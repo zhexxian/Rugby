@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
         float screenHeight = Gdx.graphics.getHeight();
 
         // Assume 960x540 (qHD - 16:9 aspect ratio)
-        gameWidth = 160;
+        gameWidth = 90;
         gameHeight = screenHeight / (screenWidth / gameWidth);
 
         world = new GameWorld(gameWidth, gameHeight);

@@ -22,11 +22,16 @@ import com.forofour.game.gameworlds.GameWorld;
  */
 public class ButtonMaker {
 
-    private static float POS_X1 = 160 - 10;
-    private static float POS_Y1 = 13;
-    private static float POS_X2 = 160 - 23;
+    private static float gameWidth = 90;
+    private static float gameHeight = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / gameWidth);
+    private static float scalePosX = Gdx.graphics.getWidth()/gameWidth;
+    private static float scalePosY = Gdx.graphics.getHeight()/gameHeight;
+
+    private static float POS_X1 = 90 - 10;
+    private static float POS_Y1 = 15;
+    private static float POS_X2 = 90 - 27;
     private static float POS_Y2 = 10;
-    private static float SIZE_SCALE = (float) 0.6;
+    private static float SIZE_SCALE = (float) 1;
 
     private static ImageButton boostButton, tossButton;
     private static ImageButton.ImageButtonStyle imageButtonStyle;
@@ -63,11 +68,6 @@ public class ButtonMaker {
     }
 
     public static Container wrap1(ImageButton ib) {
-        float gameWidth = 160;
-        float gameHeight = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / gameWidth);
-
-        float scalePosX = Gdx.graphics.getWidth()/gameWidth;
-        float scalePosY = Gdx.graphics.getHeight()/gameHeight;
 
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
@@ -78,11 +78,6 @@ public class ButtonMaker {
     }
 
     public static Container wrap2(ImageButton ib) {
-        float gameWidth = 160;
-        float gameHeight = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / gameWidth);
-
-        float scalePosX = Gdx.graphics.getWidth()/gameWidth;
-        float scalePosY = Gdx.graphics.getHeight()/gameHeight;
 
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);

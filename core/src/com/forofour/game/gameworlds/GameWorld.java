@@ -52,7 +52,7 @@ public class GameWorld extends Stage{
 
         float wallThickness = 1;
         wallTop = new Wall(0, 0, gameWidth, wallThickness, box2d);
-        wallBottom = new Wall(0, gameHeight-wallThickness, gameWidth, wallThickness, box2d);
+        wallBottom = new Wall(0, gameHeight-wallThickness - 30, gameWidth, wallThickness, box2d);
         wallLeft = new Wall(0, 0, wallThickness, gameHeight, box2d);
         wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
 

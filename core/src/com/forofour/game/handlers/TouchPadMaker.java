@@ -50,7 +50,7 @@ public class TouchPadMaker {
 
     public static Container wrap(Touchpad tp) {
 
-        float gameWidth = 160;
+        float gameWidth = 90;
         float gameHeight = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / gameWidth);
 
         float scalePosX = Gdx.graphics.getWidth()/gameWidth;
