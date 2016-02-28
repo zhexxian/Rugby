@@ -145,8 +145,11 @@ public class Player {
     }
 
     public boolean hasBall(){
-        if(ball.isHeld())
+        System.out.println("Checking hasBall 1");
+        if(ball.isHeld()) {
+            System.out.println("hasBall " + ball.getHoldingPlayer().equals(this));
             return ball.getHoldingPlayer().equals(this);
+        }
         return false;
     }
 

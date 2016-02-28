@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.forofour.game.gameobjects.Ball;
@@ -19,6 +18,9 @@ import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Wall;
 import com.forofour.game.handlers.ButtonMaker;
 import com.forofour.game.handlers.TouchPadMaker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by seanlim on 19/2/2016.
@@ -28,7 +30,9 @@ public class GameWorld extends Stage{
     private World box2d; // Box2d world gravity
     private Ball ball;
     private Wall wallTop, wallBottom, wallLeft, wallRight;
-    private Player player, player2;
+
+    private Player player;
+    private List playerList;
 
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton;
@@ -48,7 +52,14 @@ public class GameWorld extends Stage{
         box2d.setContactListener(new ListenerClass(this));
         ball = new Ball(gameWidth/2, gameHeight/2, 1f, box2d);
         player = new Player(50, 50, 2f, ball, box2d);
-//        player2 = new Player(20, 20, 2f, ball, box2d);
+        playerList = new ArrayList();
+        playerList.add(player);
+        playerList.add(new Player(10, 10, 2f, ball, box2d));
+        playerList.add(new Player(20, 20, 2f, ball, box2d));
+        playerList.add(new Player(30, 30, 2f, ball, box2d));
+        playerList.add(new Player(40, 40, 2f, ball, box2d));
+        playerList.add(new Player(60, 60, 2f, ball, box2d));
+        playerList.add(new Player(70, 70, 2f, ball, box2d));
 
         float wallThickness = 1;
         wallTop = new Wall(0, 0, gameWidth, wallThickness, box2d);
@@ -101,6 +112,9 @@ public class GameWorld extends Stage{
     public Player getPlayer(){
         return player;
     }
+    public List<Player> getPlayerList(){
+        return playerList;
+    }
 
     public Touchpad getTouchpad() {return touchpad;}
 
@@ -118,7 +132,7 @@ public class GameWorld extends Stage{
 
 class ListenerClass implements ContactListener{
 
-    public GameWorld world;
+    private GameWorld world;
 
     public ListenerClass(GameWorld world){
         this.world = world;
@@ -130,7 +144,6 @@ class ListenerClass implements ContactListener{
 
     @Override
     public void endContact(Contact contact) {
-
     }
 
     @Override
@@ -140,12 +153,22 @@ class ListenerClass implements ContactListener{
             Body b = contact.getFixtureB().getBody();
 
             if(a.getUserData() instanceof Ball) {
-//                world.destroy(a);
                 ((Ball) a.getUserData()).setHoldingPlayer((Player) b.getUserData());
             }
             if(b.getUserData() instanceof Ball) {
-//                world.destroy(b);
                 ((Ball) b.getUserData()).setHoldingPlayer((Player) a.getUserData());
+            }
+
+        } else {
+            Body a = contact.getFixtureA().getBody();
+            Body b = contact.getFixtureB().getBody();
+
+            if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
+                if(world.getBall().getHoldingPlayer().equals(a.getUserData()) ||
+                        world.getBall().getHoldingPlayer().equals(b.getUserData())) {
+                    System.out.println("Collision");
+                    world.getBall().triggerCollision();
+                }
             }
         }
     }

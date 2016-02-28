@@ -1,20 +1,12 @@
 package com.forofour.game.gameobjects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.MotorJointDef;
-import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
-import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
-
-import java.util.Random;
 
 /**
  * Created by seanlim on 19/2/2016.
@@ -36,6 +28,7 @@ public class Ball extends BodyDef{
 
     private Vector2 lastDirection;
     private static float IMPULSE_SCALAR = (float) 1.5;
+    private boolean playerCollided;
 /*
     private MouseJointDef jointDef;
     private MouseJoint joint;
@@ -66,6 +59,7 @@ public class Ball extends BodyDef{
         fixture = body.createFixture(fixtureDef);
 
         boundingCircle.dispose();
+        playerCollided = false;
 
 /*        BodyDef aDef = new BodyDef();
         aDef.type = BodyType.DynamicBody;
@@ -92,8 +86,13 @@ public class Ball extends BodyDef{
 
     public void update(float delta) {
         if(isHeld()) {
-            body.setTransform(holdingPlayer.getBody().getPosition(), 0);
+            body.setTransform(holdingPlayer.getBody().getPosition(), 0); // Assume holdingPlayer !=null
             body.setLinearVelocity(0, 0);
+
+            if(playerCollided) {
+                playerCollided = false;
+                loseHoldingPlayer();
+            }
 
         } else if(immunityTime > 0) {
             immunityTime -= delta;
@@ -104,6 +103,10 @@ public class Ball extends BodyDef{
 
     public boolean isHeld(){
         return holdingPlayer!=null;
+    }
+
+    public void triggerCollision(){
+        playerCollided = true;
     }
 
     public void setHoldingPlayer(Player player){
@@ -127,7 +130,6 @@ public class Ball extends BodyDef{
         body.setTransform(holdingPlayer.getBody().getPosition().add(offset), 0);
         body.applyLinearImpulse(holdingPlayer.getLastDirection().scl(IMPULSE_SCALAR), body.getPosition(), true);
         holdingPlayer = null;
-
     }
     public float getRadius() {
         return radius;
