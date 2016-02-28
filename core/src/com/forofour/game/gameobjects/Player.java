@@ -134,7 +134,7 @@ public class Player {
     }
 
     public void boost() {
-        if(boostTime <= 0) {
+        if(boostTime <= 0 && !hasBall()) {
             boostTime = 1;
         }
     }
