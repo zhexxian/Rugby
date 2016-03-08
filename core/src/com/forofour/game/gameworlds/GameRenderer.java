@@ -44,7 +44,7 @@ public class GameRenderer {
         cam.viewportWidth = GameConstants.GAME_WIDTH * GameConstants.VIEW2MAP_RATIO;
         cam.viewportHeight = GameConstants.GAME_HEIGHT * GameConstants.VIEW2MAP_RATIO;
 
-        camAdj = new CameraAdjustments(cam, player);
+        camAdj = new CameraAdjustments(cam, player); // Helper to get XY coordinates of viewport
 
         debugRenderer = new Box2DDebugRenderer();
         //shapeRenderer = new ShapeRenderer();
@@ -72,6 +72,21 @@ public class GameRenderer {
         //drawShapes();
         drawSprites();
 
+
+        // Update stage buttons visibility states if necessary
+        renderButtons();
+    }
+
+    private void renderButtons(){
+        // Buttons are rendered as the top most layer within stage as actors
+        // Only require to trigger the visibility states
+        if(world.getPlayer().hasBall()) {
+            world.getTossButton().setVisible(true);
+            world.getBoostButton().setVisible(false);
+        } else {
+            world.getTossButton().setVisible(false);
+            world.getBoostButton().setVisible(true);
+        }
     }
 
     private void drawSprites() {

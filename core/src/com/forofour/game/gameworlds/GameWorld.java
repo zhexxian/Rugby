@@ -13,9 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Wall;
-import com.forofour.game.handlers.ButtonMaker;
+import com.forofour.game.actors.ButtonMaker;
 import com.forofour.game.handlers.GameConstants;
-import com.forofour.game.handlers.TouchPadMaker;
+import com.forofour.game.actors.TouchPadMaker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,15 +47,14 @@ public class GameWorld extends Stage{
         box2d = new World(new Vector2(0f, 0f), true);
         box2d.setContactListener(new ListenerClass(this));
         ball = new Ball(gameWidth/2, gameHeight/2, 1f, box2d);
+
+
         player = new Player(50, 50, 2f, ball, box2d);
         playerList = new ArrayList();
         playerList.add(player);
         playerList.add(new Player(10, 10, 2f, ball, box2d));
         playerList.add(new Player(20, 20, 2f, ball, box2d));
         playerList.add(new Player(30, 30, 2f, ball, box2d));
-        playerList.add(new Player(40, 40, 2f, ball, box2d));
-        playerList.add(new Player(60, 60, 2f, ball, box2d));
-        playerList.add(new Player(70, 70, 2f, ball, box2d));
 
         float wallThickness = 1;
         wallTop = new Wall(0, 0, gameWidth, wallThickness, box2d);
@@ -114,6 +113,12 @@ public class GameWorld extends Stage{
     }
 
     public Touchpad getTouchpad() {return touchpad;}
+    public ImageButton getTossButton(){
+        return tossButton;
+    }
+    public ImageButton getBoostButton(){
+        return boostButton;
+    }
 }
 
 class ListenerClass implements ContactListener{

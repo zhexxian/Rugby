@@ -103,7 +103,7 @@ public class Player {
     public void boost() {
         // Returns if not allowed to boost
         if(noBoostTime > 0) {
-            System.out.println("Player - no boost " + boostTime);
+            System.out.println("Player - no boost " + noBoostTime);
             return;
         }
 

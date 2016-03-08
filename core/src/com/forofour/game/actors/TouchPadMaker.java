@@ -1,4 +1,4 @@
-package com.forofour.game.handlers;
+package com.forofour.game.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.forofour.game.gameworlds.GameWorld;
+import com.forofour.game.handlers.GameConstants;
 
 /**
  * Created by seanlim on 28/2/2016.
@@ -39,19 +40,14 @@ public class TouchPadMaker {
         touchpadStyle.knob = touchKnob;
         //Create new TouchPad with the created style
         touchpad = new Touchpad(10, touchpadStyle);
-        //setBounds(x,y,width,height)
 
         touchpad.setDebug(true);
-//        touchpad.setBounds(10 * scaleX, 10 * scaleY, 15 * scaleX, 15 * scaleY);
-        touchpad.setBounds(50, 50, 150, 150);
+        touchpad.setBounds(50, 50, 150, 150); // Initial position and bounds. Will be overwritten by wrapper
 
         return touchpad;
     }
 
     public static Container wrap(Touchpad tp) {
-
-//        System.out.println("ScaleX " + GameConstants.SCALE_POS_X + " " +  Gdx.graphics.getWidth() + " " + GameConstants.GAME_WIDTH);
-//        System.out.println("ScaleY " + GameConstants.SCALE_POS_Y + " " + Gdx.graphics.getHeight() + " " + GameConstants.GAME_HEIGHT);
 
         /* Required wrapper to allow item to scale
          */
