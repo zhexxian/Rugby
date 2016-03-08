@@ -1,19 +1,12 @@
 package com.forofour.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.forofour.game.gameworlds.GameRenderer;
 import com.forofour.game.gameworlds.GameWorld;
+import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.InputHandler;
-import com.forofour.game.handlers.TouchPadMaker;
 
 /**
  * Created by seanlim on 19/2/2016.
@@ -24,8 +17,6 @@ public class GameScreen implements Screen {
     private GameRenderer renderer;
     private Vector2 screenSize;
     private float runTime;
-    private float gameWidth;
-    private float gameHeight;
 
     public GameScreen(){
         Gdx.app.log("GameScreen", "Attached");
@@ -34,11 +25,11 @@ public class GameScreen implements Screen {
         float screenHeight = Gdx.graphics.getHeight();
 
         // Assume 960x540 (qHD - 16:9 aspect ratio)
-        gameWidth = 160;
-        gameHeight = screenHeight / (screenWidth / gameWidth);
+        GameConstants.GAME_WIDTH = 160;
+        GameConstants.GAME_HEIGHT = screenHeight / (screenWidth / GameConstants.GAME_WIDTH);
 
-        world = new GameWorld(gameWidth, gameHeight);
-        renderer = new GameRenderer(world, gameWidth, gameHeight);
+        world = new GameWorld();
+        renderer = new GameRenderer(world);
 
         Gdx.input.setInputProcessor(new InputHandler(world)); // Stage has is an inputAdapter
 //        Gdx.input.setInputProcessor(new InputHandler(world));

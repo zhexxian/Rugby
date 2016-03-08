@@ -1,13 +1,10 @@
 package com.forofour.game.gameworlds;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,6 +14,7 @@ import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Wall;
 import com.forofour.game.handlers.ButtonMaker;
+import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.TouchPadMaker;
 
 import java.util.ArrayList;
@@ -37,16 +35,14 @@ public class GameWorld extends Stage{
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton;
 
-    private Body destroyBody;
-    private float gameWidth, gameHeight;
-
     private int time;
     private float runTime = 0;
 
-    public GameWorld(float gameWidth, float gameHeight){
+    public GameWorld(){
         super();
-        this.gameWidth = gameWidth;
-        this.gameHeight = gameHeight;
+
+        float gameWidth = GameConstants.GAME_WIDTH;
+        float gameHeight = GameConstants.GAME_HEIGHT;
 
         box2d = new World(new Vector2(0f, 0f), true);
         box2d.setContactListener(new ListenerClass(this));
@@ -66,8 +62,6 @@ public class GameWorld extends Stage{
         wallBottom = new Wall(0, gameHeight-wallThickness, gameWidth, wallThickness, box2d);
         wallLeft = new Wall(0, 0, wallThickness, gameHeight, box2d);
         wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
-
-        destroyBody = null;
 
         touchpad = TouchPadMaker.make(this);
         boostButton = ButtonMaker.getBoostButton(this);
@@ -117,17 +111,6 @@ public class GameWorld extends Stage{
     }
 
     public Touchpad getTouchpad() {return touchpad;}
-
-    public float getGameWidth(){
-        return gameWidth;
-    }
-    public float getGameHeight(){
-        return gameHeight;
-    }
-
-    public void destroy(Body body) {
-        destroyBody = body;
-    }
 }
 
 class ListenerClass implements ContactListener{

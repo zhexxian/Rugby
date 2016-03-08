@@ -4,13 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.AssetLoader;
+import com.forofour.game.handlers.CameraAdjustments;
+import com.forofour.game.handlers.GameConstants;
+import com.sun.prism.image.ViewPort;
 
 /**
  * Created by seanlim on 19/2/2016.
@@ -19,45 +22,59 @@ public class GameRenderer {
 
     private GameWorld world;
     private OrthographicCamera cam;
-    private Box2DDebugRenderer debugRenderer;
-    private ShapeRenderer shapeRenderer;
-    private SpriteBatch batcher;
+    private CameraAdjustments camAdj;
 
-    float gameWidth, gameHeight;
+    // Renderers
+    private Box2DDebugRenderer debugRenderer;
+    //private ShapeRenderer shapeRenderer;
+    private SpriteBatch batcher;
 
     // Game objects
     private Player player;
     private Ball ball;
 
-    public GameRenderer(GameWorld world, float gameWidth, float gameHeight) {
+    public GameRenderer(GameWorld world) {
         this.world = world;
+        initGameObjects(); // Upon receiving the world
 
         cam = new OrthographicCamera();
-        cam.setToOrtho(true, gameWidth, gameHeight);
+        cam.setToOrtho(true, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
+
+        // Sets the proportion of the entire map to view
+        cam.viewportWidth = GameConstants.GAME_WIDTH * GameConstants.VIEW2MAP_RATIO;
+        cam.viewportHeight = GameConstants.GAME_HEIGHT * GameConstants.VIEW2MAP_RATIO;
+
+        camAdj = new CameraAdjustments(cam, player);
 
         debugRenderer = new Box2DDebugRenderer();
-
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(cam.combined);
-
+        //shapeRenderer = new ShapeRenderer();
         batcher = new SpriteBatch();
-        batcher.setProjectionMatrix(cam.combined);
 
-        this.gameWidth = gameWidth;
-        this.gameHeight = gameHeight;
 
-        initGameObjects();
     }
 
     public void render(float delta) {
-//        Gdx.app.log("GameRenderer", "render");
+        //        Gdx.app.log("GameRenderer", "render");
 
-//        Fill the entire screen with black, to prevent potential flickering.
+        // Viewport follows player
+        cam.position.set(camAdj.getPosition());
+        cam.update();
+
+        // Updated camera is used to render stuff
+        //shapeRenderer.setProjectionMatrix(cam.combined);
+        batcher.setProjectionMatrix(cam.combined);
+
+        // Fill the entire screen with black, to prevent potential flickering.
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         debugRenderer.render(world.getBox2d(), cam.combined);
+        //drawShapes();
+        drawSprites();
 
+    }
+
+    private void drawSprites() {
         batcher.begin();
 
         // Backgound
@@ -67,39 +84,37 @@ public class GameRenderer {
         batcher.draw(AssetLoader.playerRegion, // Texture
                 player.getBody().getPosition().x - player.getRadius(),
                 player.getBody().getPosition().y - player.getRadius(),
-                player.getRadius()*2, // width
+                player.getRadius() * 2, // width
                 player.getRadius()*2); // height
 
         // Ball
         batcher.draw(AssetLoader.ball,
                 ball.getBody().getPosition().x - ball.getRadius(),
                 ball.getBody().getPosition().y - ball.getRadius(),
-                ball.getRadius()*2,
+                ball.getRadius() * 2,
                 ball.getRadius()*2);
 
         batcher.end();
-
-//        drawShapes();
-
     }
 
-    private void drawShapes() {
+/*    private void drawShapes() {
         // Begin ShapeRenderer
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(player.getBody().getPosition().x,
+        shapeRenderer.circle(player.getBody().getPosition().x * GameConstants.VIEW2MAP_RATIO,
                 player.getBody().getPosition().y, player.getRadius());
         shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.BLUE);
 
-        shapeRenderer.circle(ball.getBody().getPosition().x, ball.getBody().getPosition().y,
+        shapeRenderer.circle(ball.getBody().getPosition().x * GameConstants.VIEW2MAP_RATIO,
+                ball.getBody().getPosition().y,
                 ball.getRadius());
 
         shapeRenderer.end();
-    }
+    }*/
 
     private void initGameObjects() {
         ball = world.getBall();

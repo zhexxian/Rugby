@@ -1,19 +1,10 @@
 package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.forofour.game.gameworlds.GameWorld;
 
@@ -63,11 +54,8 @@ public class ButtonMaker {
     }
 
     public static Container wrap1(ImageButton ib) {
-        float gameWidth = 160;
-        float gameHeight = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / gameWidth);
-
-        float scalePosX = Gdx.graphics.getWidth()/gameWidth;
-        float scalePosY = Gdx.graphics.getHeight()/gameHeight;
+        float scalePosX = Gdx.graphics.getWidth()/ GameConstants.GAME_WIDTH;
+        float scalePosY = Gdx.graphics.getHeight()/ GameConstants.GAME_HEIGHT;
 
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
@@ -78,11 +66,8 @@ public class ButtonMaker {
     }
 
     public static Container wrap2(ImageButton ib) {
-        float gameWidth = 160;
-        float gameHeight = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / gameWidth);
-
-        float scalePosX = Gdx.graphics.getWidth()/gameWidth;
-        float scalePosY = Gdx.graphics.getHeight()/gameHeight;
+        float scalePosX = Gdx.graphics.getWidth()/ GameConstants.GAME_WIDTH;
+        float scalePosY = Gdx.graphics.getHeight()/ GameConstants.GAME_HEIGHT;
 
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
