@@ -24,11 +24,11 @@ public class GameScreen implements Screen {
         // Assume 960x540 (qHD - 16:9 aspect ratio)
         // Initialize some constants upon being able to
 
-
         world = new GameWorld();
         renderer = new GameRenderer(world);
 
-        Gdx.input.setInputProcessor(new InputHandler(world)); // Stage has is an inputAdapter
+        Gdx.input.setInputProcessor(new InputHandler(world)); // Stage itself is an inputAdapter
+//        Gdx.input.setInputProcessor(world);
 
     }
 
@@ -42,8 +42,7 @@ public class GameScreen implements Screen {
         //Gdx.app.log("GameScreen(" + gameWidth + "x" + gameHeight + ") FPS", (1 / delta) + " DELTA" + delta);
         runTime += delta;
 
-        renderer.render(delta);
-
+        renderer.render(delta); // Why render than update?
         world.update(delta);
     }
 

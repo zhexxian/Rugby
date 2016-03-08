@@ -9,7 +9,8 @@ import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameworlds.GameWorld;
 
 /**
- * Created by seanlim on 19/2/2016.
+ * Multiplexer to allow multiple InputHandlers to be used.
+ * Currently useful for debugging purposes as game can be run on desktop
  */
 public class InputHandler extends InputMultiplexer{
 

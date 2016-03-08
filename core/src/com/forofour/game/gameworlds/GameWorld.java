@@ -81,8 +81,11 @@ public class GameWorld extends Stage{
 //        Gdx.app.log("GameWorld", "update");
         runTime += delta;
 
+        // Updates the Physics world movement/collision - player, ball
         box2d.step(delta, 8, 3);
         box2d.clearForces();
+
+        // Updates the
         player.update(delta);
         ball.update(delta);
 

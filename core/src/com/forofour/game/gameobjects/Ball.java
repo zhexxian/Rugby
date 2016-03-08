@@ -23,19 +23,12 @@ public class Ball extends BodyDef{
 
     private float immunityTime = 0;
     private float radius;
-    private int maxAcceleration = 40;
-    private int maxVelocity = 300;
 
-    private Vector2 lastDirection;
     private static float IMPULSE_SCALAR = (float) 1.5;
     private boolean playerCollided;
-/*
-    private MouseJointDef jointDef;
-    private MouseJoint joint;
-    private Body bodyA;
-*/
 
-    public Ball(float x, float y, float radius, World box2d){
+
+    public Ball(float x, float y, float radius, World box2d) {
         this.radius = radius;
 
         this.box2d = box2d;
@@ -60,29 +53,7 @@ public class Ball extends BodyDef{
 
         boundingCircle.dispose();
         playerCollided = false;
-
-/*        BodyDef aDef = new BodyDef();
-        aDef.type = BodyType.DynamicBody;
-        bodyA = box2d.createBody(aDef);
-        jointDef = new MouseJointDef();
-        jointDef.bodyA = bodyA;
-        jointDef.collideConnected = true;
-        jointDef.maxForce = 500;
-        jointDef.bodyB = getBody();*/
     }
-
-/*    public MouseJointDef getJointDef(){
-        return jointDef;
-    }
-    public void makeMouseJoint() {
-        joint = (MouseJoint) box2d.createJoint(jointDef);
-    }
-    public boolean isJoint(){
-        return joint != null;
-    }
-    public MouseJoint getJoint(){
-        return joint;
-    }*/
 
     public void update(float delta) {
         if(isHeld()) {
@@ -98,7 +69,6 @@ public class Ball extends BodyDef{
             immunityTime -= delta;
             System.out.println("Ball invisible " + immunityTime);
         }
-//        System.out.println("BALL: " + body.getLinearVelocity().x + " " + body.getLinearVelocity().y);
     }
 
     public boolean isHeld(){
@@ -106,7 +76,7 @@ public class Ball extends BodyDef{
     }
 
     public void triggerCollision(){
-        playerCollided = true;
+        playerCollided = true; // SENSITIVE : Triggers collided state, ball to lose player upon update
     }
 
     public void setHoldingPlayer(Player player){
@@ -129,6 +99,8 @@ public class Ball extends BodyDef{
         // Place the ball at the offset position
         body.setTransform(holdingPlayer.getBody().getPosition().add(offset), 0);
         body.applyLinearImpulse(holdingPlayer.getLastDirection().scl(IMPULSE_SCALAR), body.getPosition(), true);
+
+        // Remove holding player
         holdingPlayer = null;
     }
     public float getRadius() {
