@@ -50,19 +50,15 @@ public class TouchPadMaker {
 
     public static Container wrap(Touchpad tp) {
 
-        float scalePosX = Gdx.graphics.getWidth()/ GameConstants.GAME_WIDTH;
-        float scalePosY = Gdx.graphics.getHeight()/ GameConstants.GAME_HEIGHT;
-
-        System.out.println("ScaleX " + scalePosX + " " +  Gdx.graphics.getWidth() + " " + GameConstants.GAME_WIDTH);
-        System.out.println("ScaleY " + scalePosY + " " + Gdx.graphics.getHeight() + " " + GameConstants.GAME_HEIGHT);
-
+//        System.out.println("ScaleX " + GameConstants.SCALE_POS_X + " " +  Gdx.graphics.getWidth() + " " + GameConstants.GAME_WIDTH);
+//        System.out.println("ScaleY " + GameConstants.SCALE_POS_Y + " " + Gdx.graphics.getHeight() + " " + GameConstants.GAME_HEIGHT);
 
         /* Required wrapper to allow item to scale
          */
         Container wrapper = new Container(tp);
         wrapper.setTransform(true);
-        wrapper.setPosition(POS_X * scalePosX, POS_Y * scalePosY);
-        wrapper.setScale(SIZE_SCALE * scalePosX/6, SIZE_SCALE * scalePosY/6);
+        wrapper.setPosition(POS_X * GameConstants.SCALE_POS_X, POS_Y * GameConstants.SCALE_POS_Y);
+        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS_X/6, SIZE_SCALE * GameConstants.SCALE_POS_Y/6);
 
         return wrapper;
     }

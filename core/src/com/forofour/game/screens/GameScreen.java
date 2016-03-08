@@ -21,18 +21,14 @@ public class GameScreen implements Screen {
     public GameScreen(){
         Gdx.app.log("GameScreen", "Attached");
 
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-
         // Assume 960x540 (qHD - 16:9 aspect ratio)
-        GameConstants.GAME_WIDTH = 160;
-        GameConstants.GAME_HEIGHT = screenHeight / (screenWidth / GameConstants.GAME_WIDTH);
+        // Initialize some constants upon being able to
+
 
         world = new GameWorld();
         renderer = new GameRenderer(world);
 
         Gdx.input.setInputProcessor(new InputHandler(world)); // Stage has is an inputAdapter
-//        Gdx.input.setInputProcessor(new InputHandler(world));
 
     }
 

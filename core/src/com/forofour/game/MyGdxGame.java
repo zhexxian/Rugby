@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.forofour.game.handlers.AssetLoader;
+import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.screens.GameScreen;
 
 public class MyGdxGame extends Game {
@@ -15,6 +16,7 @@ public class MyGdxGame extends Game {
 	public void create() {
 		Gdx.app.log("Rugby Game", "created");
         AssetLoader.load();
+		GameConstants.init(); // Initialize when able to
 		setScreen(new GameScreen());
 	}
 
