@@ -113,11 +113,23 @@ public class GameWorld extends Stage{
         if(ball != null)
             ball.update(delta);
 
+        // Adds scores
+        if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
+            teamA.addScore();
+        if(teamB.getTeamList().contains(ball.getHoldingPlayer()))
+            teamB.addScore();
+
         //Stage
         if(globalLabel != null && globalTime != null) // Global time
             globalLabel.setText(globalTime.getElapsed());
-        if(teamLabel != null) // Team time
-            teamLabel.setText("");
+        if(teamLabel != null) {// Team time/score
+            if(teamA.getTeamList().contains(player))
+                teamLabel.setText("Team A Score: " + teamA.getScore());
+            else if(teamB.getTeamList().contains(player))
+                teamLabel.setText("Team B Score: " + teamB.getScore());
+            else
+                teamLabel.setText("No team score");
+        }
 
         if(player != null)
             player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());

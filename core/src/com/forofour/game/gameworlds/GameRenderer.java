@@ -173,8 +173,7 @@ public class GameRenderer {
         }
 
         // Timer
-        batcher.draw(AssetLoader.bgRegion, 0, GameConstants.GAME_HEIGHT - 42, GameConstants.GAME_WIDTH - 42, 42);
-//        timerFont.draw(batcher, world.getGlobalTime().getElapsed(), 10.0f, GameConstants.GAME_HEIGHT - 80);
+        //timerFont.draw(batcher, world.getGlobalTime().getElapsed(), 10.0f, GameConstants.GAME_HEIGHT - 80);
         batcher.end();
 
     }
