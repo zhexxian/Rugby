@@ -16,6 +16,7 @@ import com.forofour.game.gameobjects.Wall;
 import com.forofour.game.actors.ButtonMaker;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.actors.TouchPadMaker;
+import com.forofour.game.actors.Timer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,8 @@ public class GameWorld extends Stage{
 
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton;
+
+    private Timer timer;
 
     private int time;
     private float runTime = 0;
@@ -66,6 +69,9 @@ public class GameWorld extends Stage{
         touchpad = TouchPadMaker.make(this);
         boostButton = ButtonMaker.getBoostButton(this);
         tossButton = ButtonMaker.getTossButton(this);
+
+        timer = new Timer();
+        timer.start();
 
         addActor(TouchPadMaker.wrap(touchpad));
         addActor(ButtonMaker.wrap1(boostButton));
@@ -119,6 +125,10 @@ public class GameWorld extends Stage{
     }
     public ImageButton getBoostButton(){
         return boostButton;
+    }
+
+    public Timer getTimer(){
+        return timer;
     }
 }
 

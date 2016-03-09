@@ -1,19 +1,17 @@
 package com.forofour.game.gameworlds;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.CameraAdjustments;
 import com.forofour.game.handlers.GameConstants;
-import com.sun.prism.image.ViewPort;
+
 
 /**
  * Created by seanlim on 19/2/2016.
@@ -23,6 +21,7 @@ public class GameRenderer {
     private GameWorld world;
     private OrthographicCamera cam;
     private CameraAdjustments camAdj;
+    private BitmapFont timerFont;
 
     // Renderers
     private Box2DDebugRenderer debugRenderer;
@@ -45,6 +44,8 @@ public class GameRenderer {
         cam.viewportHeight = GameConstants.GAME_HEIGHT * GameConstants.VIEW2MAP_RATIO;
 
         camAdj = new CameraAdjustments(cam, player); // Helper to get XY coordinates of viewport
+
+        timerFont = new BitmapFont(true);
 
         debugRenderer = new Box2DDebugRenderer();
         //shapeRenderer = new ShapeRenderer();
@@ -75,6 +76,8 @@ public class GameRenderer {
 
         // Update stage buttons visibility states if necessary
         renderButtons();
+
+
     }
 
     private void renderButtons(){
@@ -92,24 +95,28 @@ public class GameRenderer {
     private void drawSprites() {
         batcher.begin();
 
-        // Backgound
-//        batcher.draw(AssetLoader.bgRegion, 0, 0, gameWidth, gameHeight);
-
         // Player
         batcher.draw(AssetLoader.playerRegion, // Texture
                 player.getBody().getPosition().x - player.getRadius(),
                 player.getBody().getPosition().y - player.getRadius(),
                 player.getRadius() * 2, // width
-                player.getRadius()*2); // height
+                player.getRadius() * 2); // height
 
         // Ball
         batcher.draw(AssetLoader.ball,
                 ball.getBody().getPosition().x - ball.getRadius(),
                 ball.getBody().getPosition().y - ball.getRadius(),
                 ball.getRadius() * 2,
-                ball.getRadius()*2);
+                ball.getRadius() * 2);
+
+        // Timer
+
+
+        batcher.draw(AssetLoader.bgRegion, 0, GameConstants.GAME_HEIGHT - 42, GameConstants.GAME_WIDTH - 42, 42);
+        timerFont.draw(batcher, world.getTimer().getElapsed(), 10.0f, GameConstants.GAME_HEIGHT - 80);
 
         batcher.end();
+
     }
 
 /*    private void drawShapes() {
