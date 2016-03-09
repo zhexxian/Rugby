@@ -15,7 +15,6 @@ ________________________________________________________________________________
 The following is the list of branches in this repository. Always branch from master before you start working.
 
 Master
-  - Up to date with Prototype 2
   - Branch from here to implement Networking Features
 
 Prototype 1 (discontinued)
@@ -30,6 +29,6 @@ Prototype 2 (discontinued)
   - Menu screen, Viewport that follows player, Interchangable buttons, Timer
   - Ready to implmenent basic network features
    
-Team Scoring System
+Team Scoring System (discontinued)
   - Rendered image for each team member
   - Team score display
