@@ -34,11 +34,11 @@ public class MenuActorMaker {
         menuStage = stage;
 
         //Load fonts
-        Texture texture = new Texture(Gdx.files.internal("fonts/arial.png"), true); // true enables mipmaps
+        Texture texture = new Texture(Gdx.files.internal("fonts/baskek.png"), true); // true enables mipmaps
         texture.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Linear); // linear filtering in nearest mipmap image
-        menuFont = new BitmapFont(Gdx.files.internal("fonts/arial.fnt"),
+        menuFont = new BitmapFont(Gdx.files.internal("fonts/baskek.fnt"),
                 new TextureRegion(texture), false);
-        menuFont.getData().setScale(0.2f);
+        menuFont.getData().setScale(0.15f);
 
         // Create new skin for menu screen
         Skin menuSkin = new Skin();
@@ -61,7 +61,7 @@ public class MenuActorMaker {
         buttonJoin = new TextButton("Join Game", normal);
         buttonSettings = new TextButton("Settings", normal);
 
-        buttonTutorial.setSize(this.BUTTON_WIDTH / 3 * 2, this.BUTTON_HEIGHT);
+        buttonTutorial.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonTutorial.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
                 (BUTTON_HEIGHT + BUTTON_GAP) * 4);
         buttonTutorial.addListener(new ChangeListener() {
@@ -71,7 +71,7 @@ public class MenuActorMaker {
             }
         });
 
-        buttonHost.setSize(this.BUTTON_WIDTH / 3 * 2, this.BUTTON_HEIGHT);
+        buttonHost.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonHost.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
                 (BUTTON_HEIGHT + BUTTON_GAP) * 3);
         buttonHost.addListener(new ChangeListener() {
