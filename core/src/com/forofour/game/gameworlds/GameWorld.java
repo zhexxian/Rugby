@@ -20,10 +20,11 @@ import com.forofour.game.actors.Timer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * The main game screen
- * TODO: Separation of logic to Server and Client sequence
+ *
  */
 public class GameWorld extends Stage{
 
@@ -31,14 +32,15 @@ public class GameWorld extends Stage{
     private Ball ball;
     private Wall wallTop, wallBottom, wallLeft, wallRight;
 
-    private Player player;
-    private List playerList;
+    private Player player; // Controls are tied to this instance of player
+    private List<Player> playerList;
 
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton;
 
     private Timer timer;
 
+    private boolean requireReinitializing;
     private int time;
     private float runTime = 0;
 
@@ -52,16 +54,12 @@ public class GameWorld extends Stage{
         box2d = new World(new Vector2(0f, 0f), true);
         box2d.setContactListener(new ListenerClass(this)); // Set the player-ball collision logic
 
-        // Add ball to the game
-        ball = new Ball(gameWidth/2, gameHeight/2, 1f, box2d);
-
         // Add players to the game
-        player = new Player(50, 50, 2f, ball, box2d);
-        playerList = new ArrayList();
-        playerList.add(player);
-        playerList.add(new Player(10, 10, 2f, ball, box2d));
-        playerList.add(new Player(20, 20, 2f, ball, box2d));
-        playerList.add(new Player(30, 30, 2f, ball, box2d));
+        playerList = new ArrayList<Player>();
+        //addPlayer();
+
+        // Add ball to the game
+        //addBall();
 
         // Define the physics world boundaries
         float wallThickness = 1;
@@ -82,6 +80,7 @@ public class GameWorld extends Stage{
         timer = new Timer();
         timer.start();
 
+        requireReinitializing = false;
     }
 
 
@@ -90,6 +89,7 @@ public class GameWorld extends Stage{
     }
 
     public void update(float delta){
+
 //        Gdx.app.log("GameWorld", "update");
         runTime += delta;
 
@@ -97,27 +97,55 @@ public class GameWorld extends Stage{
         box2d.step(delta, 8, 3);
         box2d.clearForces();
 
-        // Updates the
-        player.update(delta);
-        ball.update(delta);
+        // Updates the non-Physics states - hasBall, player orientation, etc.
+        if(player != null)
+            player.update(delta);
+        if(ball != null)
+            ball.update(delta);
 
         //Stage
-        player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());
+        if(player != null)
+            player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());
         getCamera().update();
         act(delta);
         draw();
         // end Stage
 
-//        if(destroyBody != null) {
-//            box2d.destroyBody(destroyBody);
-//            destroyBody = null;
-//        }
+        if(reinitRequired()) {
+
+        }
+    }
+
+    public void addPlayer() {
+        if(playerList != null) {
+            if(playerList.size() < GameConstants.MAX_PLAYERS) {
+                Random r = new Random();
+                player = new Player(r.nextInt((int) GameConstants.GAME_WIDTH), r.nextInt((int) GameConstants.GAME_HEIGHT), 2f, ball, box2d);
+                if(playerList != null) {
+                    playerList.add(player);
+                }
+            }
+            requireReinitializing = true;
+        }
+    }
+    public void addBall() {
+        if(ball == null) {
+            ball = new Ball(GameConstants.GAME_WIDTH / 2, GameConstants.GAME_HEIGHT / 2, 1f, box2d);
+            requireReinitializing = true;
+        }
+    }
+
+    public boolean reinitRequired() {
+        if(requireReinitializing) {
+            requireReinitializing = false;
+            return true;
+        }
+        return false;
     }
 
     public Ball getBall(){
         return ball;
     }
-
     public Player getPlayer(){
         return player;
     }
@@ -156,26 +184,28 @@ class ListenerClass implements ContactListener{
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-        if(!world.getBall().isHeld()) {
-            Body a = contact.getFixtureA().getBody();
-            Body b = contact.getFixtureB().getBody();
+        if(world.getBall() != null && world.getPlayer() != null) {
+            if(!world.getBall().isHeld()) {
+                Body a = contact.getFixtureA().getBody();
+                Body b = contact.getFixtureB().getBody();
 
-            if(a.getUserData() instanceof Ball) {
-                ((Ball) a.getUserData()).setHoldingPlayer((Player) b.getUserData());
-            }
-            if(b.getUserData() instanceof Ball) {
-                ((Ball) b.getUserData()).setHoldingPlayer((Player) a.getUserData());
-            }
+                if(a.getUserData() instanceof Ball) {
+                    ((Ball) a.getUserData()).setHoldingPlayer((Player) b.getUserData());
+                }
+                if(b.getUserData() instanceof Ball) {
+                    ((Ball) b.getUserData()).setHoldingPlayer((Player) a.getUserData());
+                }
 
-        } else {
-            Body a = contact.getFixtureA().getBody();
-            Body b = contact.getFixtureB().getBody();
+            } else {
+                Body a = contact.getFixtureA().getBody();
+                Body b = contact.getFixtureB().getBody();
 
-            if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
-                if(world.getBall().getHoldingPlayer().equals(a.getUserData()) ||
-                        world.getBall().getHoldingPlayer().equals(b.getUserData())) {
-                    System.out.println("Collision");
-                    world.getBall().triggerCollision();
+                if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
+                    if(world.getBall().getHoldingPlayer().equals(a.getUserData()) ||
+                            world.getBall().getHoldingPlayer().equals(b.getUserData())) {
+                        System.out.println("Collision");
+                        world.getBall().triggerCollision();
+                    }
                 }
             }
         }

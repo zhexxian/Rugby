@@ -42,7 +42,9 @@ public class ButtonMaker {
         boostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                world.getPlayer().boost();
+                System.out.println("Boost");
+                if(world.getPlayer() != null)
+                    world.getPlayer().boost();
             }
         });
         return boostButton;
@@ -57,7 +59,8 @@ public class ButtonMaker {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Toss");
-                world.getPlayer().dropBall();
+                if(world.getPlayer() != null)
+                    world.getPlayer().dropBall();
             }
         });
         return tossButton;

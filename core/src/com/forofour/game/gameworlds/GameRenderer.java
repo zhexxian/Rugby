@@ -11,6 +11,7 @@ import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.CameraAdjustments;
 import com.forofour.game.handlers.GameConstants;
+import com.forofour.game.handlers.InputHandler;
 
 
 /**
@@ -33,8 +34,10 @@ public class GameRenderer {
     private Ball ball;
 
     public GameRenderer(GameWorld world) {
+        // Initialize the objects
         this.world = world;
-        initGameObjects(); // Upon receiving the world
+        this.ball = world.getBall();
+        this.player = world.getPlayer();
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
@@ -52,11 +55,16 @@ public class GameRenderer {
         //shapeRenderer = new ShapeRenderer();
         batcher = new SpriteBatch();
 
+    }
 
+    public void reinitialize() {
+        ball = world.getBall();
+        player = world.getPlayer();
+        camAdj.reinitialize(player);
     }
 
     public void render(float delta) {
-        //        Gdx.app.log("GameRenderer", "render");
+        //Gdx.app.log("GameRenderer", "render");
 
         // Viewport follows player
         cam.position.set(camAdj.getPosition());
@@ -84,35 +92,45 @@ public class GameRenderer {
     private void renderButtons(){
         // Buttons are rendered as the top most layer within stage as actors
         // Only require to trigger the visibility states
-        if(world.getPlayer().hasBall()) {
-            world.getTossButton().setVisible(true);
-            world.getBoostButton().setVisible(false);
-        } else {
-            world.getTossButton().setVisible(false);
-            world.getBoostButton().setVisible(true);
+        if(world.getPlayer() != null) {
+            if(world.getPlayer().hasBall()) {
+                world.getTossButton().setVisible(true);
+                world.getBoostButton().setVisible(false);
+            } else {
+                world.getTossButton().setVisible(false);
+                world.getBoostButton().setVisible(true);
+            }
         }
+        else {
+            world.getTossButton().setVisible(false);
+            world.getBoostButton().setVisible(false);
+        }
+
+
     }
 
     private void drawSprites() {
         batcher.begin();
 
         // Player
-        batcher.draw(AssetLoader.playerRegion, // Texture
-                player.getBody().getPosition().x - player.getRadius(),
-                player.getBody().getPosition().y - player.getRadius(),
-                player.getRadius() * 2, // width
-                player.getRadius() * 2); // height
+        if (player != null) {
+            batcher.draw(AssetLoader.playerRegion, // Texture
+                    player.getBody().getPosition().x - player.getRadius(),
+                    player.getBody().getPosition().y - player.getRadius(),
+                    player.getRadius() * 2, // width
+                    player.getRadius() * 2); // height
+        }
 
         // Ball
-        batcher.draw(AssetLoader.ball,
-                ball.getBody().getPosition().x - ball.getRadius(),
-                ball.getBody().getPosition().y - ball.getRadius(),
-                ball.getRadius() * 2,
-                ball.getRadius() * 2);
+        if(ball != null) {
+            batcher.draw(AssetLoader.ball,
+                    ball.getBody().getPosition().x - ball.getRadius(),
+                    ball.getBody().getPosition().y - ball.getRadius(),
+                    ball.getRadius() * 2,
+                    ball.getRadius() * 2);
+        }
 
         // Timer
-
-
         batcher.draw(AssetLoader.bgRegion, 0, GameConstants.GAME_HEIGHT - 42, GameConstants.GAME_WIDTH - 42, 42);
         timerFont.draw(batcher, world.getTimer().getElapsed(), 10.0f, GameConstants.GAME_HEIGHT - 80);
 
@@ -138,11 +156,6 @@ public class GameRenderer {
 
         shapeRenderer.end();
     }*/
-
-    private void initGameObjects() {
-        ball = world.getBall();
-        player = world.getPlayer();
-    }
 
     public OrthographicCamera getCam(){
         return cam;

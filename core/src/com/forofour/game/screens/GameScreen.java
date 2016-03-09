@@ -44,6 +44,11 @@ public class GameScreen implements Screen {
 
         renderer.render(delta); // Why render than update?
         world.update(delta);
+
+        if(world.reinitRequired()){ // Required when new objects are added to the game
+            renderer.reinitialize();
+            ((InputHandler)Gdx.input.getInputProcessor()).reinitialize();
+        }
     }
 
     @Override

@@ -37,19 +37,28 @@ public class CameraAdjustments {
         this.cameraHalfHeight = cam.viewportHeight * .5f;
     }
 
-    private void refreshCameraBounds(){
-        playerPos = myPlayer.getBody().getPosition(); // Initialize value for use
+    public void reinitialize(Player player){
+        myPlayer = player;
+    }
 
-        cameraLeft = playerPos.x - cameraHalfWidth;
-        cameraRight = playerPos.x + cameraHalfWidth;
-        cameraBottom = playerPos.y + cameraHalfHeight;
-        cameraTop = playerPos.y - cameraHalfHeight;
+    private void refreshCameraBounds(){
+        if(myPlayer != null) {
+            playerPos = myPlayer.getBody().getPosition(); // Initialize value for use
+
+            cameraLeft = playerPos.x - cameraHalfWidth;
+            cameraRight = playerPos.x + cameraHalfWidth;
+            cameraBottom = playerPos.y + cameraHalfHeight;
+            cameraTop = playerPos.y - cameraHalfHeight;
+        }
     }
 
     private float getX(){
 
         // Horizontal axis
-        if(cameraLeft <= mapLeft)
+        if(myPlayer == null) {
+            return 0;
+        }
+        else if(cameraLeft <= mapLeft)
         {
             return mapLeft + cameraHalfWidth;
         }
@@ -57,12 +66,16 @@ public class CameraAdjustments {
         {
             return mapRight - cameraHalfWidth;
         }
-        else
+        else {
             return playerPos.x;
+        }
     }
     private float getY(){
         // Vertical axis
-        if(cameraBottom >= mapBottom)
+        if(myPlayer == null) {
+            return 0;
+        }
+        else if(cameraBottom >= mapBottom)
         {
             return mapBottom - cameraHalfHeight;
         }
@@ -70,8 +83,9 @@ public class CameraAdjustments {
         {
             return mapTop + cameraHalfHeight;
         }
-        else
+        else {
             return playerPos.y;
+        }
     }
 
     public Vector3 getPosition() {

@@ -16,6 +16,8 @@ public class GameConstants {
     public static float VIEW2MAP_RATIO = 0.6f;
     public static float CONTROLS_Y_OFFSET = 15f;
 
+    public static int MAX_PLAYERS = 4;
+
     public static void init() {
         GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH);
         GameConstants.SCALE_POS_X = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH;

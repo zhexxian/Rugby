@@ -8,6 +8,10 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by seanlim on 19/2/2016.
@@ -60,6 +64,14 @@ public class Player {
     }
 
     public void update(float delta){
+        if(ball == null) { // Find the ball if no instance is attached to it
+            Array<Body> bodyArrayList = new Array<Body>();
+            box2d.getBodies(bodyArrayList);
+            for(Body b :bodyArrayList) {
+                if(b.getUserData() instanceof Ball)
+                    ball = (Ball) b.getUserData();
+            }
+        }
 
         // Acquire and set angular direction
         float radInitial = (float) Math.abs(body.getAngle()%(2*Math.PI));
@@ -117,9 +129,11 @@ public class Player {
     }
 
     public boolean hasBall(){ // IMPORTANT : Checks that holding player is current player
-        if(ball.isHeld()) {
-            System.out.println("hasBall " + ball.getHoldingPlayer().equals(this));
-            return ball.getHoldingPlayer().equals(this);
+        if(ball != null) {
+            if (ball.isHeld()) {
+                System.out.println("hasBall " + ball.getHoldingPlayer().equals(this));
+                return ball.getHoldingPlayer().equals(this);
+            }
         }
         return false;
     }

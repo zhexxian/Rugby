@@ -25,47 +25,50 @@ public class InputHandler extends InputMultiplexer{
         player = world.getPlayer();
     }
 
+    public void reinitialize(){
+        ball = myWorld.getBall();
+        player = myWorld.getPlayer();
+    }
+
     @Override
     public boolean keyDown(int keycode) {
 
-//        if(keycode == Input.Keys.UP){
-//            player.move(1, false);
-//        }
-//        if(keycode == Input.Keys.DOWN){
-//            player.move(2, false);
-//        }
-//        if(keycode == Input.Keys.LEFT){
-//            player.move(3, false);
-//        }
-//        if(keycode == Input.Keys.RIGHT){
-//            player.move(4, false);
-//        }
-        if(keycode == Input.Keys.C){
-            player.dropBall();
+        if(keycode == Input.Keys.P){
+            myWorld.addPlayer();
         }
-        if(keycode == Input.Keys.B) {
-            if(!player.hasBall()) {
-                player.boost();
+        if(keycode == Input.Keys.O) {
+            myWorld.addBall();
+        }
+
+        if(player != null) {
+            if(keycode == Input.Keys.C){
+                player.dropBall();
             }
+            if(keycode == Input.Keys.B) {
+                if(!player.hasBall()) {
+                    player.boost();
+                }
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-//        if(keycode == Input.Keys.UP){
-//            player.move(1, true);
-//        }
-//        if(keycode == Input.Keys.DOWN){
-//            player.move(2, true);
-//        }
-//        if(keycode == Input.Keys.LEFT){
-//            player.move(3, true);
-//        }
-//        if(keycode == Input.Keys.RIGHT){
-//            player.move(4, true);
-//        }
-        return true;
+/*        if(keycode == Input.Keys.UP){
+            player.move(1, true);
+        }
+        if(keycode == Input.Keys.DOWN){
+            player.move(2, true);
+        }
+        if(keycode == Input.Keys.LEFT){
+            player.move(3, true);
+        }
+        if(keycode == Input.Keys.RIGHT){
+            player.move(4, true);
+        }*/
+        return false;
     }
 
     @Override
@@ -77,9 +80,13 @@ public class InputHandler extends InputMultiplexer{
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX,screenY,pointer,button);
 
-        System.out.println(screenX + " " + screenY + " " + myWorld.getWidth()+ " " + myWorld.getHeight()
+        if (player != null) {
+                    System.out.println(screenX + " " + screenY + " " + myWorld.getWidth()+ " " + myWorld.getHeight()
                 + " " + Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
-        return true;
+           return true;
+        }
+
+        return false;
     }
 
     @Override
