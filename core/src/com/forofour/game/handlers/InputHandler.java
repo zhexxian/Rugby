@@ -49,6 +49,9 @@ public class InputHandler extends InputMultiplexer{
                     player.boost();
                 }
             }
+            if(keycode == Input.Keys.L) {
+                myWorld.rotatePlayer();
+            }
             return true;
         }
         return false;
