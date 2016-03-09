@@ -1,11 +1,16 @@
 # Rugby
+
 Game Controls
-- p, add player(max. 4)
-- o, add ball(max. 1)
-- c, toss ball(if holding ball)
-- b, boost player(if not holding ball)
+- P, add player(max. 4)
+- O, add ball(max. 1)
+- C, toss ball(if holding ball)
+- B, boost player(if not holding ball)
+- L, rotate between individual team player*
 - touchpad, control player(if available)
 
+*To remove when networking features are included.
+
+##############################################################################################################
 
 The following is the list of branches in this repository. Always branch from master before you start working.
 
@@ -26,4 +31,5 @@ Prototype 2 (discontinued)
   - Ready to implmenent basic network features
    
 Team Scoring System
-  - Features to be added.
+  - Rendered image for each team member
+  - Team score display
