@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by seanlim on 19/2/2016.
+ * The main game screen
+ * TODO: Separation of logic to Server and Client sequence
  */
 public class GameWorld extends Stage{
 
