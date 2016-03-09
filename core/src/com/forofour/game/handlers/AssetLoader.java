@@ -29,7 +29,7 @@ public class AssetLoader {
 
         player = new Texture(Gdx.files.internal("data/player2.png"));
         ball = new Texture(Gdx.files.internal("data/ball2.png"));
-        bg = new Texture(Gdx.files.internal("data/bg.png"));
+        bg = new Texture(Gdx.files.internal("data/transparent.png"));
 
         bgRegion = new TextureRegion(bg);
         bgRegion.flip(false, true);

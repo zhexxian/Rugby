@@ -3,6 +3,7 @@ package com.forofour.game.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.forofour.game.MyGdxGame;
+import com.forofour.game.TouchPadTest.TouchPadTest;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

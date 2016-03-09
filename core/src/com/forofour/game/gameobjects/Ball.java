@@ -39,6 +39,7 @@ public class Ball extends BodyDef{
 //        bodyDef.fixedRotation = true;
 
         body = box2d.createBody(bodyDef);
+        body.setGravityScale(0);
         body.setUserData(this);
 
         boundingCircle = new CircleShape();

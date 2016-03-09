@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.forofour.game.MyGdxGame;
+import com.forofour.game.TouchPadTest.TouchPadTest;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
