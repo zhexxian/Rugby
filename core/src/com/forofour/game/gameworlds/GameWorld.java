@@ -9,7 +9,9 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Wall;
@@ -35,14 +37,14 @@ public class GameWorld extends Stage{
     private Player player; // Controls are tied to this instance of player
     private List<Player> playerList;
 
+    private Timer globalTime;
+
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton;
+    private Label globalLabel, teamLabel;
 
-    private Timer timer;
 
     private boolean requireReinitializing;
-    private int time;
-    private float runTime = 0;
 
     public GameWorld(){
         super();
@@ -56,10 +58,10 @@ public class GameWorld extends Stage{
 
         // Add players to the game
         playerList = new ArrayList<Player>();
-        //addPlayer();
+        addPlayer();
 
         // Add ball to the game
-        //addBall();
+        addBall();
 
         // Define the physics world boundaries
         float wallThickness = 1;
@@ -68,17 +70,21 @@ public class GameWorld extends Stage{
         wallLeft = new Wall(0, 0, wallThickness, gameHeight, box2d);
         wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
 
+        // Initialize game Timer
+        globalTime = new Timer();
+        globalTime.start();
+
         // Make & Add actors(HUD components) to the stage
         touchpad = TouchPadMaker.make(this);
         boostButton = ButtonMaker.getBoostButton(this);
         tossButton = ButtonMaker.getTossButton(this);
+        globalLabel = TextLabelMaker.getTimeLabel(this);
+        teamLabel = TextLabelMaker.getTimeLabel(this);
         addActor(TouchPadMaker.wrap(touchpad));
         addActor(ButtonMaker.wrap1(boostButton));
         addActor(ButtonMaker.wrap2(tossButton));
-
-        // Initialize game Timer
-        timer = new Timer();
-        timer.start();
+        addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
+        addActor(TextLabelMaker.wrapTeamScore(teamLabel));
 
         requireReinitializing = false;
     }
@@ -91,7 +97,6 @@ public class GameWorld extends Stage{
     public void update(float delta){
 
 //        Gdx.app.log("GameWorld", "update");
-        runTime += delta;
 
         // Updates the Physics world movement/collision - player, ball
         box2d.step(delta, 8, 3);
@@ -104,16 +109,19 @@ public class GameWorld extends Stage{
             ball.update(delta);
 
         //Stage
+        if(globalLabel != null && globalTime != null) // Global time
+            globalLabel.setText(globalTime.getElapsed());
+        if(teamLabel != null) // Team time
+            teamLabel.setText("");
+
         if(player != null)
             player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());
+
         getCamera().update();
         act(delta);
         draw();
         // end Stage
 
-        if(reinitRequired()) {
-
-        }
     }
 
     public void addPlayer() {
@@ -161,8 +169,8 @@ public class GameWorld extends Stage{
         return boostButton;
     }
 
-    public Timer getTimer(){
-        return timer;
+    public Timer getGlobalTime(){
+        return globalTime;
     }
 }
 

@@ -11,7 +11,6 @@ import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.CameraAdjustments;
 import com.forofour.game.handlers.GameConstants;
-import com.forofour.game.handlers.InputHandler;
 
 
 /**
@@ -22,7 +21,7 @@ public class GameRenderer {
     private GameWorld world;
     private OrthographicCamera cam;
     private CameraAdjustments camAdj;
-    private BitmapFont timerFont;
+//    private BitmapFont timerFont;
 
     // Renderers
     private Box2DDebugRenderer debugRenderer;
@@ -48,8 +47,8 @@ public class GameRenderer {
 
         camAdj = new CameraAdjustments(cam, player); // Helper to get XY coordinates of viewport
 
-        timerFont = new BitmapFont(true);
-        timerFont.getData().setScale(0.25f);
+//        timerFont = new BitmapFont(true);
+//        timerFont.getData().setScale(0.25f);
 
         debugRenderer = new Box2DDebugRenderer();
         //shapeRenderer = new ShapeRenderer();
@@ -132,8 +131,7 @@ public class GameRenderer {
 
         // Timer
         batcher.draw(AssetLoader.bgRegion, 0, GameConstants.GAME_HEIGHT - 42, GameConstants.GAME_WIDTH - 42, 42);
-        timerFont.draw(batcher, world.getTimer().getElapsed(), 10.0f, GameConstants.GAME_HEIGHT - 80);
-
+//        timerFont.draw(batcher, world.getGlobalTime().getElapsed(), 10.0f, GameConstants.GAME_HEIGHT - 80);
         batcher.end();
 
     }

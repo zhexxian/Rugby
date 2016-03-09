@@ -57,10 +57,12 @@ public class Timer {
         String paddedHundredths = String.format("%02d", hundredthsComponent);
         String formattedTime;
         if ((millis>0)&&(millis<3600000)) {
-            formattedTime = paddedMinutes+":"+paddedSeconds+":"+paddedHundredths;
+            formattedTime = paddedMinutes+":"+paddedSeconds;
+//            formattedTime = paddedMinutes+":"+paddedSeconds+":"+paddedHundredths;
         }
         else {
-            formattedTime = 59+":"+59+":"+99;
+            formattedTime = 59+":"+59;
+//            formattedTime = 59+":"+59+":"+99;
         }
         return formattedTime;
     }
