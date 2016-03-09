@@ -22,7 +22,7 @@ public class GameConstants {
     public static final int GAME_DURATION_MS = GAME_DURATION*1000;
     public static final int GAME_DURATION_NS = GAME_DURATION_MS*1000000;
 
-    public static final int DEFAULT_SCORE = 10;
+    public static final int DEFAULT_SCORE = 1;
     public static final int DEFAULT_SCORE_PENALTY = 3;
 
     public static void init() {

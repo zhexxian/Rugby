@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Team {
     private static ArrayList<Team> listOfTeams;
     private ArrayList<Player> teamList;
-    private int score;
+    private float score;
     private int id;
 
     public Team(int id){
@@ -29,18 +29,18 @@ public class Team {
     public void removePlayer(Player p){
         teamList.remove(p);
     }
-    public void addScore(int amt){
+    public void addScore(float amt){
         score += amt;
     }
     public void addScore(){
-        score += GameConstants.DEFAULT_SCORE;
+        score += GameConstants.DEFAULT_SCORE / 100f;
     }
     public void deductScore() {
         score -= GameConstants.DEFAULT_SCORE_PENALTY;
     }
 
     public int getScore() {
-        return score;
+        return (int) score;
     }
 
     public ArrayList<Player> getTeamList() {

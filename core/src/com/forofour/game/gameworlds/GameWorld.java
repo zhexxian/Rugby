@@ -100,7 +100,6 @@ public class GameWorld extends Stage{
     }
 
     public void update(float delta){
-
 //        Gdx.app.log("GameWorld", "update");
 
         // Updates the Physics world movement/collision - player, ball
@@ -115,23 +114,23 @@ public class GameWorld extends Stage{
 
         // Adds scores
         if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
-            teamA.addScore();
+            teamA.addScore(delta);
         if(teamB.getTeamList().contains(ball.getHoldingPlayer()))
-            teamB.addScore();
+            teamB.addScore(delta);
 
         //Stage
-        if(globalLabel != null && globalTime != null) // Global time
+        if(globalLabel != null && globalTime != null) // Global time display
             globalLabel.setText(globalTime.getElapsed());
-        if(teamLabel != null) {// Team time/score
+        if(teamLabel != null) { // Team time/score display
             if(teamA.getTeamList().contains(player))
-                teamLabel.setText("Team A Score: " + teamA.getScore());
+                teamLabel.setText("A Score: " + teamA.getScore());
             else if(teamB.getTeamList().contains(player))
-                teamLabel.setText("Team B Score: " + teamB.getScore());
+                teamLabel.setText("B Score: " + teamB.getScore());
             else
                 teamLabel.setText("No team score");
         }
 
-        if(player != null)
+        if(player != null) // Player controls
             player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());
 
         getCamera().update();
@@ -204,9 +203,15 @@ public class GameWorld extends Stage{
     public Team getTeamA() {
         return teamA;
     }
-
     public Team getTeamB() {
         return teamB;
+    }
+
+    public void rotatePlayer(){
+        if(playerList!= null) {
+            player = playerList.get((playerList.indexOf(player)+1) % playerList.size());
+            requireReinitializing = true;
+        }
     }
 }
 
