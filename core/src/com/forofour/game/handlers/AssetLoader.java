@@ -12,12 +12,12 @@ public class AssetLoader {
 
     public static Texture texture;
     public static Texture bg, wallVert, wallHori;
-    public static Texture player, ball;
+    public static Texture playerA, playerB, ball;
 
     public static Texture boostButton, tossButton;
 
     public static TextureRegion bgRegion;
-    public static TextureRegion playerRegion;
+    public static TextureRegion playerRegionA, playerRegionB;
 
     public static TextureRegion boostRegion, tossRegion;
 
@@ -27,13 +27,15 @@ public class AssetLoader {
 //        wallVert = new Texture(Gdx.files.internal(null));
 //        wallHori = new Texture(Gdx.files.internal(null));
 
-        player = new Texture(Gdx.files.internal("data/player2.png"));
+        playerA = new Texture(Gdx.files.internal("data/player.png"));
+        playerB = new Texture(Gdx.files.internal("data/player2.png"));
         ball = new Texture(Gdx.files.internal("data/ball2.png"));
         bg = new Texture(Gdx.files.internal("data/transparent.png"));
 
         bgRegion = new TextureRegion(bg);
         bgRegion.flip(false, true);
-        playerRegion = new TextureRegion(player);
+        playerRegionA = new TextureRegion(playerA);
+        playerRegionB = new TextureRegion(playerB);
 
         // Buttons
         boostButton = new Texture(Gdx.files.internal("data/boostButton.png"));
@@ -45,7 +47,8 @@ public class AssetLoader {
 
     public static void dispose() {
         // We must dispose of the texture when we are finished.
-        player.dispose();
+        playerA.dispose();
+        playerB.dispose();
         ball.dispose();
         bg.dispose();
 

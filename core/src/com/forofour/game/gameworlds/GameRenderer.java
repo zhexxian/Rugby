@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
+import com.forofour.game.gameobjects.Team;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.CameraAdjustments;
 import com.forofour.game.handlers.GameConstants;
@@ -29,14 +30,17 @@ public class GameRenderer {
     private SpriteBatch batcher;
 
     // Game objects
-    private Player player;
     private Ball ball;
+    private Player player;
+    private Team teamA, teamB;
 
     public GameRenderer(GameWorld world) {
         // Initialize the objects
         this.world = world;
         this.ball = world.getBall();
         this.player = world.getPlayer();
+        this.teamA = world.getTeamA();
+        this.teamB = world.getTeamB();
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
@@ -59,6 +63,8 @@ public class GameRenderer {
     public void reinitialize() {
         ball = world.getBall();
         player = world.getPlayer();
+        teamA = world.getTeamA();
+        teamB = world.getTeamB();
         camAdj.reinitialize(player);
     }
 
@@ -91,8 +97,8 @@ public class GameRenderer {
     private void renderButtons(){
         // Buttons are rendered as the top most layer within stage as actors
         // Only require to trigger the visibility states
-        if(world.getPlayer() != null) {
-            if(world.getPlayer().hasBall()) {
+        if(player != null) {
+            if(player.hasBall()) {
                 world.getTossButton().setVisible(true);
                 world.getBoostButton().setVisible(false);
             } else {
@@ -111,14 +117,32 @@ public class GameRenderer {
     private void drawSprites() {
         batcher.begin();
 
-        // Player
+        // Team A
+        for(Player p : teamA.getTeamList()) {
+            batcher.draw(AssetLoader.playerRegionA, // Texture
+                    p.getBody().getPosition().x - p.getRadius(),
+                    p.getBody().getPosition().y - p.getRadius(),
+                    p.getRadius() * 2, // width
+                    p.getRadius() * 2); // height
+        }
+
+        // Team B
+        for(Player p : teamB.getTeamList()) {
+            batcher.draw(AssetLoader.playerRegionB, // Texture
+                    p.getBody().getPosition().x - p.getRadius(),
+                    p.getBody().getPosition().y - p.getRadius(),
+                    p.getRadius() * 2, // width
+                    p.getRadius() * 2); // height
+        }
+
+        /*// Player
         if (player != null) {
-            batcher.draw(AssetLoader.playerRegion, // Texture
+            batcher.draw(AssetLoader.playerRegionA, // Texture
                     player.getBody().getPosition().x - player.getRadius(),
                     player.getBody().getPosition().y - player.getRadius(),
                     player.getRadius() * 2, // width
                     player.getRadius() * 2); // height
-        }
+        }*/
 
         // Ball
         if(ball != null) {

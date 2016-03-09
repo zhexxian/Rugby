@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
+import com.forofour.game.gameobjects.Team;
 import com.forofour.game.gameobjects.Wall;
 import com.forofour.game.actors.ButtonMaker;
 import com.forofour.game.handlers.GameConstants;
@@ -36,6 +37,7 @@ public class GameWorld extends Stage{
 
     private Player player; // Controls are tied to this instance of player
     private List<Player> playerList;
+    private Team teamA, teamB;
 
     private Timer globalTime;
 
@@ -55,6 +57,9 @@ public class GameWorld extends Stage{
         // Create the physics world
         box2d = new World(new Vector2(0f, 0f), true);
         box2d.setContactListener(new ListenerClass(this)); // Set the player-ball collision logic
+
+        teamA = new Team(24);
+        teamB = new Team(369);
 
         // Add players to the game
         playerList = new ArrayList<Player>();
@@ -131,11 +136,22 @@ public class GameWorld extends Stage{
                 player = new Player(r.nextInt((int) GameConstants.GAME_WIDTH), r.nextInt((int) GameConstants.GAME_HEIGHT), 2f, ball, box2d);
                 if(playerList != null) {
                     playerList.add(player);
+                    addPlayerToTeam(player);
                 }
             }
             requireReinitializing = true;
         }
     }
+
+    private void addPlayerToTeam(Player p) {
+        if(teamA.getTeamList().size() > teamB.getTeamList().size()) {
+            teamB.addPlayer(p);
+        }
+        else {
+            teamA.addPlayer(p);
+        }
+    }
+
     public void addBall() {
         if(ball == null) {
             ball = new Ball(GameConstants.GAME_WIDTH / 2, GameConstants.GAME_HEIGHT / 2, 1f, box2d);
@@ -171,6 +187,14 @@ public class GameWorld extends Stage{
 
     public Timer getGlobalTime(){
         return globalTime;
+    }
+
+    public Team getTeamA() {
+        return teamA;
+    }
+
+    public Team getTeamB() {
+        return teamB;
     }
 }
 

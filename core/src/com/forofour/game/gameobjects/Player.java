@@ -17,6 +17,7 @@ import java.util.Collections;
  * Created by seanlim on 19/2/2016.
  */
 public class Player {
+
     private World box2d;
     private Body body;
     private BodyDef bodyDef;
@@ -24,6 +25,7 @@ public class Player {
     private Fixture fixture;
 
     private Ball ball;
+    private int teamId;
 
     private float radius;
 
@@ -144,5 +146,13 @@ public class Player {
 
     public Body getBody(){
         return body;
+    }
+
+    public int getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
     }
 }
