@@ -46,6 +46,7 @@ public class GameRenderer {
         camAdj = new CameraAdjustments(cam, player); // Helper to get XY coordinates of viewport
 
         timerFont = new BitmapFont(true);
+        timerFont.getData().setScale(0.25f);
 
         debugRenderer = new Box2DDebugRenderer();
         //shapeRenderer = new ShapeRenderer();

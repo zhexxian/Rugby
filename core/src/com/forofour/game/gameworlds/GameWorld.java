@@ -48,11 +48,14 @@ public class GameWorld extends Stage{
         float gameWidth = GameConstants.GAME_WIDTH;
         float gameHeight = GameConstants.GAME_HEIGHT;
 
+        // Create the physics world
         box2d = new World(new Vector2(0f, 0f), true);
-        box2d.setContactListener(new ListenerClass(this));
+        box2d.setContactListener(new ListenerClass(this)); // Set the player-ball collision logic
+
+        // Add ball to the game
         ball = new Ball(gameWidth/2, gameHeight/2, 1f, box2d);
 
-
+        // Add players to the game
         player = new Player(50, 50, 2f, ball, box2d);
         playerList = new ArrayList();
         playerList.add(player);
@@ -60,22 +63,25 @@ public class GameWorld extends Stage{
         playerList.add(new Player(20, 20, 2f, ball, box2d));
         playerList.add(new Player(30, 30, 2f, ball, box2d));
 
+        // Define the physics world boundaries
         float wallThickness = 1;
         wallTop = new Wall(0, 0, gameWidth, wallThickness, box2d);
         wallBottom = new Wall(0, gameHeight-wallThickness, gameWidth, wallThickness, box2d);
         wallLeft = new Wall(0, 0, wallThickness, gameHeight, box2d);
         wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
 
+        // Make & Add actors(HUD components) to the stage
         touchpad = TouchPadMaker.make(this);
         boostButton = ButtonMaker.getBoostButton(this);
         tossButton = ButtonMaker.getTossButton(this);
-
-        timer = new Timer();
-        timer.start();
-
         addActor(TouchPadMaker.wrap(touchpad));
         addActor(ButtonMaker.wrap1(boostButton));
         addActor(ButtonMaker.wrap2(tossButton));
+
+        // Initialize game Timer
+        timer = new Timer();
+        timer.start();
+
     }
 
 
