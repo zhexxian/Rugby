@@ -119,20 +119,39 @@ public class GameRenderer {
 
         // Team A
         for(Player p : teamA.getTeamList()) {
-            batcher.draw(AssetLoader.playerRegionA, // Texture
+ /*           batcher.draw(AssetLoader.playerRegionA, // Texture
                     p.getBody().getPosition().x - p.getRadius(),
                     p.getBody().getPosition().y - p.getRadius(),
                     p.getRadius() * 2, // width
-                    p.getRadius() * 2); // height
+                    p.getRadius() * 2); // height*/
+            batcher.draw(AssetLoader.playerRegionA,
+                    p.getBody().getPosition().x - p.getRadius(),
+                    p.getBody().getPosition().y - p.getRadius(),
+                    p.getRadius(),
+                    p.getRadius(),
+                    p.getRadius() * 2,
+                    p.getRadius() * 2,
+                    1f, 1f,
+                    p.getLastDirection().angle());
+
         }
 
         // Team B
         for(Player p : teamB.getTeamList()) {
-            batcher.draw(AssetLoader.playerRegionB, // Texture
+            /*batcher.draw(AssetLoader.playerRegionB, // Texture
                     p.getBody().getPosition().x - p.getRadius(),
                     p.getBody().getPosition().y - p.getRadius(),
                     p.getRadius() * 2, // width
-                    p.getRadius() * 2); // height
+                    p.getRadius() * 2); // height*/
+            batcher.draw(AssetLoader.playerRegionB,
+                    p.getBody().getPosition().x - p.getRadius(),
+                    p.getBody().getPosition().y - p.getRadius(),
+                    p.getRadius(),
+                    p.getRadius(),
+                    p.getRadius() * 2,
+                    p.getRadius() * 2,
+                    1f, 1f,
+                    p.getLastDirection().angle());
         }
 
         /*// Player
