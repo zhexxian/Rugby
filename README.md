@@ -9,5 +9,5 @@ Landscape (variant of Prototype 1)
   
 Prototype 2
   - Cleaner version of Prototype 1
-  - Menu screen, Viewport that follows player, Interchangable buttons
+  - Menu screen, Viewport that follows player, Interchangable buttons, Timer
   - Ready to implmenent basic network features
