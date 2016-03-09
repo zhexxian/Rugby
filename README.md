@@ -10,7 +10,7 @@ Game Controls
 
 *To remove when networking features are included.
 
-##############################################################################################################
+_____________________________________________________________________________________________________________
 
 The following is the list of branches in this repository. Always branch from master before you start working.
 
