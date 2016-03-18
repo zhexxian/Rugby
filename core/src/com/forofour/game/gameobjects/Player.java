@@ -81,7 +81,7 @@ public class Player {
 
         // Acquire and set angular direction
         float radInitial = (float) Math.abs(body.getAngle()%(2*Math.PI));
-        float radGoal = (float) ((Math.PI/180)*(getLastDirection().angle()%360));
+        float radGoal = (float) ((Math.PI/180)*(getLastDirection().angle()));
         float deltaRad = (radGoal - radInitial);
         if(deltaRad < -Math.PI)
             deltaRad = (float) (2*Math.PI + deltaRad);
@@ -91,7 +91,7 @@ public class Player {
         if(noBoostTime > 0)
             noBoostTime -= delta;
 
-        body.setAngularVelocity((deltaRad * getRadius()) * 10);
+        body.setAngularVelocity((deltaRad * getRadius()) * 5);
 
     }
 

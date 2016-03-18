@@ -159,10 +159,10 @@ public class GameRenderer {
         // PowerUp
         if(!powerUp.isOutOfFrame()) {
             batcher.draw(AssetLoader.powerUp,
-                    GameConstants.GAME_WIDTH/3,
-                    GameConstants.GAME_HEIGHT/3,
-                    10.0f,
-                    10.0f);
+                    powerUp.getBody().getPosition().x - powerUp.getRadius(),
+                    powerUp.getBody().getPosition().y - powerUp.getRadius(),
+                    powerUp.getRadius() * 2,
+                    powerUp.getRadius() * 2);
         }
 
         batcher.end();

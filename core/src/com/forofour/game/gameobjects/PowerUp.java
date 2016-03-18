@@ -56,8 +56,9 @@ public class PowerUp {
     }
 
     public void update(float delta){
-        if(outOfFrame)
+        if(outOfFrame) {
             disappear();
+        }
     }
 
     public void setDisappear() {

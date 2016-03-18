@@ -81,7 +81,7 @@ public class InputHandler extends InputMultiplexer{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        super.touchDown(screenX,screenY,pointer,button);
+        super.touchDown(screenX, screenY, pointer, button);
 
         if (player != null) {
                     System.out.println(screenX + " " + screenY + " " + myWorld.getWidth()+ " " + myWorld.getHeight()

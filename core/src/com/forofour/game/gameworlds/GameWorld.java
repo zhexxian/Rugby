@@ -1,5 +1,6 @@
 package com.forofour.game.gameworlds;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -72,7 +73,7 @@ public class GameWorld extends Stage{
         addBall();
 
         // Add powerUp to game
-        powerUp = new PowerUp(GameConstants.GAME_WIDTH/3, GameConstants.GAME_HEIGHT/3, 10.0f, box2d);
+        powerUp = new PowerUp(GameConstants.GAME_WIDTH/3, GameConstants.GAME_HEIGHT/3, 5.0f, box2d);
 
 
 
