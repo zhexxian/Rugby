@@ -86,7 +86,7 @@ public class GameRenderer {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //debugRenderer.render(world.getBox2d(), cam.combined);
+        debugRenderer.render(world.getBox2d(), cam.combined);
         //drawShapes();
         drawSprites();
 

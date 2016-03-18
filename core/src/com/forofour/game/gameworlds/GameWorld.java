@@ -239,6 +239,9 @@ public class GameWorld extends Stage{
     }
 }
 
+/*
+Listener to detect collision within Box2d world, and to determine the events that follow
+ */
 class ListenerClass implements ContactListener{
 
     private GameWorld world;
@@ -273,6 +276,7 @@ class ListenerClass implements ContactListener{
                 Body a = contact.getFixtureA().getBody();
                 Body b = contact.getFixtureB().getBody();
 
+                // TODO: Player collision should be between opposing team members only
                 if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
                     if(world.getBall().getHoldingPlayer().equals(a.getUserData()) ||
                             world.getBall().getHoldingPlayer().equals(b.getUserData())) {

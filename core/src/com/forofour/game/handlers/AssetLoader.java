@@ -50,7 +50,7 @@ public class AssetLoader {
 
         powerSlot1 = new Texture(Gdx.files.internal("data/power_slot.png"));
         powerSlotRegion1 = new TextureRegion(powerSlot1);
-        powerUp1 = new Texture(Gdx.files.internal("data/power1.png"));
+        powerUp1 = new Texture(Gdx.files.internal("data/power_slot_filled1.png"));
         powerUpRegion1 = new TextureRegion(powerUp1);
         powerUp2 = new Texture(Gdx.files.internal("data/power2.png"));
         powerUpRegion2 = new TextureRegion(powerUp2);

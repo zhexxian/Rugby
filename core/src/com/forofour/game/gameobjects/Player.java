@@ -29,7 +29,7 @@ public class Player {
 
     private float radius;
 
-    private static Vector2 lastDirection;
+    private Vector2 lastDirection;
 
     private static final int MAX_VELOCITY = 30;
     private static final float BOOST_SCALAR = 1.3f;
