@@ -10,8 +10,7 @@ public class GameConstants {
     public static float GAME_WIDTH = 160;
     public static float GAME_HEIGHT;
 
-    public static float SCALE_POS_X;
-    public static float SCALE_POS_Y;
+    public static float SCALE_POS;
 
     public static final float VIEW2MAP_RATIO = 0.6f;
     public static final float CONTROLS_Y_OFFSET = 15f;
@@ -26,9 +25,8 @@ public class GameConstants {
     public static final int DEFAULT_SCORE_PENALTY = 3;
 
     public static void init() {
-        GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH);
-        //TODO: SCALE_POS_X == SCALE_POS_Y, use one is enough; use SCALE_POS to calculate GAME_HEIGHT
-        GameConstants.SCALE_POS_X = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH;
-        GameConstants.SCALE_POS_Y = Gdx.graphics.getHeight() / GameConstants.GAME_HEIGHT;
+        // Replace the original SCALE_POS_X and SCALE_POS_Y
+        GameConstants.SCALE_POS = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH;
+        GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS;
     }
 }

@@ -53,8 +53,8 @@ public class TouchPadMaker {
          */
         Container wrapper = new Container(tp);
         wrapper.setTransform(true);
-        wrapper.setPosition(POS_X * GameConstants.SCALE_POS_X, POS_Y * GameConstants.SCALE_POS_Y);
-        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS_X/6, SIZE_SCALE * GameConstants.SCALE_POS_Y/6);
+        wrapper.setPosition(POS_X * GameConstants.SCALE_POS, POS_Y * GameConstants.SCALE_POS);
+        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS/6, SIZE_SCALE * GameConstants.SCALE_POS/6);
 
         return wrapper;
     }

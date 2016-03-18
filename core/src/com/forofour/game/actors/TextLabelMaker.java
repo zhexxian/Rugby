@@ -40,8 +40,8 @@ public class TextLabelMaker {
 
         Container wrapper = new Container(label);
         wrapper.setTransform(true);
-        wrapper.setPosition(POS_X1 * GameConstants.SCALE_POS_X, POS_Y1 * GameConstants.SCALE_POS_Y);
-        wrapper.setScale(SIZE_SCALE1 * GameConstants.SCALE_POS_X, -SIZE_SCALE1 * GameConstants.SCALE_POS_Y); // To flip along the horizontal axis
+        wrapper.setPosition(POS_X1 * GameConstants.SCALE_POS, POS_Y1 * GameConstants.SCALE_POS);
+        wrapper.setScale(SIZE_SCALE1 * GameConstants.SCALE_POS, -SIZE_SCALE1 * GameConstants.SCALE_POS); // To flip along the horizontal axis
 
         return wrapper;
     }
@@ -50,8 +50,8 @@ public class TextLabelMaker {
 
         Container wrapper = new Container(label);
         wrapper.setTransform(true);
-        wrapper.setPosition(POS_X2 * GameConstants.SCALE_POS_X, POS_Y2 * GameConstants.SCALE_POS_Y);
-        wrapper.setScale(SIZE_SCALE2 * GameConstants.SCALE_POS_X, -SIZE_SCALE2 * GameConstants.SCALE_POS_Y); // To flip along the horizontal axis
+        wrapper.setPosition(POS_X2 * GameConstants.SCALE_POS, POS_Y2 * GameConstants.SCALE_POS);
+        wrapper.setScale(SIZE_SCALE2 * GameConstants.SCALE_POS, -SIZE_SCALE2 * GameConstants.SCALE_POS); // To flip along the horizontal axis
 
         return wrapper;
     }
