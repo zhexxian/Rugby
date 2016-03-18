@@ -27,6 +27,7 @@ public class GameConstants {
 
     public static void init() {
         GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / (Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH);
+        //TODO: SCALE_POS_X == SCALE_POS_Y, use one is enough; use SCALE_POS to calculate GAME_HEIGHT
         GameConstants.SCALE_POS_X = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH;
         GameConstants.SCALE_POS_Y = Gdx.graphics.getHeight() / GameConstants.GAME_HEIGHT;
     }

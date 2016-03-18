@@ -119,18 +119,13 @@ public class GameRenderer {
 
         // Team A
         for(Player p : teamA.getTeamList()) {
- /*           batcher.draw(AssetLoader.playerRegionA, // Texture
+            batcher.draw(AssetLoader.playerRegionA, // Texture
                     p.getBody().getPosition().x - p.getRadius(),
                     p.getBody().getPosition().y - p.getRadius(),
+                    p.getRadius(),
+                    p.getRadius(),
                     p.getRadius() * 2, // width
-                    p.getRadius() * 2); // height*/
-            batcher.draw(AssetLoader.playerRegionA,
-                    p.getBody().getPosition().x - p.getRadius(),
-                    p.getBody().getPosition().y - p.getRadius(),
-                    p.getRadius(),
-                    p.getRadius(),
-                    p.getRadius() * 2,
-                    p.getRadius() * 2,
+                    p.getRadius() * 2, // height
                     1f, 1f,
                     p.getLastDirection().angle());
 
@@ -138,11 +133,6 @@ public class GameRenderer {
 
         // Team B
         for(Player p : teamB.getTeamList()) {
-            /*batcher.draw(AssetLoader.playerRegionB, // Texture
-                    p.getBody().getPosition().x - p.getRadius(),
-                    p.getBody().getPosition().y - p.getRadius(),
-                    p.getRadius() * 2, // width
-                    p.getRadius() * 2); // height*/
             batcher.draw(AssetLoader.playerRegionB,
                     p.getBody().getPosition().x - p.getRadius(),
                     p.getBody().getPosition().y - p.getRadius(),
@@ -153,15 +143,6 @@ public class GameRenderer {
                     1f, 1f,
                     p.getLastDirection().angle());
         }
-
-        /*// Player
-        if (player != null) {
-            batcher.draw(AssetLoader.playerRegionA, // Texture
-                    player.getBody().getPosition().x - player.getRadius(),
-                    player.getBody().getPosition().y - player.getRadius(),
-                    player.getRadius() * 2, // width
-                    player.getRadius() * 2); // height
-        }*/
 
         // Ball
         if(ball != null) {
@@ -177,25 +158,6 @@ public class GameRenderer {
         batcher.end();
 
     }
-
-/*    private void drawShapes() {
-        // Begin ShapeRenderer
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(player.getBody().getPosition().x * GameConstants.VIEW2MAP_RATIO,
-                player.getBody().getPosition().y, player.getRadius());
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.BLUE);
-
-        shapeRenderer.circle(ball.getBody().getPosition().x * GameConstants.VIEW2MAP_RATIO,
-                ball.getBody().getPosition().y,
-                ball.getRadius());
-
-        shapeRenderer.end();
-    }*/
 
     public OrthographicCamera getCam(){
         return cam;
