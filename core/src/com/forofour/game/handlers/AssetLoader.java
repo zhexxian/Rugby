@@ -14,6 +14,8 @@ public class AssetLoader {
     public static Texture bg, wallVert, wallHori;
     public static Texture playerA, playerB, ball;
 
+    public static Texture powerUp;
+
     public static Texture boostButton, tossButton;
 
     public static TextureRegion bgRegion;
@@ -31,6 +33,7 @@ public class AssetLoader {
         playerB = new Texture(Gdx.files.internal("data/player2.png"));
         ball = new Texture(Gdx.files.internal("data/ball2.png"));
         bg = new Texture(Gdx.files.internal("data/transparent.png"));
+        powerUp = new Texture(Gdx.files.internal("data/powerUp.png"));
 
         bgRegion = new TextureRegion(bg);
         bgRegion.flip(false, true);
@@ -51,6 +54,7 @@ public class AssetLoader {
         playerB.dispose();
         ball.dispose();
         bg.dispose();
+        powerUp.dispose();
 
         boostButton.dispose();
         tossButton.dispose();

@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
+import com.forofour.game.gameobjects.PowerUp;
 import com.forofour.game.gameobjects.Team;
 import com.forofour.game.gameobjects.Wall;
 import com.forofour.game.actors.ButtonMaker;
@@ -45,6 +46,8 @@ public class GameWorld extends Stage{
     private ImageButton boostButton, tossButton;
     private Label globalLabel, teamLabel;
 
+    private PowerUp powerUp;
+
 
     private boolean requireReinitializing;
 
@@ -67,6 +70,9 @@ public class GameWorld extends Stage{
 
         // Add ball to the game
         addBall();
+
+        // Add powerUp to game
+        powerUp = new PowerUp(GameConstants.GAME_WIDTH/3, GameConstants.GAME_HEIGHT/3, 10.0f, box2d);
 
         // Define the physics world boundaries
         float wallThickness = 1;
@@ -111,6 +117,8 @@ public class GameWorld extends Stage{
             player.update(delta);
         if(ball != null)
             ball.update(delta);
+        if(powerUp != null)
+            powerUp.update(delta);
 
         // Adds scores
         if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
@@ -207,6 +215,10 @@ public class GameWorld extends Stage{
         return teamB;
     }
 
+    public PowerUp getPowerUp() {
+        return powerUp;
+    }
+
     public void rotatePlayer(){
         if(playerList!= null) {
             player = playerList.get((playerList.indexOf(player)+1) % playerList.size());
@@ -256,6 +268,20 @@ class ListenerClass implements ContactListener{
                         world.getBall().triggerCollision();
                     }
                 }
+            }
+        }
+        if(world.getPlayer() != null && world.getPowerUp() != null){
+            //TODO: check if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below
+            Body a = contact.getFixtureA().getBody();
+            Body b = contact.getFixtureB().getBody();
+
+            if(a.getUserData() instanceof Player && b.getUserData() instanceof PowerUp){
+                // Temporary solution: put power up out of mapview
+                ((PowerUp) b.getUserData()).setDisappear();
+            }
+            else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
+                // Temporary solution: put power up out of mapview
+                ((PowerUp) a.getUserData()).setDisappear();
             }
         }
     }

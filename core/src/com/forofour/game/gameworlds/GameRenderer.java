@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
+import com.forofour.game.gameobjects.PowerUp;
 import com.forofour.game.gameobjects.Team;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.CameraAdjustments;
@@ -33,6 +34,7 @@ public class GameRenderer {
     private Ball ball;
     private Player player;
     private Team teamA, teamB;
+    private PowerUp powerUp;
 
     public GameRenderer(GameWorld world) {
         // Initialize the objects
@@ -41,6 +43,7 @@ public class GameRenderer {
         this.player = world.getPlayer();
         this.teamA = world.getTeamA();
         this.teamB = world.getTeamB();
+        this.powerUp = world.getPowerUp();
 
         cam = new OrthographicCamera();
         cam.setToOrtho(true, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
@@ -83,7 +86,7 @@ public class GameRenderer {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        debugRenderer.render(world.getBox2d(), cam.combined);
+        //debugRenderer.render(world.getBox2d(), cam.combined);
         //drawShapes();
         drawSprites();
 
@@ -153,8 +156,15 @@ public class GameRenderer {
                     ball.getRadius() * 2);
         }
 
-        // Timer
-        //timerFont.draw(batcher, world.getGlobalTime().getElapsed(), 10.0f, GameConstants.GAME_HEIGHT - 80);
+        // PowerUp
+        if(!powerUp.isOutOfFrame()) {
+            batcher.draw(AssetLoader.powerUp,
+                    GameConstants.GAME_WIDTH/3,
+                    GameConstants.GAME_HEIGHT/3,
+                    10.0f,
+                    10.0f);
+        }
+
         batcher.end();
 
     }
