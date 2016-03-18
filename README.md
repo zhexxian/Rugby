@@ -32,3 +32,7 @@ Prototype 2 (discontinued)
 Team Scoring System (discontinued)
   - Rendered image for each team member
   - Team score display
+   
+Power Up Slot (discontinued)
+  - Power slot that can be filled and is actionable
+  - Different image for each type of powerup
