@@ -17,11 +17,13 @@ public class AssetLoader {
     public static Texture powerUp;
 
     public static Texture boostButton, tossButton;
+    public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
 
     public static TextureRegion bgRegion;
     public static TextureRegion playerRegionA, playerRegionB;
 
     public static TextureRegion boostRegion, tossRegion;
+    public static TextureRegion powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
 
     public static void load() {
 //
@@ -46,6 +48,17 @@ public class AssetLoader {
         tossButton = new Texture(Gdx.files.internal("data/tossButton.png"));
         tossRegion = new TextureRegion(tossButton);
 
+        powerSlot1 = new Texture(Gdx.files.internal("data/power_slot.png"));
+        powerSlotRegion1 = new TextureRegion(powerSlot1);
+        powerUp1 = new Texture(Gdx.files.internal("data/power1.png"));
+        powerUpRegion1 = new TextureRegion(powerUp1);
+        powerUp2 = new Texture(Gdx.files.internal("data/power2.png"));
+        powerUpRegion2 = new TextureRegion(powerUp2);
+        powerUp3 = new Texture(Gdx.files.internal("data/power3.png"));
+        powerUpRegion3 = new TextureRegion(powerUp3);
+        powerUp4 = new Texture(Gdx.files.internal("data/power4.png"));
+        powerUpRegion4 = new TextureRegion(powerUp4);
+
     }
 
     public static void dispose() {
@@ -58,5 +71,11 @@ public class AssetLoader {
 
         boostButton.dispose();
         tossButton.dispose();
+
+        powerSlot1.dispose();
+        powerUp1.dispose();
+        powerUp2.dispose();
+        powerUp3.dispose();
+        powerUp4.dispose();
     }
 }

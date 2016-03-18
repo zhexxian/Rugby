@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.forofour.game.actors.PowerUpSlotMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
@@ -43,11 +44,10 @@ public class GameWorld extends Stage{
     private Timer globalTime;
 
     private Touchpad touchpad;
-    private ImageButton boostButton, tossButton;
+    private ImageButton boostButton, tossButton, powerSlot;
     private Label globalLabel, teamLabel;
 
     private PowerUp powerUp;
-
 
     private boolean requireReinitializing;
 
@@ -74,6 +74,8 @@ public class GameWorld extends Stage{
         // Add powerUp to game
         powerUp = new PowerUp(GameConstants.GAME_WIDTH/3, GameConstants.GAME_HEIGHT/3, 10.0f, box2d);
 
+
+
         // Define the physics world boundaries
         float wallThickness = 1;
         wallTop = new Wall(0, 0, gameWidth, wallThickness, box2d);
@@ -91,11 +93,14 @@ public class GameWorld extends Stage{
         tossButton = ButtonMaker.getTossButton(this);
         globalLabel = TextLabelMaker.getTimeLabel(this);
         teamLabel = TextLabelMaker.getTimeLabel(this);
+        powerSlot = PowerUpSlotMaker.getPowerSlot(this);
+
         addActor(TouchPadMaker.wrap(touchpad));
         addActor(ButtonMaker.wrap1(boostButton));
         addActor(ButtonMaker.wrap2(tossButton));
         addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
+        addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
         requireReinitializing = false;
     }
@@ -136,6 +141,12 @@ public class GameWorld extends Stage{
                 teamLabel.setText("B Score: " + teamB.getScore());
             else
                 teamLabel.setText("No team score");
+        }
+
+        if(player.hasPowerUp()) {
+            PowerUpSlotMaker.setPowerUpStyle1();
+        } else {
+            PowerUpSlotMaker.setEmptySlotStyle();
         }
 
         if(player != null) // Player controls
@@ -278,10 +289,12 @@ class ListenerClass implements ContactListener{
             if(a.getUserData() instanceof Player && b.getUserData() instanceof PowerUp){
                 // Temporary solution: put power up out of mapview
                 ((PowerUp) b.getUserData()).setDisappear();
+                ((Player) a.getUserData()).acquirePowerUp(); // TODO: Refactor to recognize Type of PowerUp
             }
             else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
                 // Temporary solution: put power up out of mapview
                 ((PowerUp) a.getUserData()).setDisappear();
+                ((Player) b.getUserData()).acquirePowerUp();
             }
         }
     }

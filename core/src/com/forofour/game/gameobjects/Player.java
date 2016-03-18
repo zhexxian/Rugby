@@ -38,6 +38,8 @@ public class Player {
     private float boostTime = 0;
     private float noBoostTime = 0;
 
+    private boolean hasPowerUp;
+
     public Player(float x, float y, float radius, Ball ball, World box2d){
         this.ball = ball;
         this.radius = radius;
@@ -63,6 +65,8 @@ public class Player {
 
         boundingCircle.dispose();
         lastDirection = new Vector2();
+
+        hasPowerUp = false;
     }
 
     public void update(float delta){
@@ -138,6 +142,16 @@ public class Player {
             }
         }
         return false;
+    }
+
+    public void acquirePowerUp(){
+        hasPowerUp = true;
+    }
+    public void usePowerUp(){
+        hasPowerUp = false;
+    }
+    public boolean hasPowerUp() {
+        return hasPowerUp;
     }
 
     public float getRadius() {

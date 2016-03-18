@@ -72,8 +72,9 @@ public class PowerUp {
         body.setTransform(-10, -10, 0);
     }
 
+    public void isAcquired() {
 
-
+    }
 
     public float getRadius() {
         return radius;
