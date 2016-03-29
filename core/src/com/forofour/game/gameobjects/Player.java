@@ -31,11 +31,14 @@ public class Player {
 
     private Vector2 lastDirection;
 
+    //TODO: move the constants to handlers/GameConstants
     private static final int MAX_VELOCITY = 30;
     private static final float BOOST_SCALAR = 1.3f;
     private static final float BOOST_DURATION = 1;
+    private static final float REVERSE_DIRECTION_DURATION = 5;
     private static final float NO_BOOST_DURATION = 2;
     private float boostTime = 0;
+    private float reverseDirectionTime = 0;
     private float noBoostTime = 0;
 
     private boolean hasPowerUp;
@@ -90,6 +93,8 @@ public class Player {
             boostTime -= delta;
         if(noBoostTime > 0)
             noBoostTime -= delta;
+        if(reverseDirectionTime > 0)
+            reverseDirectionTime -= delta;
 
         body.setAngularVelocity((deltaRad * getRadius()) * 5);
 
@@ -109,7 +114,7 @@ public class Player {
             System.out.println("Player - boost " + boostTime);
         }
 
-        body.setLinearVelocity(x*MAX_VELOCITY, y*MAX_VELOCITY);
+        body.setLinearVelocity(x * MAX_VELOCITY, y * MAX_VELOCITY);
     }
 
     public Vector2 getLastDirection(){
@@ -149,9 +154,19 @@ public class Player {
     }
     public void usePowerUp(){
         hasPowerUp = false;
+        reverseDirectionControl();
     }
     public boolean hasPowerUp() {
         return hasPowerUp;
+    }
+
+    // Power Up: poop -- direction control reversed, up is down, left is right, and vice versa
+    public void reverseDirectionControl(){
+        reverseDirectionTime = REVERSE_DIRECTION_DURATION;
+    }
+
+    public float getReverseDirectionTime() {
+        return reverseDirectionTime;
     }
 
     public float getRadius() {

@@ -150,8 +150,15 @@ public class GameWorld extends Stage{
             PowerUpSlotMaker.setEmptySlotStyle();
         }
 
-        if(player != null) // Player controls
-            player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());
+        if(player != null) { // Player controls
+            if (player.getReverseDirectionTime() > 0){
+                player.knobMove(-getTouchpad().getKnobPercentX(), getTouchpad().getKnobPercentY());
+            }
+            else {
+                player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());
+            }
+
+        }
 
         getCamera().update();
         act(delta);
