@@ -36,9 +36,11 @@ public class Player {
     private static final float BOOST_SCALAR = 1.3f;
     private static final float BOOST_DURATION = 1;
     private static final float REVERSE_DIRECTION_DURATION = 5;
+    private static final float MOVE_VERY_SLOWLY_DURATION = 5;
     private static final float NO_BOOST_DURATION = 2;
     private float boostTime = 0;
     private float reverseDirectionTime = 0;
+    private float moveVerySlowlyTime = 0;
     private float noBoostTime = 0;
 
     private boolean hasPowerUp;
@@ -95,6 +97,8 @@ public class Player {
             noBoostTime -= delta;
         if(reverseDirectionTime > 0)
             reverseDirectionTime -= delta;
+        if(moveVerySlowlyTime > 0)
+            moveVerySlowlyTime -= delta;
 
         body.setAngularVelocity((deltaRad * getRadius()) * 5);
 
@@ -154,7 +158,8 @@ public class Player {
     }
     public void usePowerUp(){
         hasPowerUp = false;
-        reverseDirectionControl();
+        //reverseDirectionControl();
+        moveVerySlowly();
     }
     public boolean hasPowerUp() {
         return hasPowerUp;
@@ -167,6 +172,15 @@ public class Player {
 
     public float getReverseDirectionTime() {
         return reverseDirectionTime;
+    }
+
+    // Power Up: vomit -- move very slowly
+    public void moveVerySlowly(){
+        moveVerySlowlyTime = MOVE_VERY_SLOWLY_DURATION;
+    }
+
+    public float getMoveVerySlowlyTime() {
+        return moveVerySlowlyTime;
     }
 
     public float getRadius() {

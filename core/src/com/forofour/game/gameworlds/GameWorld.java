@@ -151,8 +151,11 @@ public class GameWorld extends Stage{
         }
 
         if(player != null) { // Player controls
-            if (player.getReverseDirectionTime() > 0){
+            if (player.getReverseDirectionTime() > 0) {
                 player.knobMove(-getTouchpad().getKnobPercentX(), getTouchpad().getKnobPercentY());
+            }
+            if (player.getMoveVerySlowlyTime() > 0) {
+                player.knobMove(getTouchpad().getKnobPercentX()/4, -getTouchpad().getKnobPercentY()/4);
             }
             else {
                 player.knobMove(getTouchpad().getKnobPercentX(), -getTouchpad().getKnobPercentY());
