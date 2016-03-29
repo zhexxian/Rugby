@@ -73,7 +73,7 @@ public class ButtonMaker {
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X1 * scalePosX, POS_Y1 * scalePosY);
-        wrapper.setScale(SIZE_SCALE * scalePosX/6, SIZE_SCALE * scalePosY/6);
+        wrapper.setScale(SIZE_SCALE * scalePosX/3, SIZE_SCALE * scalePosY/3);
 
         return wrapper;
     }
@@ -85,7 +85,7 @@ public class ButtonMaker {
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X2 * scalePosX, POS_Y2 * scalePosY);
-        wrapper.setScale(SIZE_SCALE * scalePosX/6, SIZE_SCALE * scalePosY/6);
+        wrapper.setScale(SIZE_SCALE * scalePosX/3, SIZE_SCALE * scalePosY/3);
 
         return wrapper;
     }

@@ -27,9 +27,9 @@ public class TouchPadMaker {
         //Create a touchpad skin
         touchpadSkin = new Skin();
         //Set background image
-        touchpadSkin.add("touchBackground", new Texture("data/touchBackground.png"));
+        touchpadSkin.add("touchBackground", new Texture("sprites/buttons/joystick-out-black.png"));
         //Set knob image
-        touchpadSkin.add("touchKnob", new Texture("data/touchKnob.png"));
+        touchpadSkin.add("touchKnob", new Texture("sprites/buttons/joystick-in-black.png"));
         //Create TouchPad Style
         touchpadStyle = new Touchpad.TouchpadStyle();
         //Create Drawable's from TouchPad skin
@@ -54,7 +54,7 @@ public class TouchPadMaker {
         Container wrapper = new Container(tp);
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X * GameConstants.SCALE_POS, POS_Y * GameConstants.SCALE_POS);
-        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS/6, SIZE_SCALE * GameConstants.SCALE_POS/6);
+        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS/5, SIZE_SCALE * GameConstants.SCALE_POS/5);
 
         return wrapper;
     }

@@ -83,7 +83,7 @@ public class GameRenderer {
         batcher.setProjectionMatrix(cam.combined);
 
         // Fill the entire screen with black, to prevent potential flickering.
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        //Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         debugRenderer.render(world.getBox2d(), cam.combined);
@@ -120,6 +120,9 @@ public class GameRenderer {
     private void drawSprites() {
         batcher.begin();
 
+        batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
+
+
         // Team A
         for(Player p : teamA.getTeamList()) {
             batcher.draw(AssetLoader.playerRegionA, // Texture
@@ -127,8 +130,8 @@ public class GameRenderer {
                     p.getBody().getPosition().y - p.getRadius(),
                     p.getRadius(),
                     p.getRadius(),
-                    p.getRadius() * 2, // width
-                    p.getRadius() * 2, // height
+                    p.getRadius() * 3, // width
+                    p.getRadius() * 3, // height
                     1f, 1f,
                     p.getLastDirection().angle());
 
@@ -141,8 +144,8 @@ public class GameRenderer {
                     p.getBody().getPosition().y - p.getRadius(),
                     p.getRadius(),
                     p.getRadius(),
-                    p.getRadius() * 2,
-                    p.getRadius() * 2,
+                    p.getRadius() * 3,
+                    p.getRadius() * 3,
                     1f, 1f,
                     p.getLastDirection().angle());
         }
@@ -152,8 +155,8 @@ public class GameRenderer {
             batcher.draw(AssetLoader.ball,
                     ball.getBody().getPosition().x - ball.getRadius(),
                     ball.getBody().getPosition().y - ball.getRadius(),
-                    ball.getRadius() * 2,
-                    ball.getRadius() * 2);
+                    ball.getRadius() * 3,
+                    ball.getRadius() * 3);
         }
 
         // PowerUp

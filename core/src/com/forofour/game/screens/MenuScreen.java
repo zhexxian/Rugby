@@ -3,9 +3,11 @@ package com.forofour.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.forofour.game.actors.MenuActorMaker;
+import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 
 /**
@@ -14,6 +16,7 @@ import com.forofour.game.handlers.GameConstants;
 public class MenuScreen implements Screen {
     private Stage stage;
     private MenuActorMaker actorMaker;
+    private SpriteBatch batch;
 
     public MenuScreen(){
         stage = new Stage(new ExtendViewport(
@@ -21,6 +24,7 @@ public class MenuScreen implements Screen {
                 GameConstants.GAME_HEIGHT));
         actorMaker = new MenuActorMaker(stage);
         Gdx.input.setInputProcessor(stage);
+        batch = new SpriteBatch();
     }
 
     @Override
@@ -30,8 +34,12 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        //Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.begin();
+        batch.draw(AssetLoader.bgMenu, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
 
         stage.act();
         stage.draw();

@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AssetLoader {
 
     public static Texture texture;
-    public static Texture bg, wallVert, wallHori;
+    public static Texture bg, wallVert, wallHori, menu;
     public static Texture playerA, playerB, ball;
 
     public static Texture powerUp;
@@ -19,6 +19,7 @@ public class AssetLoader {
     public static Texture boostButton, tossButton;
     public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
 
+    public static TextureRegion bgMenu;
     public static TextureRegion bgRegion;
     public static TextureRegion playerRegionA, playerRegionB;
 
@@ -31,21 +32,24 @@ public class AssetLoader {
 //        wallVert = new Texture(Gdx.files.internal(null));
 //        wallHori = new Texture(Gdx.files.internal(null));
 
-        playerA = new Texture(Gdx.files.internal("data/player.png"));
-        playerB = new Texture(Gdx.files.internal("data/player2.png"));
-        ball = new Texture(Gdx.files.internal("data/ball2.png"));
-        bg = new Texture(Gdx.files.internal("data/transparent.png"));
+        menu = new Texture(Gdx.files.internal("sprites/start-screen.png"));
+        playerA = new Texture(Gdx.files.internal("sprites/individual babies/blue-straight-1.png"));
+        playerB = new Texture(Gdx.files.internal("sprites/individual babies/red-straight-1.png"));
+        ball = new Texture(Gdx.files.internal("sprites/bottle-black-outline-upside-down.png"));
+        bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2.png"));
         powerUp = new Texture(Gdx.files.internal("data/powerUp.png"));
 
+
+        bgMenu = new TextureRegion(menu);
         bgRegion = new TextureRegion(bg);
-        bgRegion.flip(false, true);
+        //bgRegion.flip(false, true);
         playerRegionA = new TextureRegion(playerA);
         playerRegionB = new TextureRegion(playerB);
 
         // Buttons
-        boostButton = new Texture(Gdx.files.internal("data/boostButton.png"));
+        boostButton = new Texture(Gdx.files.internal("sprites/buttons/Boost-activate.png"));
         boostRegion = new TextureRegion(boostButton);
-        tossButton = new Texture(Gdx.files.internal("data/tossButton.png"));
+        tossButton = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
         tossRegion = new TextureRegion(tossButton);
 
         powerSlot1 = new Texture(Gdx.files.internal("data/power_slot.png"));
