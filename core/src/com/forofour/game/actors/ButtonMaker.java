@@ -17,7 +17,7 @@ import com.forofour.game.handlers.GameConstants;
 public class ButtonMaker {
 
     // X,Y origin is at bottom left of the screen.
-    private static float POS_X1 = 160 - 10;
+    private static float POS_X1 = 160 - 15;
     private static float POS_Y1 = 15;
 
     // XY1 and XY2 are used for positioning of Toss and Boost Buttons

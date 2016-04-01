@@ -14,9 +14,9 @@ import com.forofour.game.handlers.GameConstants;
  */
 public class TouchPadMaker {
 
-    private static float POS_X = 15;
-    private static float POS_Y = 15;
-    private static float SIZE_SCALE = (float) 0.6;
+    private static float POS_X = 20;
+    private static float POS_Y = 20;
+    private static float SIZE_SCALE = (float) 1;
     private static Touchpad touchpad;
     private static Touchpad.TouchpadStyle touchpadStyle;
     private static Skin touchpadSkin;

@@ -1,3 +1,5 @@
+/*This defines the menu screen*/
+
 package com.forofour.game.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -22,7 +24,7 @@ public class MenuScreen implements Screen {
         stage = new Stage(new ExtendViewport(
                 GameConstants.GAME_WIDTH,
                 GameConstants.GAME_HEIGHT));
-        actorMaker = new MenuActorMaker(stage);
+        actorMaker = new MenuActorMaker(stage); //menu button actions are initialized
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
     }
@@ -34,10 +36,10 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        //Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
+        //set menu screen background
         batch.draw(AssetLoader.bgMenu, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 

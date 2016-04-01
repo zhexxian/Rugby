@@ -1,3 +1,5 @@
+/*This is where the input actions -- screen touch, button press etc are defined*/
+
 package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
@@ -50,7 +52,7 @@ public class InputHandler extends InputMultiplexer{
                 }
             }
             if(keycode == Input.Keys.L) {
-                myWorld.rotatePlayer();
+                myWorld.switchPlayer();
             }
             return true;
         }

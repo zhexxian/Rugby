@@ -1,3 +1,5 @@
+/*This defines the main logic used in the game*/
+
 package com.forofour.game.gameworlds;
 
 import com.badlogic.gdx.Gdx;
@@ -28,15 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * The main game screen
- *
- */
 public class GameWorld extends Stage{
 
     private World box2d; // Box2d world gravity
+
     private Ball ball;
-    private Wall wallTop, wallBottom, wallLeft, wallRight;
 
     private Player player; // Controls are tied to this instance of player
     private List<Player> playerList;
@@ -50,45 +48,47 @@ public class GameWorld extends Stage{
 
     private PowerUp powerUp;
 
+    private Wall wallTop, wallBottom, wallLeft, wallRight;
+
     private boolean requireReinitializing;
 
     public GameWorld(){
         super();
 
+        //get screen size parameters
         float gameWidth = GameConstants.GAME_WIDTH;
         float gameHeight = GameConstants.GAME_HEIGHT;
 
-        // Create the physics world
+        //create the physics world
         box2d = new World(new Vector2(0f, 0f), true);
         box2d.setContactListener(new ListenerClass(this)); // Set the player-ball collision logic
 
+        //add ball to the game
+        addBall();
+
+        //create two teams with different team id
         teamA = new Team(24);
         teamB = new Team(369);
 
-        // Add players to the game
+        //add players to the game
         playerList = new ArrayList<Player>();
         addPlayer();
 
-        // Add ball to the game
-        addBall();
-
-        // Add powerUp to game
+        //add powerUp to game
         powerUp = new PowerUp(GameConstants.GAME_WIDTH/3, GameConstants.GAME_HEIGHT/3, 5.0f, box2d);
 
-
-
-        // Define the physics world boundaries
+        //define the physics world boundaries
         float wallThickness = 1;
         wallTop = new Wall(0, 0, gameWidth, wallThickness, box2d);
         wallBottom = new Wall(0, gameHeight-wallThickness, gameWidth, wallThickness, box2d);
         wallLeft = new Wall(0, 0, wallThickness, gameHeight, box2d);
         wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
 
-        // Initialize game Timer
+        //initialize game Timer
         globalTime = new Timer();
         globalTime.start();
 
-        // Make & Add actors(HUD components) to the stage
+        //make & add actors(HUD components) to the stage
         touchpad = TouchPadMaker.make(this);
         boostButton = ButtonMaker.getBoostButton(this);
         tossButton = ButtonMaker.getTossButton(this);
@@ -103,22 +103,15 @@ public class GameWorld extends Stage{
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
         addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
-        requireReinitializing = false;
-    }
-
-
-    public World getBox2d(){
-        return box2d;
     }
 
     public void update(float delta){
-//        Gdx.app.log("GameWorld", "update");
 
-        // Updates the Physics world movement/collision - player, ball
+        //updates the Physics world movement/collision - player, ball
         box2d.step(delta, 8, 3);
         box2d.clearForces();
 
-        // Updates the non-Physics states - hasBall, player orientation, etc.
+        //updates the non-Physics states - hasBall, player orientation, etc.
         if(player != null)
             player.update(delta);
         if(ball != null)
@@ -126,13 +119,13 @@ public class GameWorld extends Stage{
         if(powerUp != null)
             powerUp.update(delta);
 
-        // Adds scores
+        //add scores
         if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
             teamA.addScore(delta);
         if(teamB.getTeamList().contains(ball.getHoldingPlayer()))
             teamB.addScore(delta);
 
-        //Stage
+        //add timer
         if(globalLabel != null && globalTime != null) // Global time display
             globalLabel.setText(globalTime.getElapsed());
         if(teamLabel != null) { // Team time/score display
@@ -144,12 +137,14 @@ public class GameWorld extends Stage{
                 teamLabel.setText("No team score");
         }
 
+        //add power up
         if(player.hasPowerUp()) {
             PowerUpSlotMaker.setPowerUpStyle1();
         } else {
             PowerUpSlotMaker.setEmptySlotStyle();
         }
 
+        //define player movement
         if(player != null) { // Player controls
             if (player.getReverseDirectionTime() > 0) {
                 player.knobMove(-getTouchpad().getKnobPercentX(), getTouchpad().getKnobPercentY());
@@ -170,9 +165,11 @@ public class GameWorld extends Stage{
 
     }
 
+    //add player to the game
     public void addPlayer() {
         if(playerList != null) {
             if(playerList.size() < GameConstants.MAX_PLAYERS) {
+                //add player to a random location
                 Random r = new Random();
                 player = new Player(r.nextInt((int) GameConstants.GAME_WIDTH), r.nextInt((int) GameConstants.GAME_HEIGHT), 2f, ball, box2d);
                 if(playerList != null) {
@@ -184,6 +181,7 @@ public class GameWorld extends Stage{
         }
     }
 
+    //add player to a team
     private void addPlayerToTeam(Player p) {
         if(teamA.getTeamList().size() > teamB.getTeamList().size()) {
             teamB.addPlayer(p);
@@ -193,6 +191,7 @@ public class GameWorld extends Stage{
         }
     }
 
+    //add ball to the game
     public void addBall() {
         if(ball == null) {
             ball = new Ball(GameConstants.GAME_WIDTH / 2, GameConstants.GAME_HEIGHT / 2, 1f, box2d);
@@ -200,6 +199,7 @@ public class GameWorld extends Stage{
         }
     }
 
+    //require reinitialization after new object is added
     public boolean reinitRequired() {
         if(requireReinitializing) {
             requireReinitializing = false;
@@ -208,6 +208,9 @@ public class GameWorld extends Stage{
         return false;
     }
 
+    public World getBox2d(){
+        return box2d;
+    }
     public Ball getBall(){
         return ball;
     }
@@ -241,7 +244,8 @@ public class GameWorld extends Stage{
         return powerUp;
     }
 
-    public void rotatePlayer(){
+    //for single player mode debugging -- switch between different players
+    public void switchPlayer(){
         if(playerList!= null) {
             player = playerList.get((playerList.indexOf(player)+1) % playerList.size());
             requireReinitializing = true;
@@ -249,9 +253,8 @@ public class GameWorld extends Stage{
     }
 }
 
-/*
-Listener to detect collision within Box2d world, and to determine the events that follow
- */
+
+//Listener to detect collision within Box2d world, and to determine the events that follow
 class ListenerClass implements ContactListener{
 
     private GameWorld world;

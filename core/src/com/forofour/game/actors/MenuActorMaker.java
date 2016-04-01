@@ -1,3 +1,5 @@
+/*This defines button actions of the menu screen*/
+
 package com.forofour.game.actors;
 
 import com.badlogic.gdx.Gdx;
@@ -31,31 +33,34 @@ public class MenuActorMaker {
     private int BUTTON_GAP = 5;
 
     public MenuActorMaker(Stage stage){
+        //set the menu stage
         menuStage = stage;
 
-        //Load fonts
+        //create new skin for menu screen
+        Skin menuSkin = new Skin();
+
+        //load fonts
         Texture texture = new Texture(Gdx.files.internal("fonts/baskek.png"), true); // true enables mipmaps
         texture.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Linear); // linear filtering in nearest mipmap image
         menuFont = new BitmapFont(Gdx.files.internal("fonts/baskek.fnt"),
                 new TextureRegion(texture), false);
         menuFont.getData().setScale(0.15f);
 
-        // Create new skin for menu screen
-        Skin menuSkin = new Skin();
-        // Set menu font
+        //set menu font
         menuSkin.add("menuFont", menuFont);
-        // Set menu buttons
+
+        //set menu buttons
         menuSkin.add("buttonUp", new Texture("basic/button_up.png"));
         menuSkin.add("buttonDown", new Texture("basic/button_down.png"));
-        // Create Text button Style
 
+        //create TextButton style
         TextButton.TextButtonStyle normal = new TextButton.TextButtonStyle();
         normal.font = menuSkin.getFont("menuFont");
         normal.up = menuSkin.getDrawable("buttonUp");
         normal.down = menuSkin.getDrawable("buttonDown");
         normal.pressedOffsetY = -1;
 
-
+        //create menu buttons
         buttonTutorial = new TextButton("Tutorial", normal);
         buttonHost = new TextButton("Host Game", normal);
         buttonJoin = new TextButton("Join Game", normal);
@@ -69,7 +74,7 @@ public class MenuActorMaker {
             public void changed(ChangeEvent event, Actor actor) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
             }
-        });
+        });//on click --> change current screen to game screen
 
         buttonHost.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonHost.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,

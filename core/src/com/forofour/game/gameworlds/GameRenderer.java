@@ -1,10 +1,14 @@
+/*This defines the main styles used in the game*/
+
 package com.forofour.game.gameworlds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
@@ -23,11 +27,11 @@ public class GameRenderer {
     private GameWorld world;
     private OrthographicCamera cam;
     private CameraAdjustments camAdj;
-//    private BitmapFont timerFont;
 
-    // Renderers
+    // Renderers -- debugRenderer for physics debugging, shapeRenderer for visual effect
     private Box2DDebugRenderer debugRenderer;
     //private ShapeRenderer shapeRenderer;
+
     private SpriteBatch batcher;
 
     // Game objects
@@ -54,15 +58,14 @@ public class GameRenderer {
 
         camAdj = new CameraAdjustments(cam, player); // Helper to get XY coordinates of viewport
 
-//        timerFont = new BitmapFont(true);
-//        timerFont.getData().setScale(0.25f);
-
+        // Renderers -- debugRenderer for physics debugging, shapeRenderer for visual effect
         debugRenderer = new Box2DDebugRenderer();
         //shapeRenderer = new ShapeRenderer();
         batcher = new SpriteBatch();
 
     }
 
+    //reinitialization is required after new object is added
     public void reinitialize() {
         ball = world.getBall();
         player = world.getPlayer();
@@ -72,8 +75,6 @@ public class GameRenderer {
     }
 
     public void render(float delta) {
-        //Gdx.app.log("GameRenderer", "render");
-
         // Viewport follows player
         cam.position.set(camAdj.getPosition());
         cam.update();
@@ -90,16 +91,16 @@ public class GameRenderer {
         //drawShapes();
         drawSprites();
 
-
         // Update stage buttons visibility states if necessary
         renderButtons();
-
 
     }
 
     private void renderButtons(){
         // Buttons are rendered as the top most layer within stage as actors
         // Only require to trigger the visibility states
+
+        //switch between toss and boost buttons
         if(player != null) {
             if(player.hasBall()) {
                 world.getTossButton().setVisible(true);
@@ -120,34 +121,86 @@ public class GameRenderer {
     private void drawSprites() {
         batcher.begin();
 
+        // Background Floor mat
         batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
-
 
         // Team A
         for(Player p : teamA.getTeamList()) {
-            batcher.draw(AssetLoader.playerRegionA, // Texture
-                    p.getBody().getPosition().x - p.getRadius(),
-                    p.getBody().getPosition().y - p.getRadius(),
-                    p.getRadius(),
-                    p.getRadius(),
-                    p.getRadius() * 3, // width
-                    p.getRadius() * 3, // height
-                    1f, 1f,
-                    p.getLastDirection().angle());
+            //change the size of player
+            float scale = 3f;
+
+            //rotate player according to direction of movement
+            float angle = p.getLastDirection().angle();
+            TextureRegion playerDirection;
+            if(angle >= 45 && angle < 135)
+                playerDirection = AssetLoader.playerRegionAdown;
+            else if(angle >= 135 && angle < 225)
+                playerDirection = AssetLoader.playerRegionAleft;
+            else if(angle >= 225 && angle < 315)
+                playerDirection = AssetLoader.playerRegionAup;
+            else
+                playerDirection = AssetLoader.playerRegionAright;
+
+            /*draw(TextureRegion region,
+                float x,
+                float y,
+                float originX,
+                float originY,
+                float width,
+                float height,
+                float scaleX,
+                float scaleY,
+                float rotation)*/
+            batcher.draw(playerDirection, // Texture
+                    p.getBody().getPosition().x-0.5f,
+                    p.getBody().getPosition().y-0.5f,
+                    1,
+                    1,
+                    p.getRadius(), // width
+                    p.getRadius(), // height
+                    scale,
+                    scale,
+                    0);
 
         }
 
         // Team B
         for(Player p : teamB.getTeamList()) {
-            batcher.draw(AssetLoader.playerRegionB,
-                    p.getBody().getPosition().x - p.getRadius(),
-                    p.getBody().getPosition().y - p.getRadius(),
-                    p.getRadius(),
-                    p.getRadius(),
-                    p.getRadius() * 3,
-                    p.getRadius() * 3,
-                    1f, 1f,
-                    p.getLastDirection().angle());
+            //change the size of player
+            float scale = 3f;
+
+            //rotate player according to direction of movement
+            float angle = p.getLastDirection().angle();
+            TextureRegion playerDirection;
+            if(angle >= 45 && angle < 135)
+                playerDirection = AssetLoader.playerRegionBdown;
+            else if(angle >= 135 && angle < 225)
+                playerDirection = AssetLoader.playerRegionBleft;
+            else if(angle >= 225 && angle < 315)
+                playerDirection = AssetLoader.playerRegionBup;
+            else
+                playerDirection = AssetLoader.playerRegionBright;
+
+            /*draw(TextureRegion region,
+                float x,
+                float y,
+                float originX,
+                float originY,
+                float width,
+                float height,
+                float scaleX,
+                float scaleY,
+                float rotation)*/
+            batcher.draw(playerDirection, // Texture
+                    p.getBody().getPosition().x-0.5f,
+                    p.getBody().getPosition().y-0.5f,
+                    1f,
+                    1f,
+                    p.getRadius(), // width
+                    p.getRadius(), // height
+                    scale,
+                    scale,
+                    0);
         }
 
         // Ball

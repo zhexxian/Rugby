@@ -1,3 +1,5 @@
+/*This defines the main game screen*/
+
 package com.forofour.game.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -12,23 +14,20 @@ import com.forofour.game.handlers.InputHandler;
  * Created by seanlim on 19/2/2016.
  */
 public class GameScreen implements Screen {
-
+    //main action of game screen -- initialize and update game world (logic) and game renderer (style)
     private GameWorld world;
     private GameRenderer renderer;
     private Vector2 screenSize;
     private float runTime;
 
     public GameScreen(){
-        Gdx.app.log("GameScreen", "Attached");
+        Gdx.app.log("GameScreen", "Attached"); //print out for debugging
 
-        // Assume 960x540 (qHD - 16:9 aspect ratio)
         // Initialize some constants upon being able to
-
         world = new GameWorld();
         renderer = new GameRenderer(world);
 
         Gdx.input.setInputProcessor(new InputHandler(world)); // Stage itself is an inputAdapter
-//        Gdx.input.setInputProcessor(world);
 
     }
 
@@ -39,7 +38,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        //Gdx.app.log("GameScreen(" + gameWidth + "x" + gameHeight + ") FPS", (1 / delta) + " DELTA" + delta);
         runTime += delta;
 
         renderer.render(delta); // Why render than update?
