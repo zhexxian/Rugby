@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.forofour.game.MyGdxGame;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.screens.GameScreen;
+import com.forofour.game.screens.LobbyScreen;
 
 /**
  * Created by seanlim on 8/3/2016.
@@ -82,7 +83,7 @@ public class MenuActorMaker {
         buttonHost.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(true));
             }
         });
 
@@ -92,7 +93,7 @@ public class MenuActorMaker {
         buttonJoin.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false));
             }
         });
 

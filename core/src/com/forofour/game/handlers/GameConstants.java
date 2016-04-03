@@ -6,6 +6,9 @@
 package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
+import com.forofour.game.net.GameClient;
+import com.forofour.game.net.GameServer;
+import com.forofour.game.screens.GameScreen;
 
 
 public class GameConstants {
@@ -34,4 +37,7 @@ public class GameConstants {
         GameConstants.SCALE_POS = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH; //scale factor
         GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS; //calculated game height
     }
+
+    public static GameServer server;
+    public static GameClient client;
 }

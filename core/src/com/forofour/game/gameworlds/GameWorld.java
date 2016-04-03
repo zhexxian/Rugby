@@ -2,7 +2,6 @@
 
 package com.forofour.game.gameworlds;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.forofour.game.actors.PowerUpSlotMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.gameobjects.Ball;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameWorld extends Stage{
+public class GameWorld{
 
     private World box2d; // Box2d world gravity
 
@@ -40,20 +40,18 @@ public class GameWorld extends Stage{
     private List<Player> playerList;
     private Team teamA, teamB;
 
-    private Timer globalTime;
+    private PowerUp powerUp;
+    private Wall wallTop, wallBottom, wallLeft, wallRight;
 
+    private Stage gameStage;
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton, powerSlot;
     private Label globalLabel, teamLabel;
 
-    private PowerUp powerUp;
-
-    private Wall wallTop, wallBottom, wallLeft, wallRight;
-
+    private Timer globalTime;
     private boolean requireReinitializing;
 
     public GameWorld(){
-        super();
 
         //get screen size parameters
         float gameWidth = GameConstants.GAME_WIDTH;
@@ -96,12 +94,14 @@ public class GameWorld extends Stage{
         teamLabel = TextLabelMaker.getTimeLabel(this);
         powerSlot = PowerUpSlotMaker.getPowerSlot(this);
 
-        addActor(TouchPadMaker.wrap(touchpad));
-        addActor(ButtonMaker.wrap1(boostButton));
-        addActor(ButtonMaker.wrap2(tossButton));
-        addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
-        addActor(TextLabelMaker.wrapTeamScore(teamLabel));
-        addActor(PowerUpSlotMaker.wrap1(powerSlot));
+        gameStage = new Stage();
+
+        gameStage.addActor(TouchPadMaker.wrap(touchpad));
+        gameStage.addActor(ButtonMaker.wrap1(boostButton));
+        gameStage.addActor(ButtonMaker.wrap2(tossButton));
+        gameStage.addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
+        gameStage.addActor(TextLabelMaker.wrapTeamScore(teamLabel));
+        gameStage.addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
     }
 
@@ -158,9 +158,9 @@ public class GameWorld extends Stage{
 
         }
 
-        getCamera().update();
-        act(delta);
-        draw();
+        gameStage.getCamera().update();
+        gameStage.act(delta);
+        gameStage.draw();
         // end Stage
 
     }
@@ -219,6 +219,10 @@ public class GameWorld extends Stage{
     }
     public List<Player> getPlayerList(){
         return playerList;
+    }
+
+    public Stage getGameStage(){
+        return gameStage;
     }
 
     public Touchpad getTouchpad() {return touchpad;}

@@ -20,6 +20,13 @@ public class GameScreen implements Screen {
     private Vector2 screenSize;
     private float runTime;
 
+    public GameScreen(boolean isServer) {
+        super();
+        if(isServer) {
+
+        }
+    }
+
     public GameScreen(){
         Gdx.app.log("GameScreen", "Attached"); //print out for debugging
 
@@ -53,7 +60,7 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         Gdx.app.log("GameScreen", String.format("resizing (%d, %d)",
                 width, height));
-        world.getViewport().update(width, height, true);
+//        world.getGameStage().getViewport().update(width, height, true);
     }
 
     @Override
@@ -73,6 +80,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        world.dispose();
+        world.getGameStage().dispose();
     }
 }

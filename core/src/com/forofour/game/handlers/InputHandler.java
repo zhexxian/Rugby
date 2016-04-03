@@ -21,7 +21,7 @@ public class InputHandler extends InputMultiplexer{
     private Player player;
 
     public InputHandler(GameWorld world){
-        super(world); // Assign Stage adapter as the base input adapter
+        super(world.getGameStage()); // Assign Stage adapter as the base input adapter
         myWorld = world;
         ball = world.getBall();
         player = world.getPlayer();
@@ -86,7 +86,7 @@ public class InputHandler extends InputMultiplexer{
         super.touchDown(screenX, screenY, pointer, button);
 
         if (player != null) {
-                    System.out.println(screenX + " " + screenY + " " + myWorld.getWidth()+ " " + myWorld.getHeight()
+                    System.out.println(screenX + " " + screenY + " " + myWorld.getGameStage().getWidth()+ " " + myWorld.getGameStage().getHeight()
                 + " " + Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
            return true;
         }
