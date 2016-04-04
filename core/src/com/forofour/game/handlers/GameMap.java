@@ -188,6 +188,15 @@ public class GameMap {
         return ball;
     }
 
+    public void setNumberOfBabyFaces(int numberOfBabyFaces){
+        this.numberOfBabyFaces = numberOfBabyFaces;
+    }
+
+    public int getNumberOfBabyFaces(){
+        int temp = numberOfBabyFaces;
+        return temp;
+    }
+
     // TODO: Server commands from client, for debugging purpose
     public void svAddPlayer() {
     }

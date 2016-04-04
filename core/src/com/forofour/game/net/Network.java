@@ -39,9 +39,11 @@ public class Network {
 
     public static class PacketPlayerJoinLeave {
         public int id;
+        public int connectedClients;
         public PacketPlayerJoinLeave(){}
-        public PacketPlayerJoinLeave(int id){
+        public PacketPlayerJoinLeave(int id, int connectedClients){
             this.id = id;
+            this.connectedClients = connectedClients;
         }
     }
 

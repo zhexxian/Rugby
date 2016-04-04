@@ -13,6 +13,7 @@ import com.esotericsoftware.minlog.Log;
 import com.forofour.game.MyGdxGame;
 import com.forofour.game.actors.LobbyActorMaker;
 import com.forofour.game.actors.MenuActorMaker;
+import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
@@ -58,7 +59,7 @@ public class LobbyScreen implements Screen {
     }
 
     @Override
-    public void show() {
+    public void show(){
 
         client = new GameClient();
 
@@ -68,15 +69,20 @@ public class LobbyScreen implements Screen {
         }
 
         Gdx.app.log("LobbyScreen", "Connecting to server");
-        client.connect("10.21.115.160");
+        client.connect("localhost");
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         stage.act();
         stage.draw();
+        batch.begin();
+        for(int i=0; i<client.getMap().getNumberOfBabyFaces(); i++){
+            batch.draw(AssetLoader.powerUp,
+                    50+i*100, 50, 50, 50);
+        }
+        batch.end();
     }
 
     @Override
