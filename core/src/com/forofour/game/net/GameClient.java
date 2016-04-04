@@ -31,10 +31,12 @@ public class GameClient {
                     Network.PacketDebugAnnouncement packet = (Network.PacketDebugAnnouncement) o;
                     Gdx.app.log("GameClient", packet.getMsg());
                 }
+
+                // BALL
                 else if(o instanceof Network.PacketAddBall) {
                     Network.PacketAddBall packet = (Network.PacketAddBall) o;
                     Gdx.app.log("GameClient", "Adding ball");
-                    map.addBall(packet.position);
+                    map.addBall(packet.position, map.getBox2d());
                 }
                 else if(o instanceof Network.PacketBallState) {
                     Network.PacketBallState packet = (Network.PacketBallState) o;
@@ -45,13 +47,14 @@ public class GameClient {
                     map.updateBallMovement(packet.movement);
                 }
 
+                // PLAYER
                 else if(o instanceof Network.PacketAddPlayer) {
                     Network.PacketAddPlayer packet = (Network.PacketAddPlayer) o;
                     Gdx.app.log("GameClient", "Adding player" + c.getID() + "-" + packet.id + "-" + packet.teamNumber);
                     if(c.getID() == packet.id) // Allow specific ID to be the controller
-                        map.addPlayer(true, packet.id, packet.teamNumber, packet.position);
+                        map.addPlayer(true, packet.id, packet.teamNumber, packet.position, map.getBox2d());
                     else
-                        map.addPlayer(false, packet.id, packet.teamNumber, packet.position);
+                        map.addPlayer(false, packet.id, packet.teamNumber, packet.position, map.getBox2d());
                 }
                 else if(o instanceof Network.PacketPlayerState) {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;

@@ -16,6 +16,7 @@ import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public class GameMap {
 
     private Map<Integer,Boolean> playersConnected = new HashMap<Integer, Boolean>();
     private boolean lobbyFilled = false;
+    private int numberOfBabyFaces;
 
     private World box2d;
     private Wall wallTop, wallBottom, wallLeft, wallRight;
@@ -103,23 +105,20 @@ public class GameMap {
                 server.assignBall();
                 gameInitialized = true;
             }
-
-            if (ball != null) {
-                server.updateBallMovement();
-                if (lastSentTime < runTime - 0.1) { // Resync every 100ms
-                    server.updateBallState();
-                }
+            serverSendMessage(new Network.PacketBallUpdateMovement(ball.getBody().getLinearVelocity()));
+            if(lastSentTime < runTime - 0.1) { // Resync every 100ms
+                serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0));
             }
 //            Gdx.app.log(tag, "Within Server-side logic");
         }
 
         // Client-sided logic
         else {
-//            Gdx.app.log(tag, runTime + "/" + lastSentTime);
+            Gdx.app.log(tag, runTime + "/" + lastSentTime);
             if(lastSentTime < runTime - 0.1) { // Resync every 100ms
                 if (player != null) {
                     clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
-//                    Gdx.app.log(tag,runTime + " Updating player" + player.getId() + " position");
+                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
                 }
 
                 lastSentTime = runTime;
@@ -162,7 +161,7 @@ public class GameMap {
         return box2d;
     }
 
-    public void addPlayer(boolean control, int id, int teamNo, Vector2 position) {
+    public void addPlayer(boolean control, int id, int teamNo, Vector2 position, World box2d) {
         Player newPlayer = new Player(id, position, box2d, client);
         playerHash.put(id, newPlayer);
         if(teamNo == 1)
@@ -181,7 +180,7 @@ public class GameMap {
         return playerHash;
     }
 
-    public void addBall(Vector2 position){
+    public void addBall(Vector2 position, World box2d){
         ball = new Ball(position, box2d);
 
     }
@@ -207,20 +206,19 @@ public class GameMap {
 
     public synchronized void updatePlayerState(int id, Vector2 position, float angle) {
         Player specificPlayer = playerHash.get(id);
-        if(specificPlayer != null)
-            specificPlayer.getBody().setTransform(position, angle);
+        specificPlayer.getBody().setTransform(position, angle);
     }
 
     public synchronized void updatePlayerMovement(int id, Vector2 movement) {
         Player specificPlayer = playerHash.get(id);
-        if(specificPlayer != null)
-            specificPlayer.getBody().setLinearVelocity(movement);
+        specificPlayer.getBody().setLinearVelocity(movement);
     }
-    public synchronized void updateBallState(Vector2 position, float angle) {
+
+    public void updateBallState(Vector2 position, Float angle) {
         ball.getBody().setTransform(position, angle);
     }
 
-    public synchronized void updateBallMovement(Vector2 movement) {
+    public void updateBallMovement(Vector2 movement) {
         ball.getBody().setLinearVelocity(movement);
     }
 

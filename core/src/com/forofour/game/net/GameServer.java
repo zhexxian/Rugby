@@ -52,8 +52,7 @@ public class GameServer {
                     Network.PacketPlayerUpdateMovement packet = (Network.PacketPlayerUpdateMovement) o;
                     Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);
                     map.updatePlayerMovement(packet.id, packet.movement);
-                    server.sendToAllUDP(new Network.PacketPlayerUpdateMovement(packet.id, packet.movement));
-
+                    server.sendToAllTCP(new Network.PacketPlayerUpdateMovement(packet.id, packet.movement));
                 }
             }
 
@@ -102,11 +101,11 @@ public class GameServer {
                 int i = map.getPlayerHash().size()*10;
                 Vector2 pos = new Vector2(10+i, 10+i);
                 if(id%2 != 0) {
-                    map.addPlayer(false, id, 1, pos);
+                    map.addPlayer(false, id, 1, pos, map.getBox2d());
                     sendMessage(new Network.PacketAddPlayer(id, 1, pos));
                 }
                 else {
-                    map.addPlayer(false, id, 2, pos);
+                    map.addPlayer(false, id, 2, pos, map.getBox2d());
                     sendMessage(new Network.PacketAddPlayer(id, 2, pos));
                 }
             }
@@ -117,16 +116,7 @@ public class GameServer {
     public void assignBall() {
         Gdx.app.log("GameServer", "Assigning ball");
         Vector2 ballPosition = new Vector2(GameConstants.GAME_WIDTH/2, GameConstants.GAME_HEIGHT/2);
-        map.addBall(ballPosition);
+        map.addBall(ballPosition, map.getBox2d());
         sendMessage(new Network.PacketAddBall(ballPosition));
-    }
-
-    public void updateBallMovement() {
-        Gdx.app.log("GameServer", "Sending ball movement updates");
-        sendMessage(new Network.PacketBallUpdateMovement(map.getBall().getBody().getLinearVelocity()));
-    }
-    public void updateBallState() {
-        Gdx.app.log("GameServer", "Sending ball state updates");
-        sendMessage(new Network.PacketBallState(map.getBall().getBody().getPosition(), 0));
     }
 }

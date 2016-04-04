@@ -74,6 +74,7 @@ public class Network {
         public Vector2 movement;
         public PacketPlayerUpdateMovement(){};
         public PacketPlayerUpdateMovement(int id, Vector2 movement) {
+            this.id = id;
             this.movement = movement;
         }
     }
