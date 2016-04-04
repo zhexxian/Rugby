@@ -8,6 +8,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
+import com.forofour.game.screens.LobbyScreen;
 
 import java.io.IOException;
 
@@ -19,6 +20,8 @@ public class GameServer {
     private boolean gameStarted;
     private Server server;
     private GameMap map;
+
+    private static int numberOfBabyFaces;
 
     public GameServer(){
         map = new GameMap(this);
@@ -36,6 +39,8 @@ public class GameServer {
                     if (map.addConnection(packet.id)) {
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("New Player connected successfully"));
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("Number of player in lobby: " + map.getPlayersConnected().size()));
+                        server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
+                        //++numberOfBabyFaces;
                     }
                 }
 
@@ -59,7 +64,6 @@ public class GameServer {
 
             public void connected(Connection c) {
                 Gdx.app.log("GameServer", "Player connected");
-
             }
 
             public void disconnected(Connection c) {
@@ -128,5 +132,10 @@ public class GameServer {
     public void updateBallState() {
         Gdx.app.log("GameServer", "Sending ball state updates");
         sendMessage(new Network.PacketBallState(map.getBall().getBody().getPosition(), 0));
+    }
+
+    public static int getNumberOfBabyFaces(){
+        int temp = numberOfBabyFaces;
+        return temp;
     }
 }

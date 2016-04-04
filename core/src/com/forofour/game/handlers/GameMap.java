@@ -33,6 +33,7 @@ public class GameMap {
 
     private Map<Integer,Boolean> playersConnected = new HashMap<Integer, Boolean>();
     private boolean lobbyFilled = false;
+    private int numberOfBabyFaces;
 
     private World box2d;
     private Wall wallTop, wallBottom, wallLeft, wallRight;
@@ -187,6 +188,15 @@ public class GameMap {
     }
     public Ball getBall(){
         return ball;
+    }
+
+    public void setNumberOfBabyFaces(int numberOfBabyFaces){
+        this.numberOfBabyFaces = numberOfBabyFaces;
+    }
+
+    public int getNumberOfBabyFaces(){
+        int temp = numberOfBabyFaces;
+        return temp;
     }
 
     // TODO: Server commands from client, for debugging purpose

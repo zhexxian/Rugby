@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.GameMap;
+import com.forofour.game.screens.LobbyScreen;
 
 import java.io.IOException;
 
@@ -30,6 +31,10 @@ public class GameClient {
                 if (o instanceof Network.PacketDebugAnnouncement){
                     Network.PacketDebugAnnouncement packet = (Network.PacketDebugAnnouncement) o;
                     Gdx.app.log("GameClient", packet.getMsg());
+                }
+                else if (o instanceof Network.PacketPlayerJoinLeave){
+                    Network.PacketPlayerJoinLeave packet = (Network.PacketPlayerJoinLeave) o;
+                    map.setNumberOfBabyFaces(packet.connectedClients);
                 }
                 else if(o instanceof Network.PacketAddBall) {
                     Network.PacketAddBall packet = (Network.PacketAddBall) o;
@@ -64,7 +69,7 @@ public class GameClient {
             }
             public void connected(Connection c){
                 Gdx.app.log("GameClient", "Player connected");
-                        Network.PacketPlayerJoinLeave newPlayer = new Network.PacketPlayerJoinLeave(c.getID());
+                        Network.PacketPlayerJoinLeave newPlayer = new Network.PacketPlayerJoinLeave(c.getID(), map.getPlayersConnected().size());
                 client.sendTCP(newPlayer);
             }
             public void disconnected(Connection c){
