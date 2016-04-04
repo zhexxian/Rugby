@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.forofour.game.net.GameClient;
+import com.forofour.game.net.Network;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +19,9 @@ import java.util.Collections;
  * Created by seanlim on 19/2/2016.
  */
 public class Player {
+
+    private int id;
+    private GameClient client;
 
     private World box2d;
     private Body body;
@@ -30,6 +35,7 @@ public class Player {
     private float radius;
 
     private Vector2 lastDirection;
+    private Vector2 lastPosition;
 
     //TODO: move the constants to handlers/GameConstants
     private static final int MAX_VELOCITY = 30;
@@ -44,6 +50,12 @@ public class Player {
     private float noBoostTime = 0;
 
     private boolean hasPowerUp;
+
+    public Player(int id, Vector2 pos, World box2d, GameClient client) {
+        this(pos.x, pos.y, 2, null, box2d);
+        this.id = id;
+        this.client = client;
+    }
 
     public Player(float x, float y, float radius, Ball ball, World box2d){
         this.ball = ball;
@@ -70,6 +82,7 @@ public class Player {
 
         boundingCircle.dispose();
         lastDirection = new Vector2();
+        lastPosition = body.getPosition().cpy();
 
         hasPowerUp = false;
     }
@@ -119,6 +132,7 @@ public class Player {
         }
 
         body.setLinearVelocity(x * MAX_VELOCITY, y * MAX_VELOCITY);
+        client.sendMessageUDP(new Network.PacketPlayerUpdateMovement(id, body.getLinearVelocity()));
     }
 
     public Vector2 getLastDirection(){
@@ -197,5 +211,25 @@ public class Player {
 
     public void setTeamId(int teamId) {
         this.teamId = teamId;
+    }
+
+    public Vector2 getPosition() {
+        return body.getPosition();
+    }
+    public boolean positionChanged() {
+        if(lastPosition.equals(body.getPosition())) {
+            return false;
+        }
+        else {
+            lastPosition = body.getPosition().cpy();
+        }
+        return true;
+    }
+    public float getAngle(){
+        return body.getAngle();
+    }
+
+    public int getId(){
+        return id;
     }
 }

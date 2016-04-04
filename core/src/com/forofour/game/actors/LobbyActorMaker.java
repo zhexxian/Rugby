@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.forofour.game.MyGdxGame;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.screens.GameScreen;
+import com.forofour.game.screens.MainScreen;
 
 /**
  * Created by seanlim on 1/4/2016.
@@ -69,22 +70,22 @@ public class LobbyActorMaker {
         buttonStartGame.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonStartGame.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
                 (BUTTON_HEIGHT + BUTTON_GAP) * 2);
-        buttonStartGame.addListener(new ChangeListener() {
+/*        buttonStartGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new GameScreen(true));
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true));
             }
-        });
+        });*/
 
         buttonNudgeHost.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonNudgeHost.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
                 (BUTTON_HEIGHT + BUTTON_GAP) * 3);
-        buttonNudgeHost.addListener(new ChangeListener() {
+/*        buttonNudgeHost.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
             }
-        });
+        });*/
 
         stage.addActor(buttonStartGame);
         stage.addActor(buttonNudgeHost);

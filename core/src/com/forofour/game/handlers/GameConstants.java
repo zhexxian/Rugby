@@ -37,7 +37,4 @@ public class GameConstants {
         GameConstants.SCALE_POS = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH; //scale factor
         GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS; //calculated game height
     }
-
-    public static GameServer server;
-    public static GameClient client;
 }

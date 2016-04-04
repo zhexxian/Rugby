@@ -73,7 +73,7 @@ public class MenuActorMaker {
         buttonTutorial.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(true, true)); // Tytorial Mode, isHost
             }
         });//on click --> change current screen to game screen
 
@@ -83,7 +83,7 @@ public class MenuActorMaker {
         buttonHost.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(true));
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, true));
             }
         });
 
@@ -93,7 +93,7 @@ public class MenuActorMaker {
         buttonJoin.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false));
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, false));
             }
         });
 

@@ -20,13 +20,6 @@ public class GameScreen implements Screen {
     private Vector2 screenSize;
     private float runTime;
 
-    public GameScreen(boolean isServer) {
-        super();
-        if(isServer) {
-
-        }
-    }
-
     public GameScreen(){
         Gdx.app.log("GameScreen", "Attached"); //print out for debugging
 

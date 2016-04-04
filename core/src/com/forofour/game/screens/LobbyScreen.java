@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
+import com.forofour.game.MyGdxGame;
 import com.forofour.game.actors.LobbyActorMaker;
 import com.forofour.game.actors.MenuActorMaker;
 import com.forofour.game.handlers.GameConstants;
@@ -26,12 +29,12 @@ public class LobbyScreen implements Screen {
     private LobbyActorMaker lobbyActorMaker;
     private SpriteBatch batch;
 
+    private GameServer server;
+    private GameClient client;
     private boolean isHost;
+    private String playerName;
 
-    private Map<Integer,Boolean> playersConnected = new HashMap<Integer, Boolean>();
-    private boolean lobbyFilled = false;
-
-    public LobbyScreen(boolean isHost) {
+    public LobbyScreen(boolean tutorialMode, final boolean isHost) {
         this.isHost = isHost;
 
         stage = new Stage(new ExtendViewport(
@@ -39,6 +42,17 @@ public class LobbyScreen implements Screen {
                 GameConstants.GAME_HEIGHT));
 
         lobbyActorMaker = new LobbyActorMaker(stage);
+        lobbyActorMaker.getButtonStartGame().addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.log("StartButton", "Clicked!");
+                if(isHost)
+                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
+                else
+                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
+            }
+        });
+
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
     }
@@ -46,46 +60,15 @@ public class LobbyScreen implements Screen {
     @Override
     public void show() {
 
-        GameConstants.client = new GameClient();
+        client = new GameClient();
 
         if(isHost){
-            Log.info("Starting server..");
-
-            GameConstants.server = new GameServer(this);
-
-            GameConstants.client.connect("localhost");
-        } else {
-            GameConstants.client.connect("localhost");
+            Gdx.app.log("LobbyScreen", "Starting server");
+            server = new GameServer();
         }
-    }
 
-    public void startGame() {
-
-    }
-
-    public boolean addConnection(int id){
-        if(!lobbyFilled) {
-            System.out.println(id + " New player join lobby!");
-            playersConnected.put(id, true);
-            checkReady();
-            return true; // Add connection successful
-        }
-        return false; // Add connection failed
-    }
-
-    public void dropConnection(int id) {
-        playersConnected.remove(id);
-    }
-
-    public void checkReady() {
-        if(playersConnected.size() == 4) {
-            lobbyFilled = true;
-            System.out.println("Host is ready to start game!");
-        }
-    }
-
-    public Map<Integer, Boolean> getPlayersConnected() {
-        return playersConnected;
+        Gdx.app.log("LobbyScreen", "Connecting to server");
+        client.connect("10.21.115.160");
     }
 
     @Override
@@ -113,7 +96,6 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override

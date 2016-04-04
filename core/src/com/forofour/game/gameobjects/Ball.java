@@ -27,6 +27,9 @@ public class Ball extends BodyDef{
     private static float IMPULSE_SCALAR = (float) 1.5;
     private boolean playerCollided;
 
+    public Ball(Vector2 pos, World box2d) {
+        this(pos.x, pos.y, 2, box2d);
+    }
 
     public Ball(float x, float y, float radius, World box2d) {
         this.radius = radius;

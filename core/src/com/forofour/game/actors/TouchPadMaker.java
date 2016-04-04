@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.handlers.GameConstants;
+import com.forofour.game.net.GameClient;
 
 /**
  * Created by seanlim on 28/2/2016.
@@ -24,6 +25,30 @@ public class TouchPadMaker {
     private static Drawable touchKnob;
 
     public static Touchpad make(GameWorld world) {
+        //Create a touchpad skin
+        touchpadSkin = new Skin();
+        //Set background image
+        touchpadSkin.add("touchBackground", new Texture("sprites/buttons/joystick-out-black.png"));
+        //Set knob image
+        touchpadSkin.add("touchKnob", new Texture("sprites/buttons/joystick-in-black.png"));
+        //Create TouchPad Style
+        touchpadStyle = new Touchpad.TouchpadStyle();
+        //Create Drawable's from TouchPad skin
+        touchBackground = touchpadSkin.getDrawable("touchBackground");
+        touchKnob = touchpadSkin.getDrawable("touchKnob");
+        //Apply the Drawables to the TouchPad Style
+        touchpadStyle.background = touchBackground;
+        touchpadStyle.knob = touchKnob;
+        //Create new TouchPad with the created style
+        touchpad = new Touchpad(10, touchpadStyle);
+
+        touchpad.setDebug(true);
+        touchpad.setBounds(50, 50, 150, 150); // Initial position and bounds. Will be overwritten by wrapper
+
+        return touchpad;
+    }
+
+    public static Touchpad make(GameClient client) {
         //Create a touchpad skin
         touchpadSkin = new Skin();
         //Set background image

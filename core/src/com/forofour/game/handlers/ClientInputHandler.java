@@ -1,46 +1,38 @@
-/*This is where the input actions -- screen touch, button press etc are defined*/
-
 package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameworlds.GameWorld;
+import com.forofour.game.net.GameClient;
 
 /**
- * Multiplexer to allow multiple InputHandlers to be used.
- * Currently useful for debugging purposes as game can be run on desktop
+ * Created by seanlim on 4/4/2016.
  */
-public class InputHandler extends InputMultiplexer{
-
-    private GameWorld myWorld;
-    private Ball ball;
+public class ClientInputHandler extends InputMultiplexer {
+    private MainOverlay overlay;
+    private GameClient client;
     private Player player;
 
-    public InputHandler(GameWorld world){
-        super(world.getGameStage()); // Assign Stage adapter as the base input adapter
-        myWorld = world;
-        ball = world.getBall();
-        player = world.getPlayer();
-    }
-
-    public void reinitialize(){
-        ball = myWorld.getBall();
-        player = myWorld.getPlayer();
+    public ClientInputHandler(MainOverlay overlay){
+        super(overlay); // Assign Stage adapter as the base input adapter
+        this.overlay = overlay;
+        this.client = overlay.getClient();
+        this.player = client.getMap().getPlayer();
     }
 
     @Override
     public boolean keyDown(int keycode) {
 
-        if(keycode == Input.Keys.P){
-            myWorld.addPlayer();
-        }
-        if(keycode == Input.Keys.O) {
-            myWorld.addBall();
-        }
+//        if(keycode == Input.Keys.P){
+//            client.svAddPlayer();
+//        }
+//        if(keycode == Input.Keys.O) {
+//            myWorld.addBall();
+//        }
 
         if(player != null) {
             if(keycode == Input.Keys.C){
@@ -50,9 +42,6 @@ public class InputHandler extends InputMultiplexer{
                 if(!player.hasBall()) {
                     player.boost();
                 }
-            }
-            if(keycode == Input.Keys.L) {
-                myWorld.switchPlayer();
             }
             return true;
         }
@@ -74,9 +63,12 @@ public class InputHandler extends InputMultiplexer{
         super.touchDown(screenX, screenY, pointer, button);
 
         if (player != null) {
-                    System.out.println(screenX + " " + screenY + " " + myWorld.getGameStage().getWidth()+ " " + myWorld.getGameStage().getHeight()
-                + " " + Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
-           return true;
+            System.out.println(screenX + " " + screenY + " " + overlay.getWidth()+ " " + overlay.getHeight()
+                    + " " + Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
+            return true;
+        } else{
+            player = client.getMap().getPlayer();
+            Gdx.app.log("InputHandler", "Controls binded to player");
         }
 
         return false;
