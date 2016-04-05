@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.handlers.GameConstants;
+import com.forofour.game.net.GameClient;
 
 /**
  * Created by seanlim on 9/3/2016.
@@ -26,7 +27,16 @@ public class TextLabelMaker {
     private static Label.LabelStyle textStyle;
     private static Label textLabel;
 
-    public static Label getTimeLabel(final GameWorld world) {
+//    public static Label getTimeLabel(final GameWorld world) {
+//        textFont = new BitmapFont(true);
+//
+//        textStyle = new Label.LabelStyle();
+//        textStyle.font = textFont;
+//
+//        textLabel = new Label("", textStyle);
+//        return textLabel;
+//    }
+    public static Label getTimeLabel(GameClient client) {
         textFont = new BitmapFont(true);
 
         textStyle = new Label.LabelStyle();

@@ -158,7 +158,7 @@ public class Player {
         }
     }
 
-    public boolean hasBall(){ // IMPORTANT : Checks that holding player is current player
+    public synchronized boolean hasBall(){ // IMPORTANT : Checks that holding player is current player
         if(ball != null) {
             if (ball.isHeld()) {
                 System.out.println("hasBall " + ball.getHoldingPlayer().equals(this));

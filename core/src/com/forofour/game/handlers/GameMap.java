@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
+import com.forofour.game.actors.Timer;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.PowerUp;
@@ -46,6 +47,7 @@ public class GameMap {
     private HashMap<Integer, Player> playerHash;
     private Team teamA, teamB;
 
+    private Timer globalTime;
     private boolean gameInitialized;
 
     public GameMap(GameServer server){
@@ -86,6 +88,7 @@ public class GameMap {
         //create two teams with different team id
         teamA = new Team(1);
         teamB = new Team(2);
+        globalTime = new Timer();
     }
 
     // Client updates itself and sends updates to server
@@ -275,6 +278,10 @@ public class GameMap {
                 ball.loseHoldingPlayer();
             }
         }
+    }
+
+    public Timer getGlobalTime() {
+        return globalTime;
     }
 
     // Server-sided Collision

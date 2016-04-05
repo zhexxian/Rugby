@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
+import com.forofour.game.net.GameClient;
 
 /**
  * Make necessary buttons for game play, toss/boost.
@@ -32,7 +33,7 @@ public class ButtonMaker {
     private static ImageButton boostButton, tossButton;
     private static ImageButton.ImageButtonStyle imageButtonStyle;
 
-    public static ImageButton getBoostButton(final GameWorld world) {
+    /*public static ImageButton getBoostButton(final GameWorld world) {
 
         imageButtonStyle = new ImageButton.ImageButtonStyle();
         imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.boostRegion);
@@ -61,6 +62,40 @@ public class ButtonMaker {
                 System.out.println("Toss");
                 if(world.getPlayer() != null)
                     world.getPlayer().dropBall();
+            }
+        });
+        return tossButton;
+    }*/
+
+    public static ImageButton getBoostButton(final GameClient client) {
+
+        imageButtonStyle = new ImageButton.ImageButtonStyle();
+        imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.boostRegion);
+        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.boostRegion);
+        boostButton = new ImageButton(imageButtonStyle);
+
+        boostButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Boost");
+                if(client.getMap().getPlayer() != null)
+                    client.getMap().getPlayer().boost();
+            }
+        });
+        return boostButton;
+    }
+
+    public static ImageButton getTossButton(final GameClient client) {
+        imageButtonStyle = new ImageButton.ImageButtonStyle();
+        imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.tossRegion);
+        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.tossRegion);
+        tossButton = new ImageButton(imageButtonStyle);
+        tossButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Toss");
+                if(client.getMap().getPlayer() != null)
+                    client.getMap().getPlayer().dropBall();
             }
         });
         return tossButton;

@@ -101,17 +101,18 @@ public class Ball extends BodyDef{
 
     public void loseHoldingPlayer(){
         if(holdingPlayer != null) {
+            body.setActive(true); // Enable Physics
             immunityTime = 2;
 
             // Formulate the offset from player origin to release the ball
             Vector2 offset = new Vector2();
-            offset.add((float) (holdingPlayer.getRadius() * 1.05), 0);
+            offset.add((float) (holdingPlayer.getRadius() * 1.10), 0);
             offset.rotateRad(holdingPlayer.getBody().getAngle());
 
             // Place the ball at the offset position
             body.setTransform(holdingPlayer.getBody().getPosition().add(offset), 0);
+            body.setLinearVelocity(offset.scl(10));
             body.applyLinearImpulse(holdingPlayer.getLastDirection().scl(IMPULSE_SCALAR), body.getPosition(), true);
-            body.setActive(true); // Enable Physics
         }
         // Remove holding player
         holdingPlayer = null;
