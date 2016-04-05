@@ -1,5 +1,6 @@
 package com.forofour.game.gameobjects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -39,7 +40,7 @@ public class Ball extends BodyDef{
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(x, y));
         bodyDef.linearDamping = 0.1f;
-//        bodyDef.fixedRotation = true;
+        bodyDef.fixedRotation = true;
 
         body = box2d.createBody(bodyDef);
         body.setGravityScale(0);
@@ -61,8 +62,9 @@ public class Ball extends BodyDef{
 
     public void update(float delta) {
         if(isHeld()) {
+            body.setActive(false); // Disables physics
             body.setTransform(holdingPlayer.getBody().getPosition(), 0); // Assume holdingPlayer !=null
-            body.setLinearVelocity(0, 0);
+            body.setLinearVelocity(holdingPlayer.getBody().getLinearVelocity());
 
             if(playerCollided) {
                 playerCollided = false;
@@ -71,7 +73,7 @@ public class Ball extends BodyDef{
 
         } else if(immunityTime > 0) {
             immunityTime -= delta;
-            System.out.println("Ball invisible " + immunityTime);
+            Gdx.app.log("Ball" , "is invisible " + immunityTime);
         }
     }
 
@@ -83,7 +85,7 @@ public class Ball extends BodyDef{
         playerCollided = true; // SENSITIVE : Triggers collided state, ball to lose player upon update
     }
 
-    public void setHoldingPlayer(Player player){
+    public synchronized void setHoldingPlayer(Player player){
         if(immunityTime <= 0) {
             holdingPlayer = player;
         }
@@ -91,19 +93,26 @@ public class Ball extends BodyDef{
     public Player getHoldingPlayer(){
         return holdingPlayer;
     }
+    public int getHoldingPlayerId() {
+        if(holdingPlayer == null)
+            return -1;
+        return holdingPlayer.getId();
+    }
 
     public void loseHoldingPlayer(){
-        immunityTime = 2;
+        if(holdingPlayer != null) {
+            immunityTime = 2;
 
-        // Formulate the offset from player origin to release the ball
-        Vector2 offset = new Vector2();
-        offset.add((float) (holdingPlayer.getRadius() * 1.05), 0);
-        offset.rotateRad(holdingPlayer.getBody().getAngle());
+            // Formulate the offset from player origin to release the ball
+            Vector2 offset = new Vector2();
+            offset.add((float) (holdingPlayer.getRadius() * 1.05), 0);
+            offset.rotateRad(holdingPlayer.getBody().getAngle());
 
-        // Place the ball at the offset position
-        body.setTransform(holdingPlayer.getBody().getPosition().add(offset), 0);
-        body.applyLinearImpulse(holdingPlayer.getLastDirection().scl(IMPULSE_SCALAR), body.getPosition(), true);
-
+            // Place the ball at the offset position
+            body.setTransform(holdingPlayer.getBody().getPosition().add(offset), 0);
+            body.applyLinearImpulse(holdingPlayer.getLastDirection().scl(IMPULSE_SCALAR), body.getPosition(), true);
+            body.setActive(true); // Enable Physics
+        }
         // Remove holding player
         holdingPlayer = null;
     }

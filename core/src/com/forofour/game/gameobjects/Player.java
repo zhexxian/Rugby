@@ -1,6 +1,6 @@
 package com.forofour.game.gameobjects;
 
-import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -11,9 +11,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by seanlim on 19/2/2016.
@@ -66,7 +63,7 @@ public class Player {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(x, y));
         bodyDef.linearDamping = 0.1f;
-//        bodyDef.fixedRotation = true;
+        bodyDef.fixedRotation = true;
 
         body = box2d.createBody(bodyDef);
         body.setUserData(this);
@@ -132,7 +129,8 @@ public class Player {
         }
 
         body.setLinearVelocity(x * MAX_VELOCITY, y * MAX_VELOCITY);
-        client.sendMessageUDP(new Network.PacketPlayerUpdateMovement(id, body.getLinearVelocity()));
+
+        client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
     }
 
     public Vector2 getLastDirection(){
@@ -153,8 +151,11 @@ public class Player {
     }
 
     public void dropBall(){
-        if(hasBall())
+        if(hasBall()) {
             ball.loseHoldingPlayer();
+            client.sendMessage(new Network.PacketDropBall(id));
+            Gdx.app.log("Player-dropBall", "id " + id);
+        }
     }
 
     public boolean hasBall(){ // IMPORTANT : Checks that holding player is current player

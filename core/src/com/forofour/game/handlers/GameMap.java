@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
+import com.forofour.game.gameobjects.PowerUp;
 import com.forofour.game.gameobjects.Team;
 import com.forofour.game.gameobjects.Wall;
 import com.forofour.game.net.GameClient;
@@ -40,6 +41,7 @@ public class GameMap {
     private Wall wallTop, wallBottom, wallLeft, wallRight;
     private Player player;
     private Ball ball;
+    private ArrayList<PowerUp> powerUpList;
 
     private HashMap<Integer, Player> playerHash;
     private Team teamA, teamB;
@@ -49,10 +51,12 @@ public class GameMap {
     public GameMap(GameServer server){
         this(true);
         this.server = server;
+        this.tag = "GameMap" + "(server)";
     }
     public GameMap(GameClient client){
         this(false);
         this.client = client;
+        this.tag = "GameMap" + "(client)";
     }
 
     private GameMap(boolean isHost) {
@@ -60,10 +64,6 @@ public class GameMap {
         runTime = 0;
         lastSentTime = 0;
         this.isHost = isHost;
-        if(isHost)
-            this.tag = "GameMap" + "(server)";
-        else
-            this.tag = "GameMap" + "(client)";
 
         //get screen size parameters
         float gameWidth = GameConstants.GAME_WIDTH;
@@ -81,6 +81,7 @@ public class GameMap {
         wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
 
         playerHash = new HashMap<Integer, Player>();
+        powerUpList = new ArrayList<PowerUp>();
 
         //create two teams with different team id
         teamA = new Team(1);
@@ -94,37 +95,58 @@ public class GameMap {
         box2d.step(delta, 8, 3);
         box2d.clearForces();
 
-        if(player != null) {
+        if(gameInitialized) {
+            // Common logic
             player.update(delta);
+            ball.update(delta);
+
+            // Client-sided logic
+            if(!isHost) {
+                Gdx.app.log(tag, "Player"+ player.getId() + " ballHeld "+ball.isHeld());
+
+                if(lastSentTime < runTime - 0.1) { // Resync every 100ms
+                    if (player != null) {
+                        // Client will receive updated location on PlayerLocations after sending his own
+                        clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
+                        Gdx.app.log(tag, "Updating player" + player.getId() + " position");
+                    }
+                    lastSentTime = runTime;
+                }
+            }
+        }
+        else{
+            if(player != null && ball != null)
+                gameInitialized = true;
         }
 
         // Server-sided logic
         if(isHost) {
             if(!gameInitialized) {
                 server.assignPlayers();
+                player = playerHash.get(1);
                 server.assignBall();
                 gameInitialized = true;
             }
-            serverSendMessage(new Network.PacketBallUpdateMovement(ball.getBody().getLinearVelocity()));
-            if(lastSentTime < runTime - 0.1) { // Resync every 100ms
-                serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0));
-            }
-//            Gdx.app.log(tag, "Within Server-side logic");
-        }
+            else {
+                Gdx.app.log(tag, "Server ballHeld "+ball.isHeld());
+                if(!ball.isHeld())
+                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity()));
+//                if(!ball.isHeld()) {
+//                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity(), -1));
+//                    Gdx.app.log(tag, "Ball holder : No one");
+//                }
+//                else {
+//                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity(), ball.getHoldingPlayer().getId()));
+//                    Gdx.app.log(tag, "Ball holder : Player" + ball.getHoldingPlayer().getId());
+//                }
 
-        // Client-sided logic
-        else {
-            Gdx.app.log(tag, runTime + "/" + lastSentTime);
-            if(lastSentTime < runTime - 0.1) { // Resync every 100ms
-                if (player != null) {
-                    clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
-                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
+                if(lastSentTime < runTime - 0.1) { // Resync every 100ms
+                    if(!ball.isHeld())
+                        serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0));
+                    lastSentTime = runTime;
                 }
-
-                lastSentTime = runTime;
             }
         }
-
     }
 
     public boolean addConnection(int id){
@@ -222,6 +244,9 @@ public class GameMap {
         Player specificPlayer = playerHash.get(id);
         specificPlayer.getBody().setLinearVelocity(movement);
     }
+    public synchronized void updateDropBall(){
+        ball.loseHoldingPlayer();
+    }
 
     public void updateBallState(Vector2 position, Float angle) {
         ball.getBody().setTransform(position, angle);
@@ -231,6 +256,28 @@ public class GameMap {
         ball.getBody().setLinearVelocity(movement);
     }
 
+    public Team getTeamA() {
+        return teamA;
+    }
+
+    public Team getTeamB() {
+        return teamB;
+    }
+
+    public ArrayList<PowerUp> getPowerUpList() {
+        return powerUpList;
+    }
+
+    public void updatePlayerDropBall(int id, boolean hasBall) {
+        if(ball!= null) {
+            if(ball.getHoldingPlayer().getId() == id) {
+                Gdx.app.log(tag + " updatePlayerDropBall", id + " " + hasBall);
+                ball.loseHoldingPlayer();
+            }
+        }
+    }
+
+    // Server-sided Collision
     class ListenerClass implements ContactListener {
 
         private GameMap map;
@@ -250,31 +297,38 @@ public class GameMap {
         @Override
         public void preSolve(Contact contact, Manifold oldManifold) {
             Gdx.app.log(tag, "Collision detected");
-            if(map.getBall() != null && map.getPlayer() != null) {
+            if(map.getBall() != null && map.getPlayerHash() != null) {
                 if(!map.getBall().isHeld()) {
+                    Gdx.app.log("Collision", "Ball is not held");
                     Body a = contact.getFixtureA().getBody();
                     Body b = contact.getFixtureB().getBody();
 
-                    if(a.getUserData() instanceof Ball) {
+                    if(a.getUserData() instanceof Ball && b.getUserData() instanceof Player) {
+                        Gdx.app.log("Collision", "Collided with player"+ ((Player) b.getUserData()).getId());
                         ((Ball) a.getUserData()).setHoldingPlayer((Player) b.getUserData());
+//                        serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity(), ((Player) b.getUserData()).getId()));
+                        serverSendMessage(new Network.PacketSetHoldingPlayer(((Player) b.getUserData()).getId()));
                     }
-                    if(b.getUserData() instanceof Ball) {
+                    if(b.getUserData() instanceof Ball && a.getUserData() instanceof Player) {
+                        Gdx.app.log("Collision", "Collided with player"+ ((Player) a.getUserData()).getId());
                         ((Ball) b.getUserData()).setHoldingPlayer((Player) a.getUserData());
+                        serverSendMessage(new Network.PacketSetHoldingPlayer(((Player) a.getUserData()).getId()));
                     }
 
-                } else {
-                    Body a = contact.getFixtureA().getBody();
-                    Body b = contact.getFixtureB().getBody();
-
-                    // TODO: Player collision should be between opposing team members only
-                    if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
-                        if(map.getBall().getHoldingPlayer().equals(a.getUserData()) ||
-                                map.getBall().getHoldingPlayer().equals(b.getUserData())) {
-                            System.out.println("Collision");
-                            map.getBall().triggerCollision();
-                        }
-                    }
                 }
+//                else {
+//                    Body a = contact.getFixtureA().getBody();
+//                    Body b = contact.getFixtureB().getBody();
+//
+//                    // TODO: Player collision should be between opposing team members only
+//                    if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
+//                        if(map.getBall().getHoldingPlayer().equals(a.getUserData()) ||
+//                                map.getBall().getHoldingPlayer().equals(b.getUserData())) {
+//                            System.out.println("Collision");
+//                            map.getBall().triggerCollision();
+//                        }
+//                    }
+//                }
             }
 /*            if(map.getPlayer() != null && map.getPowerUp() != null){
                 //TODO: check if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below

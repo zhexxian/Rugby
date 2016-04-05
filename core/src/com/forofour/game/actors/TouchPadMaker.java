@@ -24,7 +24,7 @@ public class TouchPadMaker {
     private static Drawable touchBackground;
     private static Drawable touchKnob;
 
-    public static Touchpad make(GameWorld world) {
+/*    public static Touchpad make(GameWorld world) {
         //Create a touchpad skin
         touchpadSkin = new Skin();
         //Set background image
@@ -46,7 +46,7 @@ public class TouchPadMaker {
         touchpad.setBounds(50, 50, 150, 150); // Initial position and bounds. Will be overwritten by wrapper
 
         return touchpad;
-    }
+    }*/
 
     public static Touchpad make(GameClient client) {
         //Create a touchpad skin

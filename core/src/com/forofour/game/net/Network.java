@@ -15,14 +15,20 @@ public class Network {
         Kryo kryo = endPoint.getKryo();
         kryo.register(Float.class);
         kryo.register(Vector2.class);
+
         kryo.register(PacketPlayerJoinLeave.class);
         kryo.register(PacketDebugAnnouncement.class);
+
         kryo.register(PacketAddPlayer.class);
         kryo.register(PacketPlayerState.class);
-        kryo.register(PacketPlayerUpdateMovement.class);
+        kryo.register(PacketPlayerUpdateFast.class);
+
         kryo.register(PacketAddBall.class);
         kryo.register(PacketBallState.class);
-        kryo.register(PacketBallUpdateMovement.class);
+        kryo.register(PacketBallUpdateFast.class);
+        kryo.register(PacketDropBall.class);
+        kryo.register(PacketSetHoldingPlayer.class);
+
         kryo.register(PacketInitRound.class);
     }
 
@@ -71,11 +77,11 @@ public class Network {
         }
     }
 
-    public static class PacketPlayerUpdateMovement {
+    public static class PacketPlayerUpdateFast {
         public int id;
         public Vector2 movement;
-        public PacketPlayerUpdateMovement(){};
-        public PacketPlayerUpdateMovement(int id, Vector2 movement) {
+        public PacketPlayerUpdateFast(){};
+        public PacketPlayerUpdateFast(int id, Vector2 movement) {
             this.id = id;
             this.movement = movement;
         }
@@ -99,10 +105,10 @@ public class Network {
         }
     }
 
-    public static class PacketBallUpdateMovement {
+    public static class PacketBallUpdateFast {
         public Vector2 movement;
-        public PacketBallUpdateMovement(){};
-        public PacketBallUpdateMovement(Vector2 movement) {
+        public PacketBallUpdateFast(){};
+        public PacketBallUpdateFast(Vector2 movement) {
             this.movement = movement;
         }
     }
@@ -115,4 +121,19 @@ public class Network {
         }
     }
 
+    public static class PacketDropBall {
+        public int id;
+        public PacketDropBall(){}
+        public PacketDropBall(int id) {
+            this.id = id;
+        }
+    }
+
+    public static class PacketSetHoldingPlayer {
+        public int id;
+        public PacketSetHoldingPlayer() {}
+        public PacketSetHoldingPlayer(int id) {
+            this.id = id;
+        }
+    }
 }

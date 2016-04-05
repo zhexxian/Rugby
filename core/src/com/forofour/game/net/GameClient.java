@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.GameMap;
 
 import java.io.IOException;
@@ -31,6 +30,10 @@ public class GameClient {
                     Network.PacketDebugAnnouncement packet = (Network.PacketDebugAnnouncement) o;
                     Gdx.app.log("GameClient", packet.getMsg());
                 }
+                else if(o instanceof Network.PacketPlayerJoinLeave) {
+                    Network.PacketPlayerJoinLeave packet = (Network.PacketPlayerJoinLeave) o;
+                    map.setNumberOfBabyFaces(packet.connectedClients);
+                }
 
                 // BALL
                 else if(o instanceof Network.PacketAddBall) {
@@ -42,9 +45,10 @@ public class GameClient {
                     Network.PacketBallState packet = (Network.PacketBallState) o;
                     map.updateBallState(packet.position, packet.angle);
                 }
-                else if(o instanceof Network.PacketBallUpdateMovement) {
-                    Network.PacketBallUpdateMovement packet = (Network.PacketBallUpdateMovement) o;
+                else if(o instanceof Network.PacketBallUpdateFast) { // Ball velocity & Player holder ID
+                    Network.PacketBallUpdateFast packet = (Network.PacketBallUpdateFast) o;
                     map.updateBallMovement(packet.movement);
+                    Gdx.app.log("GameClient", "PacketBallUpdateFast");
                 }
 
                 // PLAYER
@@ -60,14 +64,27 @@ public class GameClient {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
                 }
-                else if(o instanceof Network.PacketPlayerUpdateMovement) {
-                    Network.PacketPlayerUpdateMovement packet = (Network.PacketPlayerUpdateMovement) o;
+                else if(o instanceof Network.PacketPlayerUpdateFast) {
+                    Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
                     map.updatePlayerMovement(packet.id, packet.movement);
+                }
+
+                else if(o instanceof Network.PacketDropBall) {
+                    Network.PacketDropBall packet = (Network.PacketDropBall) o;
+                    map.updateDropBall();
+                }
+                else if(o instanceof Network.PacketSetHoldingPlayer) { // Ball holder ID
+                    Network.PacketSetHoldingPlayer packet = (Network.PacketSetHoldingPlayer) o;
+                    map.getBall().setHoldingPlayer(map.getPlayerHash().get(packet.id));
+                    if(packet.id == -1) {
+                        map.updateDropBall();
+                    }
+                    Gdx.app.log("GameClient", "PacketSetHoldingPlayer " +packet.id);
                 }
             }
             public void connected(Connection c){
                 Gdx.app.log("GameClient", "Player connected");
-                        Network.PacketPlayerJoinLeave newPlayer = new Network.PacketPlayerJoinLeave(c.getID());
+                        Network.PacketPlayerJoinLeave newPlayer = new Network.PacketPlayerJoinLeave(c.getID(), map.getPlayersConnected().size());
                 client.sendTCP(newPlayer);
             }
             public void disconnected(Connection c){

@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 
@@ -37,22 +36,36 @@ public class GameServer {
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("New Player connected successfully"));
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("Number of player in lobby: " + map.getPlayersConnected().size()));
                     }
+                    server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
                 }
 
                 // Updates location of specific player
                 else if(o instanceof Network.PacketPlayerState) {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;
-                    Gdx.app.log("GameServer", "State Updates for player" + "-" + c.getID() + "-" + packet.id);
+//                    Gdx.app.log("GameServer", "State Updates for player" + "-" + c.getID() + "-" + packet.id);
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
                     server.sendToAllTCP(new Network.PacketPlayerState(packet.id, packet.position, packet.angle));
-
                 }
 
-                else if(o instanceof Network.PacketPlayerUpdateMovement) {
-                    Network.PacketPlayerUpdateMovement packet = (Network.PacketPlayerUpdateMovement) o;
-                    Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);
+                else if(o instanceof Network.PacketPlayerUpdateFast) {
+                    Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
+//                    Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);
                     map.updatePlayerMovement(packet.id, packet.movement);
-                    server.sendToAllTCP(new Network.PacketPlayerUpdateMovement(packet.id, packet.movement));
+                    server.sendToAllTCP(new Network.PacketPlayerUpdateFast(packet.id, packet.movement));
+                }
+
+                else if(o instanceof Network.PacketDropBall) {
+                    Network.PacketDropBall packet = (Network.PacketDropBall) o;
+                    Gdx.app.log("GameServer", "Holder " + map.getBall().getHoldingPlayer().getId());
+
+                    // Check that dropper is indeed holder
+                    if(map.getBall().getHoldingPlayerId() == ((Network.PacketDropBall) o).id)
+                        map.updateDropBall();
+//                    map.getPlayerHash().get(packet.id).dropBall();
+//                    map.getBall().loseHoldingPlayer();
+                    server.sendToAllTCP(new Network.PacketDropBall(packet.id));
+                    Gdx.app.log("GameServer", "Holder " + map.getBall().getHoldingPlayerId());
+                    Gdx.app.log("GameServer", "player" + packet.id + " called dropball");
                 }
             }
 
@@ -82,7 +95,6 @@ public class GameServer {
 
     public void update(float delta){
         map.update(delta);
-
     }
 
     public void shutdown() {

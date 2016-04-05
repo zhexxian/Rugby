@@ -69,7 +69,7 @@ public class LobbyScreen implements Screen {
         }
 
         Gdx.app.log("LobbyScreen", "Connecting to server");
-        client.connect("localhost");
+        client.connect("192.168.1.231");
     }
 
     @Override

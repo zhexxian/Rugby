@@ -87,12 +87,12 @@ public class GameWorld{
         globalTime.start();
 
         //make & add actors(HUD components) to the stage
-        touchpad = TouchPadMaker.make(this);
+/*        touchpad = TouchPadMaker.make(this);
         boostButton = ButtonMaker.getBoostButton(this);
         tossButton = ButtonMaker.getTossButton(this);
         globalLabel = TextLabelMaker.getTimeLabel(this);
         teamLabel = TextLabelMaker.getTimeLabel(this);
-        powerSlot = PowerUpSlotMaker.getPowerSlot(this);
+        powerSlot = PowerUpSlotMaker.getPowerSlot(this);*/
 
         gameStage = new Stage();
 
