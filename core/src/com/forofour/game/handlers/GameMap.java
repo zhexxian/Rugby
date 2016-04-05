@@ -128,7 +128,7 @@ public class GameMap {
                 gameInitialized = true;
             }
             else {
-                Gdx.app.log(tag, "Server ballHeld "+ball.isHeld());
+                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
                 if(!ball.isHeld())
                     serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity()));
 //                if(!ball.isHeld()) {
@@ -316,19 +316,20 @@ public class GameMap {
                     }
 
                 }
-//                else {
-//                    Body a = contact.getFixtureA().getBody();
-//                    Body b = contact.getFixtureB().getBody();
-//
-//                    // TODO: Player collision should be between opposing team members only
-//                    if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
-//                        if(map.getBall().getHoldingPlayer().equals(a.getUserData()) ||
-//                                map.getBall().getHoldingPlayer().equals(b.getUserData())) {
-//                            System.out.println("Collision");
-//                            map.getBall().triggerCollision();
-//                        }
-//                    }
-//                }
+                else {
+                    Body a = contact.getFixtureA().getBody();
+                    Body b = contact.getFixtureB().getBody();
+
+                    // TODO: Player collision should be between opposing team members only
+                    if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
+                        if(map.getBall().getHoldingPlayer().equals(a.getUserData()) ||
+                                map.getBall().getHoldingPlayer().equals(b.getUserData())) {
+                            Gdx.app.log("Collision", "between players");
+                            map.getBall().triggerCollision();
+                            serverSendMessage(new Network.PacketDropBall());
+                        }
+                    }
+                }
             }
 /*            if(map.getPlayer() != null && map.getPowerUp() != null){
                 //TODO: check if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below

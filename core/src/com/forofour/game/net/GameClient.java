@@ -69,15 +69,17 @@ public class GameClient {
                     map.updatePlayerMovement(packet.id, packet.movement);
                 }
 
+                // NOTE: for reasons, this packet is slower than PacketSetHoldingPlayer
                 else if(o instanceof Network.PacketDropBall) {
                     Network.PacketDropBall packet = (Network.PacketDropBall) o;
                     map.updateDropBall();
                 }
                 else if(o instanceof Network.PacketSetHoldingPlayer) { // Ball holder ID
                     Network.PacketSetHoldingPlayer packet = (Network.PacketSetHoldingPlayer) o;
-                    map.getBall().setHoldingPlayer(map.getPlayerHash().get(packet.id));
                     if(packet.id == -1) {
                         map.updateDropBall();
+                    } else {
+                        map.getBall().setHoldingPlayer(map.getPlayerHash().get(packet.id));
                     }
                     Gdx.app.log("GameClient", "PacketSetHoldingPlayer " +packet.id);
                 }

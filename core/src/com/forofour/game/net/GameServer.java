@@ -56,15 +56,15 @@ public class GameServer {
 
                 else if(o instanceof Network.PacketDropBall) {
                     Network.PacketDropBall packet = (Network.PacketDropBall) o;
-                    Gdx.app.log("GameServer", "Holder " + map.getBall().getHoldingPlayer().getId());
-
+                    Gdx.app.log("GameServer", "bef Holder " + map.getBall().getHoldingPlayerId());
                     // Check that dropper is indeed holder
-                    if(map.getBall().getHoldingPlayerId() == ((Network.PacketDropBall) o).id)
+                    if(map.getBall().getHoldingPlayerId() == ((Network.PacketDropBall) o).id) {
                         map.updateDropBall();
+                        server.sendToAllTCP(new Network.PacketDropBall(packet.id));
+                    }
 //                    map.getPlayerHash().get(packet.id).dropBall();
 //                    map.getBall().loseHoldingPlayer();
-                    server.sendToAllTCP(new Network.PacketDropBall(packet.id));
-                    Gdx.app.log("GameServer", "Holder " + map.getBall().getHoldingPlayerId());
+                    Gdx.app.log("GameServer", "aft Holder " + map.getBall().getHoldingPlayerId());
                     Gdx.app.log("GameServer", "player" + packet.id + " called dropball");
                 }
             }
