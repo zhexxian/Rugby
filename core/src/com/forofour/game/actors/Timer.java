@@ -9,6 +9,10 @@ public class Timer {
     private long stopTime = 0;
     private boolean running = false;
 
+    public boolean isRunning() {
+        return running;
+    }
+
     // Start measuring
     public void start() {
         this.startTime = System.nanoTime();

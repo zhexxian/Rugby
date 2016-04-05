@@ -123,9 +123,14 @@ public class Network {
 
     public static class PacketDropBall {
         public int id;
+        public Vector2 lastDirection; // For the server
         public PacketDropBall(){}
         public PacketDropBall(int id) {
             this.id = id;
+        }
+        public PacketDropBall(int id, Vector2 lastDirection) {
+            this.id = id;
+            this.lastDirection = lastDirection;
         }
     }
 

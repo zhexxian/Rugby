@@ -1,13 +1,10 @@
 package com.forofour.game.handlers;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.forofour.game.actors.ButtonMaker;
-import com.forofour.game.actors.PowerUpSlotMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.actors.Timer;
 import com.forofour.game.actors.TouchPadMaker;
@@ -15,7 +12,6 @@ import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Team;
 import com.forofour.game.net.GameClient;
-import com.forofour.game.net.Network;
 
 /**
  * Created by seanlim on 4/4/2016.
@@ -53,6 +49,7 @@ public class MainOverlay extends Stage {
 //        addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
         isInitialized = false;
+        hideActors();
     }
 
     public GameClient getClient(){
@@ -62,9 +59,15 @@ public class MainOverlay extends Stage {
     public void update(float delta){
         if(isInitialized){
             captureTouchpad();
-            displayTimeAndScore();
-            displayScore(delta);
-            displayButtons();
+            updateTime();
+            updateScore(delta);
+            updateButtons();
+
+            if(client.getMap().isPaused()) {
+                hideActors();
+            } else {
+                showActors();
+            }
         }
         else {
             initialized();
@@ -85,6 +88,19 @@ public class MainOverlay extends Stage {
         }
     }
 
+    private void hideActors(){
+//        touchpad.setVisible(false);
+        boostButton.setVisible(false);
+        tossButton.setVisible(false);
+        globalLabel.setVisible(false);
+        teamLabel.setVisible(false);
+    }
+    private void showActors() {
+        touchpad.setVisible(true);
+        globalLabel.setVisible(true);
+        teamLabel.setVisible(true);
+    }
+
     private void captureTouchpad() {
         if (player.getReverseDirectionTime() > 0) {
             player.knobMove(-touchpad.getKnobPercentX(), touchpad.getKnobPercentY());
@@ -97,12 +113,12 @@ public class MainOverlay extends Stage {
         }
     }
 
-    private void displayTimeAndScore() {
+    private void updateTime() {
         // Global time display
         globalLabel.setText(globalTime.getElapsed());
     }
 
-    private void displayScore(float delta) {
+    private void updateScore(float delta) {
         //add scores
         if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
             teamA.addScore(delta);
@@ -118,7 +134,7 @@ public class MainOverlay extends Stage {
             teamLabel.setText("No team score");
     }
 
-    private void displayButtons() {
+    private void updateButtons() {
         if(player != null) {
             if(player.hasBall()) {
                 tossButton.setVisible(true);

@@ -48,7 +48,7 @@ public class GameMap {
     private Team teamA, teamB;
 
     private Timer globalTime;
-    private boolean gameInitialized;
+    private boolean gameInitialized, paused;
 
     public GameMap(GameServer server){
         this(true);
@@ -63,6 +63,7 @@ public class GameMap {
 
     private GameMap(boolean isHost) {
         gameInitialized = false;
+        paused = true;
         runTime = 0;
         lastSentTime = 0;
         this.isHost = isHost;
@@ -98,28 +99,31 @@ public class GameMap {
         box2d.step(delta, 8, 3);
         box2d.clearForces();
 
-        if(gameInitialized) {
+        if(gameInitialized && !paused) {
             // Common logic
             player.update(delta);
             ball.update(delta);
 
             // Client-sided logic
             if(!isHost) {
-                Gdx.app.log(tag, "Player"+ player.getId() + " ballHeld "+ball.isHeld());
+
+                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
 
                 if(lastSentTime < runTime - 0.1) { // Resync every 100ms
-                    if (player != null) {
-                        // Client will receive updated location on PlayerLocations after sending his own
-                        clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
-                        Gdx.app.log(tag, "Updating player" + player.getId() + " position");
-                    }
+                    // Client will receive updated location on PlayerLocations after sending his own
+                    clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
+                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
+
                     lastSentTime = runTime;
                 }
             }
         }
         else{
-            if(player != null && ball != null)
+            if(player != null && ball != null) {
                 gameInitialized = true;
+                globalTime.start();
+                paused = false; // Overlay is dependent on this
+            }
         }
 
         // Server-sided logic
@@ -129,6 +133,7 @@ public class GameMap {
                 player = playerHash.get(1);
                 server.assignBall();
                 gameInitialized = true;
+                globalTime.start();
             }
             else {
                 Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
@@ -282,6 +287,10 @@ public class GameMap {
 
     public Timer getGlobalTime() {
         return globalTime;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     // Server-sided Collision
