@@ -17,6 +17,7 @@ import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
+import com.forofour.game.net.Network;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,10 +48,13 @@ public class LobbyScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.log("StartButton", "Clicked!");
-                if(isHost)
-                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
-                else
-                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
+                if(isHost) {
+                    server.sendMessage(new Network.PacketInitRound(true));
+                }
+//                if(isHost)
+//                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
+//                else
+//                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
             }
         });
 
@@ -83,6 +87,16 @@ public class LobbyScreen implements Screen {
                     50+i*100, 50, 50, 50);
         }
         batch.end();
+
+        if(isHost) {
+            if(server.getMap().gameInitiated) {
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
+            }
+        } else {
+            if(client.getMap().gameInitiated) {
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
+            }
+        }
     }
 
     @Override

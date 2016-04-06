@@ -158,12 +158,16 @@ public class Player {
         }
     }
 
-    public synchronized boolean hasBall(){ // IMPORTANT : Checks that holding player is current player
+    public boolean hasBall(){ // IMPORTANT : Checks that holding player is current player
         if(ball != null) {
-            if (ball.isHeld()) {
-                System.out.println("hasBall " + ball.getHoldingPlayer().equals(this));
-                return ball.getHoldingPlayer().equals(this);
+            if(ball.getHoldingPlayerId() == id) {
+                return true;
             }
+            // NOTE: Below method keeps crashing.
+//            if (ball.isHeld()) {
+//                System.out.println("hasBall " + ball.getHoldingPlayer().equals(this));
+//                return ball.getHoldingPlayer().equals(this);
+//            }
         }
         return false;
     }

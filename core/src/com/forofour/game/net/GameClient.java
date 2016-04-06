@@ -31,6 +31,11 @@ public class GameClient {
                     Gdx.app.log("GameClient", packet.getMsg());
                 }
 
+                else if(o instanceof Network.PacketInitRound) {
+                    Network.PacketInitRound packet = (Network.PacketInitRound) o;
+                    map.gameInitiated = packet.initiate;
+                }
+
                 else if(o instanceof Network.PacketGamePause) {
                     Network.PacketGamePause packet = (Network.PacketGamePause) o;
                     map.gamePaused = packet.gamePaused;
@@ -99,7 +104,7 @@ public class GameClient {
                     if(packet.id == -1) {
                         map.updateDropBall();
                     } else {
-                        map.getBall().setHoldingPlayer(map.getPlayerHash().get(packet.id));
+                       map.updateHoldingPlayer(packet.id);
                     }
                     Gdx.app.log("GameClient", "PacketSetHoldingPlayer " + packet.id);
                 }

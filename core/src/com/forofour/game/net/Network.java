@@ -126,10 +126,10 @@ public class Network {
     }
 
     public static class PacketInitRound {
-        public boolean start;
+        public boolean initiate;
         public PacketInitRound(){}
-        public PacketInitRound(boolean start){
-            this.start = start;
+        public PacketInitRound(boolean initiate){
+            this.initiate = initiate;
         }
     }
 

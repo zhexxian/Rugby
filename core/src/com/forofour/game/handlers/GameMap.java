@@ -49,6 +49,7 @@ public class GameMap {
 
     private Timer globalTime;
     private boolean gameInitialized;
+    public boolean gameInitiated;
     public boolean gamePaused;
 
     public GameMap(GameServer server){
@@ -260,12 +261,14 @@ public class GameMap {
     public synchronized void updateDropBall(){
         ball.loseHoldingPlayer();
     }
-
-    public void updateBallState(Vector2 position, Float angle) {
-        ball.getBody().setTransform(position, angle);
+    public synchronized void updateHoldingPlayer(int id) {
+        ball.setHoldingPlayer(playerHash.get(id));
     }
 
-    public void updateBallMovement(Vector2 movement) {
+    public synchronized void updateBallState(Vector2 position, Float angle) {
+        ball.getBody().setTransform(position, angle);
+    }
+    public synchronized void updateBallMovement(Vector2 movement) {
         ball.getBody().setLinearVelocity(movement);
     }
 
@@ -279,15 +282,6 @@ public class GameMap {
 
     public ArrayList<PowerUp> getPowerUpList() {
         return powerUpList;
-    }
-
-    public void updatePlayerDropBall(int id, boolean hasBall) {
-        if(ball!= null) {
-            if(ball.getHoldingPlayer().getId() == id) {
-                Gdx.app.log(tag + " updatePlayerDropBall", id + " " + hasBall);
-                ball.loseHoldingPlayer();
-            }
-        }
     }
 
     public Timer getGlobalTime() {

@@ -9,19 +9,21 @@ import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by seanlim on 1/4/2016.
  */
 public class GameServer {
 
-    private boolean gameStarted;
     private Server server;
     private GameMap map;
+    private ArrayList<Integer> initiatedPlayers;
 
     public GameServer(){
         map = new GameMap(this);
-
+        initiatedPlayers = new ArrayList<Integer>();
+        initiatedPlayers.add(1);
         server = new Server();
         Network.register(server);
 
@@ -37,6 +39,16 @@ public class GameServer {
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("Number of player in lobby: " + map.getPlayersConnected().size()));
                     }
                     server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
+                }
+
+                else if(o instanceof Network.PacketInitRound) {
+                    Network.PacketInitRound packet = (Network.PacketInitRound) o;
+                    Gdx.app.log("GameServer", " initiated p" + c.getID());
+                    initiatedPlayers.add(c.getID());
+                    if(initiatedPlayers.containsAll(map.getPlayersConnected().keySet()))
+                        map.gameInitiated = true;
+                    Gdx.app.log("GameServer", "initPlayers - " + initiatedPlayers);
+                    Gdx.app.log("GameServer", "playersConnected - " + map.getPlayersConnected().keySet());
                 }
 
                 else if(o instanceof Network.PacketGamePause) {
@@ -138,5 +150,9 @@ public class GameServer {
         Vector2 ballPosition = new Vector2(GameConstants.GAME_WIDTH/2, GameConstants.GAME_HEIGHT/2);
         map.addBall(ballPosition, map.getBox2d());
         sendMessage(new Network.PacketAddBall(ballPosition));
+    }
+
+    public GameMap getMap() {
+        return map;
     }
 }

@@ -14,6 +14,7 @@ import com.forofour.game.handlers.MainOverlay;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.forofour.game.net.Network;
 
 /**
  * Created by seanlim on 4/4/2016.
@@ -55,6 +56,7 @@ public class MainScreen implements Screen {
 
         } else {
             Gdx.app.log("MainScreen", "Client ready");
+            client.sendMessage(new Network.PacketInitRound());
         }
 
     }
