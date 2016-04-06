@@ -44,6 +44,7 @@ public class MainScreen implements Screen {
         overlay = new MainOverlay(client);
 
         Gdx.input.setInputProcessor(new ClientInputHandler(overlay)); // Stage itself is an inputAdapter
+
     }
 
     @Override
@@ -63,16 +64,22 @@ public class MainScreen implements Screen {
 
         // Client-sided
         // TODO: Player to send server its movement values, Server to reply with update position
-        map.update(delta);
-        renderer.render(delta);
+        if(!map.gamePaused) {
 
-        overlay.update(delta);
+            map.update(delta);
+            map.getGlobalTime().start();
 
-        // Server-sided. Holds master map
-        if(isHost) {
-            server.update(delta);
+            // Server-sided. Holds master map
+            if (isHost) {
+                server.update(delta);
+            }
+        }
+        else {
+            map.getGlobalTime().pause();
         }
 
+        renderer.render(delta);
+        overlay.update(delta);
 //        fpsLogger.log();
     }
 

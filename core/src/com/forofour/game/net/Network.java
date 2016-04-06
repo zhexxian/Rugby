@@ -16,9 +16,11 @@ public class Network {
         kryo.register(Float.class);
         kryo.register(Vector2.class);
 
+        kryo.register(PacketGamePause.class);
+
         kryo.register(PacketPlayerJoinLeave.class);
         kryo.register(PacketDebugAnnouncement.class);
-        kryo.register(PacketGlobalState.class);
+        kryo.register(PacketTeamScores.class);
 
         kryo.register(PacketAddPlayer.class);
         kryo.register(PacketPlayerState.class);
@@ -41,6 +43,15 @@ public class Network {
         }
         public String getMsg() {
             return "--- Server Announcement Start --- : " + msg;
+        }
+    }
+
+    public static class PacketGamePause {
+        public boolean gamePaused;
+        public PacketGamePause() {
+        }
+        public PacketGamePause(boolean gamePaused) {
+            this.gamePaused = gamePaused;
         }
     }
 
@@ -143,18 +154,13 @@ public class Network {
         }
     }
 
-    public static class PacketGlobalState {
-        public boolean ready;
-        public boolean paused;
+    public static class PacketTeamScores {
         public int scoreA;
         public int scoreB;
-        public PacketGlobalState() {
+        public PacketTeamScores() {
         }
-        public PacketGlobalState(boolean ready) {
-            this.ready = ready;
-        }
-        public PacketGlobalState(boolean paused, int scoreA, int scoreB) {
-            this.paused = paused;
+
+        public PacketTeamScores(int scoreA, int scoreB) {
             this.scoreA = scoreA;
             this.scoreB = scoreB;
         }

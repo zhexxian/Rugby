@@ -3,10 +3,7 @@ package com.forofour.game.handlers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
-import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
 
@@ -29,8 +26,8 @@ public class ClientInputHandler extends InputMultiplexer {
     public boolean keyDown(int keycode) {
 
         if(keycode == Input.Keys.P){
-            client.sendMessage(new Network.PacketGlobalState(client.getMap().isPaused()));
-            Gdx.app.log("Keypress P", "Set ready to " + client.getMap().isPaused());
+            client.sendMessage(new Network.PacketGamePause());
+            Gdx.app.log("Keypress P", "PauseButton Sent");
         }
 //        if(keycode == Input.Keys.O) {
 //            myWorld.addBall();

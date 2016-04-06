@@ -49,7 +49,6 @@ public class MainOverlay extends Stage {
 //        addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
         isInitialized = false;
-        hideActors();
     }
 
     public GameClient getClient(){
@@ -57,20 +56,21 @@ public class MainOverlay extends Stage {
     }
 
     public void update(float delta){
-        if(isInitialized){
-            captureTouchpad();
-            updateTime();
-            updateScore(globalTime.getElapsedMilliseconds()/1000);
-            updateButtons();
+        if(!client.getMap().gamePaused) {
+            showActors();
+            if(isInitialized){
+                captureTouchpad();
+                updateTime();
+                updateScore(globalTime.getElapsedMilliseconds()/1000);
+                updateButtons();
 
-            if(client.getMap().isPaused()) {
-                hideActors();
-            } else {
-                showActors();
+            }
+            else {
+                initialized();
             }
         }
         else {
-            initialized();
+            hideActors();
         }
 
         getCamera().update();
@@ -83,19 +83,19 @@ public class MainOverlay extends Stage {
         teamB = client.getMap().getTeamB();
         ball = client.getMap().getBall();
         globalTime = client.getMap().getGlobalTime();
-        if(player != null && teamA != null && teamB != null && ball != null && globalTime != null ) {
+        if (player != null && teamA != null && teamB != null && ball != null && globalTime != null ) {
             isInitialized = true;
         }
     }
 
-    private void hideActors(){
+    public void hideActors(){
         touchpad.setVisible(false);
         boostButton.setVisible(false);
         tossButton.setVisible(false);
         globalLabel.setVisible(false);
         teamLabel.setVisible(false);
     }
-    private void showActors() {
+    public void showActors() {
         touchpad.setVisible(true);
         globalLabel.setVisible(true);
         teamLabel.setVisible(true);

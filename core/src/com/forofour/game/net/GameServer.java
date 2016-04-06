@@ -39,15 +39,12 @@ public class GameServer {
                     server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
                 }
 
-                // Indication that clients are ready
-                else if (o instanceof Network.PacketGlobalState) {
-                    Network.PacketGlobalState packet = (Network.PacketGlobalState) o;
-                    map.getPlayersConnected().replace(c.getID(), packet.ready);
-                    if(!packet.ready) {
-                        Gdx.app.log("GameServer", "Player"+ c.getID() + " setPaused");
-                        map.setPaused(true);
-                    }
-                    Gdx.app.log("GameServer", "Player"+ c.getID() + " ready " + packet.ready);
+                else if(o instanceof Network.PacketGamePause) {
+                    Network.PacketGamePause packet = (Network.PacketGamePause) o;
+                    Gdx.app.log("GameServer", "PauseButton Received from Client");
+                    map.gamePaused = !map.gamePaused;
+                    server.sendToAllTCP(new Network.PacketGamePause(map.gamePaused));
+                    Gdx.app.log("GameServer", "Pause value sent " + map.gamePaused);
                 }
 
                 // Updates location of specific player

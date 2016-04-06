@@ -31,7 +31,7 @@ public class Timer {
             this.startPause = 0;
         }
         else {
-            Gdx.app.log("Timer", getElapsed());
+//            Gdx.app.log("Timer", getElapsed());
         }
     }
 

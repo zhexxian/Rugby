@@ -48,7 +48,8 @@ public class GameMap {
     private Team teamA, teamB;
 
     private Timer globalTime;
-    private boolean gameInitialized, paused;
+    private boolean gameInitialized;
+    public boolean gamePaused;
 
     public GameMap(GameServer server){
         this(true);
@@ -63,7 +64,7 @@ public class GameMap {
 
     private GameMap(boolean isHost) {
         gameInitialized = false;
-        paused = true;
+        gamePaused = false;
         runTime = 0;
         lastSentTime = 0;
         this.isHost = isHost;
@@ -99,7 +100,7 @@ public class GameMap {
         box2d.step(delta, 8, 3);
         box2d.clearForces();
 
-        if(gameInitialized && !paused) {
+        if(gameInitialized) {
             // Common logic
             player.update(delta);
             ball.update(delta);
@@ -119,10 +120,9 @@ public class GameMap {
             }
         }
         else{
-            if(player != null && ball != null && !isHost && !globalTime.isRunning()) {
+            if(player != null && ball != null && !isHost) {
                 gameInitialized = true;
-//                paused = true; // Overlay is dependent on this
-                clientSendMessage(new Network.PacketGlobalState(true));
+                globalTime.start();
             }
         }
 
@@ -133,19 +133,7 @@ public class GameMap {
                 player = playerHash.get(1);
                 server.assignBall();
                 gameInitialized = true;
-                paused = true;
-            }
-            else if(paused) {
-                // Server wait for client to be ready
-                if(playersConnected.size() == GameConstants.MAX_PLAYERS && !playersConnected.values().contains(false) && !globalTime.isRunning()) {
-                    paused = false;
-                    globalTime.start();
-                    serverSendMessage(new Network.PacketGlobalState(false, 0, 0)); // to Start client games
-                }
-                else {
-                    globalTime.pause();
-                    serverSendMessage(new Network.PacketGlobalState(true, teamA.getScore(), teamB.getScore())); // to Pause client games
-                }
+                globalTime.start();
             }
             else {
                 addTeamScores(delta);
@@ -158,7 +146,7 @@ public class GameMap {
                     if(!ball.isHeld())
                         serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0));
                     if(!playersConnected.containsKey(false)) {
-                        serverSendMessage(new Network.PacketGlobalState(false, teamA.getScore(), teamB.getScore())); // to Update client games
+                        serverSendMessage(new Network.PacketTeamScores(teamA.getScore(), teamB.getScore())); // to Update client games
                     }
                     lastSentTime = runTime;
                 }
@@ -304,21 +292,6 @@ public class GameMap {
 
     public Timer getGlobalTime() {
         return globalTime;
-    }
-
-    public boolean isPaused() {
-        return paused;
-    }
-
-    public void setPaused(boolean paused) {
-        Gdx.app.log(tag, "paused " + paused);
-        if(!paused) {
-            globalTime.start();
-        }
-        else {
-            globalTime.pause();
-        }
-        this.paused = paused;
     }
 
     // Server-sided Collision

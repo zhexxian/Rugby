@@ -30,21 +30,27 @@ public class GameClient {
                     Network.PacketDebugAnnouncement packet = (Network.PacketDebugAnnouncement) o;
                     Gdx.app.log("GameClient", packet.getMsg());
                 }
+
+                else if(o instanceof Network.PacketGamePause) {
+                    Network.PacketGamePause packet = (Network.PacketGamePause) o;
+                    map.gamePaused = packet.gamePaused;
+                    Gdx.app.log("GameClient", "PauseButton Received from Server");
+                }
+
                 else if(o instanceof Network.PacketPlayerJoinLeave) {
                     Network.PacketPlayerJoinLeave packet = (Network.PacketPlayerJoinLeave) o;
                     map.setNumberOfBabyFaces(packet.connectedClients);
                 }
                 // Indication that clients are ready
-                else if (o instanceof Network.PacketGlobalState) {
-                    Network.PacketGlobalState packet = (Network.PacketGlobalState) o;
-                    map.setPaused(packet.paused);
-                    Gdx.app.log("GameClient" + c.getID(), "A Current " + map.getTeamA().getScore()
-                            + "\tChange " + packet.scoreA
-                            + "\tMembersId " + map.getTeamA().getTeamList().get(0).getId());
-                    Gdx.app.log("GameClient" + c.getID(), "B " + map.getTeamB().getScore()
-                            + "\tChange" + packet.scoreB
-                            + "\tMembersId " + map.getTeamA().getTeamList().get(0).getId());
-                    Gdx.app.log("GameClient" + c.getID(), "Player Team number" + map.getPlayer().getTeamId());
+                else if (o instanceof Network.PacketTeamScores) {
+                    Network.PacketTeamScores packet = (Network.PacketTeamScores) o;
+//                    Gdx.app.log("GameClient" + c.getID(), "A Current " + map.getTeamA().getScore()
+//                            + "\tChange " + packet.scoreA
+//                            + "\tMembersId " + map.getTeamA().getTeamList().get(0).getId());
+//                    Gdx.app.log("GameClient" + c.getID(), "B " + map.getTeamB().getScore()
+//                            + "\tChange" + packet.scoreB
+//                            + "\tMembersId " + map.getTeamA().getTeamList().get(0).getId());
+//                    Gdx.app.log("GameClient" + c.getID(), "Player Team number" + map.getPlayer().getTeamId());
                     map.getTeamA().setScore(packet.scoreA);
                     map.getTeamB().setScore(packet.scoreB);
                 }
