@@ -35,6 +35,7 @@ public class LobbyScreen implements Screen {
     private GameClient client;
     private boolean isHost;
     private String playerName;
+    boolean showStartNudgeButton;
 
     public LobbyScreen(boolean tutorialMode, final boolean isHost) {
         this.isHost = isHost;
@@ -51,6 +52,7 @@ public class LobbyScreen implements Screen {
                 if(isHost) {
                     server.sendMessage(new Network.PacketInitRound(true));
                 }
+                // Old implementation of buttons press
 //                if(isHost)
 //                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
 //                else
@@ -73,7 +75,7 @@ public class LobbyScreen implements Screen {
         }
 
         Gdx.app.log("LobbyScreen", "Connecting to server");
-        client.connect("192.168.56.1");
+        client.connect("192.168.1.166");
     }
 
     @Override
@@ -88,11 +90,17 @@ public class LobbyScreen implements Screen {
         }
         batch.end();
 
+        // Only if Desired number of Players are connection would the buttons be Active/Visible
+        showStartNudgeButton = client.getMap().getNumberOfBabyFaces() == GameConstants.MAX_PLAYERS; // Should it be 2 or more?
         if(isHost) {
+            lobbyActorMaker.getButtonStartGame().setVisible(showStartNudgeButton);
+            lobbyActorMaker.getButtonNudgeHost().setVisible(false);
             if(server.getMap().gameInitiated) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
             }
         } else {
+            lobbyActorMaker.getButtonStartGame().setVisible(false);
+            lobbyActorMaker.getButtonNudgeHost().setVisible(showStartNudgeButton);
             if(client.getMap().gameInitiated) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
             }

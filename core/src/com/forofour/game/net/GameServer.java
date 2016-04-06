@@ -97,8 +97,11 @@ public class GameServer {
             public void disconnected(Connection c) {
                 Gdx.app.log("GameServer", "Player disconnected");
                 map.dropConnection(c.getID());
+
+                // Basically sending the same thing
                 server.sendToAllTCP(new Network.PacketDebugAnnouncement("Player " + c.getID() + " has disconnected from the game"));
                 server.sendToAllTCP(new Network.PacketDebugAnnouncement("Number of player in lobby: " + map.getPlayersConnected().size()));
+                server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
             }
         });
 

@@ -38,6 +38,7 @@ public class Network {
     public static class PacketDebugAnnouncement {
         private String msg;
         public PacketDebugAnnouncement(){}
+        public PacketDebugAnnouncement(int no){}
         public PacketDebugAnnouncement(String msg) {
             this.msg = msg;
         }

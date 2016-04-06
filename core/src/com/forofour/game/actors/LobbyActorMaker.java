@@ -69,7 +69,7 @@ public class LobbyActorMaker {
 
         buttonStartGame.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonStartGame.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
-                (BUTTON_HEIGHT + BUTTON_GAP) * 2);
+                GameConstants.GAME_HEIGHT/2 - BUTTON_HEIGHT /2);
 /*        buttonStartGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -79,7 +79,7 @@ public class LobbyActorMaker {
 
         buttonNudgeHost.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonNudgeHost.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
-                (BUTTON_HEIGHT + BUTTON_GAP) * 3);
+                GameConstants.GAME_HEIGHT/2 - BUTTON_HEIGHT /2);
 /*        buttonNudgeHost.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

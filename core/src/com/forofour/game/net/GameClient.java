@@ -45,6 +45,7 @@ public class GameClient {
                 else if(o instanceof Network.PacketPlayerJoinLeave) {
                     Network.PacketPlayerJoinLeave packet = (Network.PacketPlayerJoinLeave) o;
                     map.setNumberOfBabyFaces(packet.connectedClients);
+                    Gdx.app.log("GameClient", "Number of Connected clients " + packet.connectedClients);
                 }
                 // Indication that clients are ready
                 else if (o instanceof Network.PacketTeamScores) {
