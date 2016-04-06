@@ -60,7 +60,7 @@ public class MainOverlay extends Stage {
         if(isInitialized){
             captureTouchpad();
             updateTime();
-            updateScore(delta);
+            updateScore(globalTime.getElapsedMilliseconds()/1000);
             updateButtons();
 
             if(client.getMap().isPaused()) {
@@ -89,7 +89,7 @@ public class MainOverlay extends Stage {
     }
 
     private void hideActors(){
-//        touchpad.setVisible(false);
+        touchpad.setVisible(false);
         boostButton.setVisible(false);
         tossButton.setVisible(false);
         globalLabel.setVisible(false);
@@ -119,11 +119,6 @@ public class MainOverlay extends Stage {
     }
 
     private void updateScore(float delta) {
-        //add scores
-        if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
-            teamA.addScore(delta);
-        if(teamB.getTeamList().contains(ball.getHoldingPlayer()))
-            teamB.addScore(delta);
 
         // Team time/score display
         if(teamA.getTeamList().contains(player))

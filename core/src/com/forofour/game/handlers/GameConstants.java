@@ -22,7 +22,7 @@ public class GameConstants {
     public static final float CONTROLS_Y_OFFSET = 15f;
 
     //number of players
-    public static final int MAX_PLAYERS = 4;
+    public static final int MAX_PLAYERS = 2;
 
     //game duration
     public static final int GAME_DURATION = 60;

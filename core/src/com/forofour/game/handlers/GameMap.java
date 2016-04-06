@@ -119,10 +119,10 @@ public class GameMap {
             }
         }
         else{
-            if(player != null && ball != null) {
+            if(player != null && ball != null && !isHost && !globalTime.isRunning()) {
                 gameInitialized = true;
-                globalTime.start();
-                paused = false; // Overlay is dependent on this
+//                paused = true; // Overlay is dependent on this
+                clientSendMessage(new Network.PacketGlobalState(true));
             }
         }
 
@@ -133,24 +133,33 @@ public class GameMap {
                 player = playerHash.get(1);
                 server.assignBall();
                 gameInitialized = true;
-                globalTime.start();
+                paused = true;
+            }
+            else if(paused) {
+                // Server wait for client to be ready
+                if(playersConnected.size() == GameConstants.MAX_PLAYERS && !playersConnected.values().contains(false) && !globalTime.isRunning()) {
+                    paused = false;
+                    globalTime.start();
+                    serverSendMessage(new Network.PacketGlobalState(false, 0, 0)); // to Start client games
+                }
+                else {
+                    globalTime.pause();
+                    serverSendMessage(new Network.PacketGlobalState(true, teamA.getScore(), teamB.getScore())); // to Pause client games
+                }
             }
             else {
+                addTeamScores(delta);
+
                 Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
                 if(!ball.isHeld())
                     serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity()));
-//                if(!ball.isHeld()) {
-//                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity(), -1));
-//                    Gdx.app.log(tag, "Ball holder : No one");
-//                }
-//                else {
-//                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity(), ball.getHoldingPlayer().getId()));
-//                    Gdx.app.log(tag, "Ball holder : Player" + ball.getHoldingPlayer().getId());
-//                }
 
                 if(lastSentTime < runTime - 0.1) { // Resync every 100ms
                     if(!ball.isHeld())
                         serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0));
+                    if(!playersConnected.containsKey(false)) {
+                        serverSendMessage(new Network.PacketGlobalState(false, teamA.getScore(), teamB.getScore())); // to Update client games
+                    }
                     lastSentTime = runTime;
                 }
             }
@@ -160,7 +169,7 @@ public class GameMap {
     public boolean addConnection(int id){
         if(!lobbyFilled) {
             Gdx.app.log(tag, "Player " + id +  " joined the game");
-            playersConnected.put(id, true);
+            playersConnected.put(id, false);
             updatePlayersConnected();
             return true; // Add connection successful
         }
@@ -216,6 +225,14 @@ public class GameMap {
     }
     public Ball getBall(){
         return ball;
+    }
+
+    public void addTeamScores(float delta) {
+        //add scores
+        if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
+            teamA.addScore(delta);
+        if(teamB.getTeamList().contains(ball.getHoldingPlayer()))
+            teamB.addScore(delta);
     }
 
     public void setNumberOfBabyFaces(int numberOfBabyFaces){
@@ -291,6 +308,17 @@ public class GameMap {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        Gdx.app.log(tag, "paused " + paused);
+        if(!paused) {
+            globalTime.start();
+        }
+        else {
+            globalTime.pause();
+        }
+        this.paused = paused;
     }
 
     // Server-sided Collision

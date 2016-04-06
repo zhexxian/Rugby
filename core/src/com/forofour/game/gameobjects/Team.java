@@ -1,5 +1,6 @@
 package com.forofour.game.gameobjects;
 
+import com.badlogic.gdx.Gdx;
 import com.forofour.game.handlers.GameConstants;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class Team {
     public void addPlayer(Player p){
         teamList.add(p);
         p.setTeamId(id);
+//        Gdx.app.log("Team addPlayer", "Team " + id + "Player " + p.getId());
     }
     public void removePlayer(Player p){
         teamList.remove(p);
@@ -32,6 +34,7 @@ public class Team {
     public void addScore(float amt){
         score += amt;
     }
+
     public void addScore(){
         score += GameConstants.DEFAULT_SCORE / 100f;
     }
@@ -41,6 +44,10 @@ public class Team {
 
     public int getScore() {
         return (int) score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public ArrayList<Player> getTeamList() {

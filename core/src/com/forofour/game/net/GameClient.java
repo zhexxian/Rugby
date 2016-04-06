@@ -34,6 +34,20 @@ public class GameClient {
                     Network.PacketPlayerJoinLeave packet = (Network.PacketPlayerJoinLeave) o;
                     map.setNumberOfBabyFaces(packet.connectedClients);
                 }
+                // Indication that clients are ready
+                else if (o instanceof Network.PacketGlobalState) {
+                    Network.PacketGlobalState packet = (Network.PacketGlobalState) o;
+                    map.setPaused(packet.paused);
+                    Gdx.app.log("GameClient" + c.getID(), "A Current " + map.getTeamA().getScore()
+                            + "\tChange " + packet.scoreA
+                            + "\tMembersId " + map.getTeamA().getTeamList().get(0).getId());
+                    Gdx.app.log("GameClient" + c.getID(), "B " + map.getTeamB().getScore()
+                            + "\tChange" + packet.scoreB
+                            + "\tMembersId " + map.getTeamA().getTeamList().get(0).getId());
+                    Gdx.app.log("GameClient" + c.getID(), "Player Team number" + map.getPlayer().getTeamId());
+                    map.getTeamA().setScore(packet.scoreA);
+                    map.getTeamB().setScore(packet.scoreB);
+                }
 
                 // BALL
                 else if(o instanceof Network.PacketAddBall) {
@@ -81,7 +95,7 @@ public class GameClient {
                     } else {
                         map.getBall().setHoldingPlayer(map.getPlayerHash().get(packet.id));
                     }
-                    Gdx.app.log("GameClient", "PacketSetHoldingPlayer " +packet.id);
+                    Gdx.app.log("GameClient", "PacketSetHoldingPlayer " + packet.id);
                 }
             }
             public void connected(Connection c){

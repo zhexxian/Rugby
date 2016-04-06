@@ -18,6 +18,7 @@ public class Network {
 
         kryo.register(PacketPlayerJoinLeave.class);
         kryo.register(PacketDebugAnnouncement.class);
+        kryo.register(PacketGlobalState.class);
 
         kryo.register(PacketAddPlayer.class);
         kryo.register(PacketPlayerState.class);
@@ -139,6 +140,23 @@ public class Network {
         public PacketSetHoldingPlayer() {}
         public PacketSetHoldingPlayer(int id) {
             this.id = id;
+        }
+    }
+
+    public static class PacketGlobalState {
+        public boolean ready;
+        public boolean paused;
+        public int scoreA;
+        public int scoreB;
+        public PacketGlobalState() {
+        }
+        public PacketGlobalState(boolean ready) {
+            this.ready = ready;
+        }
+        public PacketGlobalState(boolean paused, int scoreA, int scoreB) {
+            this.paused = paused;
+            this.scoreA = scoreA;
+            this.scoreB = scoreB;
         }
     }
 }

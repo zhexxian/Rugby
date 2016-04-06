@@ -1,5 +1,7 @@
 package com.forofour.game.actors;
 
+import com.badlogic.gdx.Gdx;
+
 /**
  * Created by zhexian on 3/9/2016.
  */
@@ -9,20 +11,42 @@ public class Timer {
     private long stopTime = 0;
     private boolean running = false;
 
+    private boolean paused = false;
+    private long startPause = 0;
+
     public boolean isRunning() {
         return running;
     }
 
     // Start measuring
     public void start() {
-        this.startTime = System.nanoTime();
-        this.running = true;
+        if(paused) {
+            startTime += System.nanoTime() -  startPause;
+            paused = false;
+        }
+        else if(!running) {
+            this.startTime = System.nanoTime();
+            this.running = true;
+            this.paused = false;
+            this.startPause = 0;
+        }
+        else {
+            Gdx.app.log("Timer", getElapsed());
+        }
+    }
+
+    public void pause() {
+        if(!paused) {
+            paused = true;
+            startPause = System.nanoTime();
+        }
     }
 
     // Stop measuring
     public void stop() {
         this.stopTime = System.nanoTime();
         this.running = false;
+        this.paused = false;
     }
 
     // Reset
@@ -30,18 +54,29 @@ public class Timer {
         this.startTime = 0;
         this.stopTime = 0;
         this.running = false;
+
+        this.startPause = 0;
+        this.paused = false;
     }
 
     // Get elapsed milliseconds
     public long getElapsedMilliseconds() {
         long elapsed;
-        if (running) {
+        if (running && paused) {
+            elapsed = (System.nanoTime() - startTime) + (System.nanoTime() -  startPause);
+        }
+        else if(running && !paused) {
             elapsed = (System.nanoTime() - startTime);
         }
         else {
             elapsed = (stopTime - startTime);
         }
         return elapsed / nanosPerMilli;
+    }
+
+    public void setElapsedMilliseconds(long targetElapsed){
+        if(running && !paused)
+            startTime = System.nanoTime() - targetElapsed;
     }
 
     // Get formatted elapsed time

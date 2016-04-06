@@ -8,6 +8,7 @@ import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.net.GameClient;
+import com.forofour.game.net.Network;
 
 /**
  * Created by seanlim on 4/4/2016.
@@ -27,9 +28,10 @@ public class ClientInputHandler extends InputMultiplexer {
     @Override
     public boolean keyDown(int keycode) {
 
-//        if(keycode == Input.Keys.P){
-//            client.svAddPlayer();
-//        }
+        if(keycode == Input.Keys.P){
+            client.sendMessage(new Network.PacketGlobalState(client.getMap().isPaused()));
+            Gdx.app.log("Keypress P", "Set ready to " + client.getMap().isPaused());
+        }
 //        if(keycode == Input.Keys.O) {
 //            myWorld.addBall();
 //        }
