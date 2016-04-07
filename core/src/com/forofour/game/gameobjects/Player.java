@@ -94,7 +94,7 @@ public class Player {
         fixture = body.createFixture(fixtureDef);
 
         boundingCircle.dispose();
-        lastDirection = new Vector2();
+        lastDirection = Vector2.Zero;
         lastPosition = body.getPosition().cpy();
 
         hasPowerUp = false;
@@ -117,7 +117,10 @@ public class Player {
 //        if(deltaRad < -Math.PI)
 //            deltaRad = (float) (2*Math.PI + deltaRad);
 //        body.setAngularVelocity((deltaRad * getRadius()) * 5);
-        body.setTransform(body.getPosition(), body.getLinearVelocity().angleRad());
+        if(!body.getLinearVelocity().isZero()) {
+            lastDirection = body.getLinearVelocity();
+            body.setTransform(body.getPosition(), body.getLinearVelocity().angleRad());
+        }
 
         if(boostTime > 0)
             boostTime -= delta;
@@ -154,18 +157,10 @@ public class Player {
 
         body.setLinearVelocity(x * MAX_VELOCITY * slow_scale * confuse_x, y * MAX_VELOCITY * slow_scale * confuse_y);
 
-        // Remembers last moved direction
-        if(!body.getLinearVelocity().isZero())
-            lastDirection.set(body.getLinearVelocity());
-
         // Following line works as a "latency smoother"
         // Sending the linear velocity to the server, will quickly set the velocity of the body within the server physics engine
         // Re-sync of position is done with the slow update.
         client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
-    }
-
-    public Vector2 getLastDirection(){
-        return lastDirection;
     }
 
     public void boost() {
@@ -317,6 +312,9 @@ public class Player {
     }
     public float getAngleDegree(){
         return body.getAngle() * MathUtils.radiansToDegrees;
+    }
+    public Vector2 getLastDirection() {
+        return lastDirection;
     }
 
     public int getId(){

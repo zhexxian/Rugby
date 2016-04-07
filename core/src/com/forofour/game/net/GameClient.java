@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.forofour.game.gameobjects.PowerUp;
 import com.forofour.game.handlers.GameMap;
 
 import java.io.IOException;
@@ -90,7 +91,6 @@ public class GameClient {
                 else if(o instanceof Network.PacketPlayerState) {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
-                    Gdx.app.log("Player"+packet.id, "Angle " + packet.angle);
                 }
                 else if(o instanceof Network.PacketPlayerUpdateFast) {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
@@ -112,14 +112,20 @@ public class GameClient {
                     Gdx.app.log("GameClient", "PacketSetHoldingPlayer " + packet.id);
                 }
 
+                // Addition of PowerUp to game
                 else if(o instanceof Network.PacketAddPowerUp) {
                     Network.PacketAddPowerUp packet = (Network.PacketAddPowerUp) o;
                     Gdx.app.log("GameClient", "PacketAddPowerUp, Type:" + packet.type + " Position:" +packet.position);
+                    map.addPowerUp(packet.position, packet.type);
                 }
+
+                // Acquisition of PowerUp by player
                 else if(o instanceof Network.PacketPickPowerUp) {
                     Network.PacketPickPowerUp packet = (Network.PacketPickPowerUp) o;
-                    map.getPlayerHash().get(packet.id).acquirePowerUp(packet.type);
-                    Gdx.app.log("GameClient", "PacketPickPowerUp, ID:" + packet.id + " Type:"+packet.type);
+                    Gdx.app.log("GameClient", "PacketPickPowerUp, ID:" + packet.playerId + " Type:"+packet.type + " ItemID:"+packet.powerUpId);
+                    map.getPlayerHash().get(packet.playerId).acquirePowerUp(packet.type);
+                    if(packet.powerUpId != -1) // DEBUG PURPOSES(SV COMMANDS)
+                        map.removePowerUp(packet.powerUpId);
                 }
                 else if(o instanceof Network.PacketUsePowerUp) {
                     Network.PacketUsePowerUp packet = (Network.PacketUsePowerUp) o;

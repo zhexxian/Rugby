@@ -309,12 +309,12 @@ class ListenerClass implements ContactListener{
 //
 //            if(a.getUserData() instanceof Player && b.getUserData() instanceof PowerUp){
 //                // Temporary solution: put power up out of mapview
-//                ((PowerUp) b.getUserData()).setDisappear();
+//                ((PowerUp) b.getUserData()).remove();
 //                ((Player) a.getUserData()).acquirePowerUp(); // TODO: Refactor to recognize Type of PowerUp
 //            }
 //            else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
 //                // Temporary solution: put power up out of mapview
-//                ((PowerUp) a.getUserData()).setDisappear();
+//                ((PowerUp) a.getUserData()).remove();
 //                ((Player) b.getUserData()).acquirePowerUp();
 //            }
 //        }

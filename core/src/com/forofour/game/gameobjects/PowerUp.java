@@ -19,22 +19,16 @@ public class PowerUp {
     private CircleShape boundingCircle ;
     private Fixture fixture;
 
-    private int holderId;
+    private int type;
+    private int id;
 
     private float radius;
     private boolean outOfFrame;
 
-    public PowerUp(Vector2 position, int type, World box2d) {
+    public PowerUp(Vector2 position, int type, int powerUpId, World box2d) {
         this(position.x, position.y, 2, box2d);
-        if(type == 2) { // Type 2: Invisibility Effect
-
-        }
-        else if(type == 3) { // Type 3: Disoriented Controls Effect
-
-        }
-        else { // Type 1(Default): Slow Effect
-
-        }
+        this.type = type;
+        this.id = powerUpId;
     }
 
     public PowerUp(float x, float y, float radius, World box2d){
@@ -70,8 +64,8 @@ public class PowerUp {
         }
     }
 
-    public void setDisappear() {
-        outOfFrame = true;
+    public void destroy() {
+        box2d.destroyBody(body);
     }
 
     public boolean isOutOfFrame(){
@@ -82,8 +76,12 @@ public class PowerUp {
         body.setTransform(-10, -10, 0);
     }
 
-    public void isAcquired() {
+    public int getId(){
+        return id;
+    }
 
+    public int getType(){
+        return type;
     }
 
     public float getRadius() {

@@ -154,18 +154,27 @@ public class Network {
         public int type;
         public Vector2 position;
         public PacketAddPowerUp() {}
+        public PacketAddPowerUp(int type) {
+            this.type = type;
+        }
         public PacketAddPowerUp(Vector2 position, int type) {
             this.position = position;
             this.type = type;
         }
     }
     public static class PacketPickPowerUp {
-        public int id;
+        public int playerId;
         public int type;
+        public int powerUpId;
         public PacketPickPowerUp() {}
-        public PacketPickPowerUp(int id, int type) {
-            this.id = id;
+        public PacketPickPowerUp(int type) {
             this.type = type;
+        }
+
+        public PacketPickPowerUp(int playerId, int type, int powerUpId) {
+            this.playerId = playerId;
+            this.type = type;
+            this.powerUpId = powerUpId;
         }
     }
     public static class PacketUsePowerUp {

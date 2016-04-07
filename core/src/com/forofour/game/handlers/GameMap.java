@@ -43,6 +43,8 @@ public class GameMap {
     private Player player;
     private Ball ball;
     private ArrayList<PowerUp> powerUpList;
+    private ArrayList<PowerUp> powerUpRemoveList;
+    private int powerUpCount;
 
     private HashMap<Integer, Player> playerHash;
     private Team teamA, teamB;
@@ -87,6 +89,8 @@ public class GameMap {
 
         playerHash = new HashMap<Integer, Player>();
         powerUpList = new ArrayList<PowerUp>();
+        powerUpRemoveList = new ArrayList<PowerUp>();
+        powerUpCount = 0;
 
         //create two teams with different team id
         teamA = new Team(1);
@@ -100,26 +104,22 @@ public class GameMap {
         //updates the Physics world movement/collision - player, ball
         box2d.step(delta, 8, 3);
         box2d.clearForces();
+        sweepDeadBodies();
 
         if(gameInitialized) {
             // Common logic
-//            player.update(delta);
             for(Player p : playerHash.values()) {
                 p.update(delta);
             }
-
             ball.update(delta);
 
             // Client-sided logic
             if(!isHost) {
-
 //                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
-
                 if(lastSentTime < runTime - 0.1) { // Resync every 100ms
                     // Client will receive updated location on PlayerLocations after sending his own
                     clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
 //                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
-
                     lastSentTime = runTime;
                 }
             }
@@ -156,6 +156,17 @@ public class GameMap {
                     lastSentTime = runTime;
                 }
             }
+        }
+    }
+
+    public void sweepDeadBodies() {
+        if(!powerUpRemoveList.isEmpty()) {
+            for(PowerUp powerUp : powerUpRemoveList) {
+                powerUpList.remove(powerUp);
+                powerUp.getBody().setUserData(null);
+                powerUp.destroy();
+            }
+            powerUpRemoveList.clear();
         }
     }
 
@@ -233,14 +244,17 @@ public class GameMap {
         return ball;
     }
 
-
-    public void consumePowerUp(int playerId){}
-    public void addPowerUp(Vector2 position, int type) {
-        PowerUp powerUp = new PowerUp(position.x, position.y, 2, box2d);
+    public int addPowerUp(Vector2 position, int type) {
+        PowerUp powerUp = new PowerUp(position, type, ++powerUpCount, box2d);
         powerUpList.add(powerUp);
+        return powerUp.getId();
     }
-    public void removePowerUp(){
-        // FIFO
+    public void removePowerUp(int id){
+        for(PowerUp powerUp : powerUpList) {
+            if(powerUp.getId() == id) {
+                powerUpRemoveList.add(powerUp);
+            }
+        }
     }
     public ArrayList<PowerUp> getPowerUpList() {
         return powerUpList;
@@ -328,12 +342,13 @@ public class GameMap {
 
         @Override
         public void preSolve(Contact contact, Manifold oldManifold) {
+            Body a = contact.getFixtureA().getBody();
+            Body b = contact.getFixtureB().getBody();
             Gdx.app.log(tag, "Collision detected");
+
             if(map.getBall() != null && map.getPlayerHash() != null) {
                 if(!map.getBall().isHeld()) {
                     Gdx.app.log("Collision", "Ball is not held");
-                    Body a = contact.getFixtureA().getBody();
-                    Body b = contact.getFixtureB().getBody();
 
                     if(a.getUserData() instanceof Ball && b.getUserData() instanceof Player) {
                         Gdx.app.log("Collision", "Collided with player"+ ((Player) b.getUserData()).getId());
@@ -349,8 +364,6 @@ public class GameMap {
 
                 }
                 else {
-                    Body a = contact.getFixtureA().getBody();
-                    Body b = contact.getFixtureB().getBody();
 
                     // TODO: Player collision should be between opposing team members only
                     if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
@@ -363,22 +376,26 @@ public class GameMap {
                     }
                 }
             }
-/*            if(map.getPlayer() != null && map.getPowerUp() != null){
-                //TODO: check if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below
-                Body a = contact.getFixtureA().getBody();
-                Body b = contact.getFixtureB().getBody();
+            if(map.getPlayer() != null && map.getPowerUpList() != null){
+                //Checks if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below
 
                 if(a.getUserData() instanceof Player && b.getUserData() instanceof PowerUp){
-                    // Temporary solution: put power up out of mapview
-                    ((PowerUp) b.getUserData()).setDisappear();
-                    ((Player) a.getUserData()).acquirePowerUp(); // TODO: Refactor to recognize Type of PowerUp
+                    Player player = (Player) a.getUserData();
+                    PowerUp powerUp = (PowerUp) b.getUserData();
+                    player.acquirePowerUp(powerUp.getType()); // TODO: Refactor to recognize Type of PowerUp
+                    Gdx.app.log(tag, "Player" + player.getId() + " Type" + powerUp.getType());
+                    serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
+                    removePowerUp(powerUp.getId());
                 }
                 else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
-                    // Temporary solution: put power up out of mapview
-                    ((PowerUp) a.getUserData()).setDisappear();
-                    ((Player) b.getUserData()).acquirePowerUp();
+                    Player player = (Player) a.getUserData();
+                    PowerUp powerUp = (PowerUp) b.getUserData();
+                    player.acquirePowerUp(powerUp.getType());
+                    Gdx.app.log(tag, "Player" + player.getId() + " Type" + powerUp.getType());
+                    serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
+                    removePowerUp(powerUp.getId());
                 }
-            }*/
+            }
         }
 
         @Override

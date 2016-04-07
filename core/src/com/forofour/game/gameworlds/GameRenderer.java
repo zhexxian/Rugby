@@ -130,7 +130,7 @@ public class GameRenderer {
             float scale = 3f;
 
             //rotate player according to direction of movement
-            float angle = p.getLastDirection().angle();
+            float angle = p.getAngleDegree();
             TextureRegion playerDirection;
             if(angle >= 45 && angle < 135)
                 playerDirection = AssetLoader.playerRegionAdown;
@@ -170,7 +170,7 @@ public class GameRenderer {
             float scale = 3f;
 
             //rotate player according to direction of movement
-            float angle = p.getLastDirection().angle();
+            float angle = p.getAngleDegree();
             TextureRegion playerDirection;
             if(angle >= 45 && angle < 135)
                 playerDirection = AssetLoader.playerRegionBdown;

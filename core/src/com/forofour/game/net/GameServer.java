@@ -91,12 +91,24 @@ public class GameServer {
                     Gdx.app.log("GameServer", "player" + packet.id + " called dropball");
                 }
 
+                // DEBUG PURPOSES(SV COMMANDS) : Adding of PowerUps into game
+                else if(o instanceof Network.PacketAddPowerUp) {
+                    Network.PacketAddPowerUp packet = (Network.PacketAddPowerUp) o;
+                    Vector2 position = new Vector2(10+random.nextInt(50),10+random.nextInt(50));
+                    int powerUpId = map.addPowerUp(position, packet.type);
+                    Gdx.app.log("GameServer", "PacketAddPowerUp, Type:" + packet.type + " ItemID:"+powerUpId);
+                    server.sendToAllTCP(new Network.PacketAddPowerUp(position, packet.type));
+                }
+
+                // DEBUG PURPOSES(SV COMMANDS) : Acquisition of PowerUp by player
                 else if(o instanceof Network.PacketPickPowerUp) {
                     Network.PacketPickPowerUp packet = (Network.PacketPickPowerUp) o;
                     map.getPlayerHash().get(c.getID()).acquirePowerUp(packet.type);
-                    Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type);
-                    server.sendToAllTCP(new Network.PacketPickPowerUp(c.getID(), packet.type)); // TODO: Remove this, server shall send this.
+                    Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type + " ItemID:"+packet.powerUpId);
+                    server.sendToAllTCP(new Network.PacketPickPowerUp(c.getID(), packet.type, -1)); // -1 as arbitary powerUpId
                 }
+
+                // Player's USE of PowerUp
                 else if(o instanceof Network.PacketUsePowerUp) {
                     int generatedChoice = random.nextInt(4);
                     map.getPlayerHash().get(c.getID()).usePowerUp(generatedChoice);

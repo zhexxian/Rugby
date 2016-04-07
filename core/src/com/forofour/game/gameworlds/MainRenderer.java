@@ -74,7 +74,7 @@ public class MainRenderer {
 
             // Updated camera is used to render stuff
             batcher.setProjectionMatrix(cam.combined);
-            drawSprites();
+//            drawSprites();
         }
     }
 
@@ -92,8 +92,8 @@ public class MainRenderer {
             float scale = 3f;
 
             //rotate player according to direction of movement
-            float angle = p.getLastDirection().angle();
-            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
+            float angle = p.getAngleDegree();
+//            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
             TextureRegion playerDirection;
             if(angle >= 45 && angle < 135)
                 playerDirection = AssetLoader.playerRegionAdown;
@@ -135,8 +135,8 @@ public class MainRenderer {
             float scale = 3f;
 
             //rotate player according to direction of movement
-            float angle = p.getLastDirection().angle();
-            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
+            float angle = p.getAngleDegree();
+//            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
 
 //            Gdx.app.log("Player" + p.getId(), "Angle " + p.getLastDirection().angle());
             TextureRegion playerDirection;
