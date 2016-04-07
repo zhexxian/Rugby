@@ -170,9 +170,11 @@ public class Network {
     }
     public static class PacketUsePowerUp {
         public int id;
+        public int generatedChoice;
         public PacketUsePowerUp() {}
-        public PacketUsePowerUp(int id) {
+        public PacketUsePowerUp(int id, int generateChoice) {
             this.id = id;
+            this.generatedChoice = generateChoice;
         }
     }
 

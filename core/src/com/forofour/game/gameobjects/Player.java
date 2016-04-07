@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Array;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
 
+import java.util.Random;
+
 /**
  * Created by seanlim on 19/2/2016.
  */
@@ -28,6 +30,7 @@ public class Player {
 
     private Ball ball;
     private int teamId;
+    private Team ownTeam, otherTeam;
 
     private float radius;
 
@@ -139,8 +142,8 @@ public class Player {
 
     public void knobMove(float x, float y) {
         // Remembers last moved direction
-        if(x != 0 || y != 0)
-            lastDirection.set(x, y);
+//        if(x != 0 || y != 0)
+//            lastDirection.set(x, y);
 
         // Apply boost multiplier(if required)
         if(boostTime > 0) {
@@ -152,7 +155,12 @@ public class Player {
         }
 
         body.setLinearVelocity(x * MAX_VELOCITY * slow_scale * confuse_x, y * MAX_VELOCITY * slow_scale * confuse_y);
+        if(!body.getLinearVelocity().isZero())
+            lastDirection.set(body.getLinearVelocity());
 
+        // Following line works as a "latency smoother"
+        // Sending the linear velocity to the server, will quickly set the velocity of the body within the server physics engine
+        // Re-sync of position is done with the slow update.
         client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
     }
 
@@ -173,7 +181,7 @@ public class Player {
         }
     }
 
-    public void dropBall(){
+    public void dropBall(){ // Client Sided command(NOTE: Server has no instance of client)
         if(hasBall()) {
             ball.loseHoldingPlayer();
             client.sendMessage(new Network.PacketDropBall(id));
@@ -200,15 +208,19 @@ public class Player {
         powerUpType = type;
         Gdx.app.log("Player"+id, "Acquired" +type);
     }
-    public void usePowerUp(){
+
+    // Call from server that powerUp usage is being called.
+    // generateChoice - Random number from server
+    public void usePowerUp(int generatedChoice){
         if(hasPowerUp()) {
             hasPowerUp = false;
-            //reverseDirectionControl();
-            if (powerUpType == 1) {
-                activateSlowEffect();
-            } else if (powerUpType == 2) {
-                activateConfusionEffect(1);
-            } else if (powerUpType == 3) {
+            if (powerUpType == 1) { // SLOW - Only to opposing team members
+                for(Player p : otherTeam.getTeamList())
+                    p.activateSlowEffect();
+            } else if (powerUpType == 2) { // CONFUSION - Only to opposing team members
+                for(Player p : otherTeam.getTeamList())
+                    p.activateConfusionEffect(generatedChoice);
+            } else if (powerUpType == 3) { // Invisibility - To self
                 activateInvisibleEffect();
             }
             Gdx.app.log("Player" + id, "Used" + powerUpType);
@@ -221,29 +233,31 @@ public class Player {
         return hasPowerUp;
     }
 
-
-    // Power Up: vomit -- move very slowly
+    // ACTIVATE EFFECTS CALLED BY THE SERVER
+    // Set movement speed scalar, and duration of effect
     public void activateSlowEffect(){
-        slow_scale = 0.5f;
+        slow_scale = 0.9f;
         slowEffectTime = SLOW_DURATION;
     }
-
-    public void activateConfusionEffect(int x){
-        switch(x) {
-            case 1: confuse_x = -1; confuse_y = -1; break;
-            case 2: confuse_x = -1; confuse_y = 1; break;
-            case 3: confuse_x = 1; confuse_y = -1; break;
-            case 4: confuse_x = 1; confuse_y = 1; break;
+    // Set the inverse to the controls, based on server's choice
+    public void activateConfusionEffect(int generatedNumber){
+        switch(generatedNumber) {
+            case 0: confuse_x = -1; confuse_y = -1; break;
+            case 1: confuse_x = -1; confuse_y = 0.7f; break;
+            case 2: confuse_x = 1; confuse_y = -0.7f; break;
+            case 3: confuse_x = -0.7f; confuse_y = 1; break;
             default:
                 confuse_x = 1; confuse_y = 1; break;
         }
         confusionEffectTime = CONFUSION_DURATION;
         Gdx.app.log("Player"+id, "Activate x:" + confuse_x + " y:"+confuse_y);
     }
+    // Set invisibility duration
     public void activateInvisibleEffect(){
         invisibleEffectTime = INVISIBLE_DURATION;
     }
 
+    // Returns the values back to original state
     public void deactivateSlowEffect(){
         slow_scale = 1;
     }
@@ -261,10 +275,11 @@ public class Player {
     public float getConfusionEffectTime() {
         return confusionEffectTime;
     }
-
-    public float getInvisibility_scale() {
-        if(invisibility_scale < 0.2) { // Minimum Opacity of Player
-            return 0.2f;
+    public float getInvisibility_scale(int playerId) {
+        if(playerId == id) {
+            if(invisibility_scale < 0.35) { // Minimum Opacity of Player
+                return 0.35f;
+            }
         }
         return invisibility_scale;
     }
@@ -303,5 +318,10 @@ public class Player {
 
     public int getId(){
         return id;
+    }
+
+    public void setTeam(Team ownTeam, Team otherTeam) {
+        this.ownTeam = ownTeam;
+        this.otherTeam = otherTeam;
     }
 }

@@ -10,7 +10,7 @@ import com.forofour.game.handlers.GameMap;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Random;
 
 /**
  * Created by seanlim on 1/4/2016.
@@ -19,9 +19,11 @@ public class GameServer {
 
     private Server server;
     private GameMap map;
+    private Random random;
     private ArrayList<Integer> initiatedPlayers;
 
     public GameServer(){
+        random = new Random(System.currentTimeMillis());
         map = new GameMap(this);
         initiatedPlayers = new ArrayList<Integer>();
         initiatedPlayers.add(1);
@@ -96,8 +98,9 @@ public class GameServer {
                     server.sendToAllTCP(new Network.PacketPickPowerUp(c.getID(), packet.type)); // TODO: Remove this, server shall send this.
                 }
                 else if(o instanceof Network.PacketUsePowerUp) {
-                    map.getPlayerHash().get(c.getID()).usePowerUp();
-                    server.sendToAllTCP(new Network.PacketUsePowerUp(c.getID()));
+                    int generatedChoice = random.nextInt(4);
+                    map.getPlayerHash().get(c.getID()).usePowerUp(generatedChoice);
+                    server.sendToAllTCP(new Network.PacketUsePowerUp(c.getID(), generatedChoice));
                     Gdx.app.log("GameServer", "PacketUsePowerUp, ID:" + c.getID());
                 }
             }

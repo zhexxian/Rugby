@@ -207,6 +207,13 @@ public class GameMap {
         else
             teamB.addPlayer(newPlayer);
 
+        for(Player p: playerHash.values()) {
+            if(teamA.getTeamList().contains(p))
+                p.setTeam(teamA, teamB);
+            else
+                p.setTeam(teamB, teamA);
+        }
+
         if(control)
             player = newPlayer;
 
@@ -244,6 +251,16 @@ public class GameMap {
     }
     public Team getTeamB() {
         return teamB;
+    }
+    public Team getOpposingTeam(int teamNo) {
+        if(teamNo == 1) {
+            Gdx.app.log(tag, teamB.toString());
+            return teamB;
+        }
+        else {
+            Gdx.app.log(tag, teamA.toString());
+            return teamA;
+        }
     }
 
     public void addTeamScores(float delta) {

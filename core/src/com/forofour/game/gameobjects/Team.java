@@ -53,4 +53,12 @@ public class Team {
     public ArrayList<Player> getTeamList() {
         return teamList;
     }
+
+    public static ArrayList<Team> getListOfTeams() {
+        return listOfTeams;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

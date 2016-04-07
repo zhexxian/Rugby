@@ -89,6 +89,7 @@ public class GameClient {
                 else if(o instanceof Network.PacketPlayerState) {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
+                    Gdx.app.log("Player"+packet.id, "Angle " + packet.angle);
                 }
                 else if(o instanceof Network.PacketPlayerUpdateFast) {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
@@ -121,22 +122,22 @@ public class GameClient {
                 }
                 else if(o instanceof Network.PacketUsePowerUp) {
                     Network.PacketUsePowerUp packet = (Network.PacketUsePowerUp) o;
-                    Gdx.app.log("GameClient", "PacketUsePowerUp, ID:" + packet.id);
-                    Gdx.app.log("GameClient", "HASH " + map.getPlayerHash());
-                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer());
-                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer().hasPowerUp());
-                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1));
-                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1).hasPowerUp());
-                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2));
-                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2).hasPowerUp());
-                    map.getPlayerHash().get(packet.id).usePowerUp();
-                    Gdx.app.log("GameClient", "P" + packet.id + "CONSUMED");
-                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer());
-                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer().hasPowerUp());
-                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1));
-                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1).hasPowerUp());
-                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2));
-                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2).hasPowerUp());
+//                    Gdx.app.log("GameClient", "PacketUsePowerUp, ID:" + packet.id);
+//                    Gdx.app.log("GameClient", "HASH " + map.getPlayerHash());
+//                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer());
+//                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer().hasPowerUp());
+//                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1));
+//                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1).hasPowerUp());
+//                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2));
+//                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2).hasPowerUp());
+                    map.getPlayerHash().get(packet.id).usePowerUp(packet.generatedChoice);
+//                    Gdx.app.log("GameClient", "P" + packet.id + "CONSUMED");
+//                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer());
+//                    Gdx.app.log("GameClient", "PLAYER " + map.getPlayer().hasPowerUp());
+//                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1));
+//                    Gdx.app.log("GameClient", "P1 " + map.getPlayerHash().get(1).hasPowerUp());
+//                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2));
+//                    Gdx.app.log("GameClient", "P2 " + map.getPlayerHash().get(2).hasPowerUp());
                 }
             }
             public void connected(Connection c){
