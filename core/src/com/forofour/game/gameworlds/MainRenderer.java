@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
@@ -91,7 +93,7 @@ public class MainRenderer {
 
             //rotate player according to direction of movement
             float angle = p.getLastDirection().angle();
-//            Gdx.app.log("Player" + p.getId(), "Angle " + p.getLastDirection().angle());
+            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
             TextureRegion playerDirection;
             if(angle >= 45 && angle < 135)
                 playerDirection = AssetLoader.playerRegionAdown;
@@ -134,6 +136,8 @@ public class MainRenderer {
 
             //rotate player according to direction of movement
             float angle = p.getLastDirection().angle();
+            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
+
 //            Gdx.app.log("Player" + p.getId(), "Angle " + p.getLastDirection().angle());
             TextureRegion playerDirection;
             if(angle >= 45 && angle < 135)

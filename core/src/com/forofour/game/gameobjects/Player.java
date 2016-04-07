@@ -1,6 +1,7 @@
 package com.forofour.game.gameobjects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -109,13 +110,14 @@ public class Player {
             }
         }
 
-        // Acquire and set angular direction
-        float radInitial = (float) Math.abs(body.getAngle()%(2*Math.PI));
-        float radGoal = (float) ((Math.PI/180)*(getLastDirection().angle()));
-        float deltaRad = (radGoal - radInitial);
-        if(deltaRad < -Math.PI)
-            deltaRad = (float) (2*Math.PI + deltaRad);
-        body.setAngularVelocity((deltaRad * getRadius()) * 5);
+//        // Acquire and set angular direction
+//        float radInitial = (float) Math.abs(body.getAngle()%(2*Math.PI));
+//        float radGoal = (float) ((Math.PI/180)*(getLastDirection().angle()));
+//        float deltaRad = (radGoal - radInitial);
+//        if(deltaRad < -Math.PI)
+//            deltaRad = (float) (2*Math.PI + deltaRad);
+//        body.setAngularVelocity((deltaRad * getRadius()) * 5);
+        body.setTransform(body.getPosition(), body.getLinearVelocity().angleRad());
 
         if(boostTime > 0)
             boostTime -= delta;
@@ -141,10 +143,6 @@ public class Player {
     }
 
     public void knobMove(float x, float y) {
-        // Remembers last moved direction
-//        if(x != 0 || y != 0)
-//            lastDirection.set(x, y);
-
         // Apply boost multiplier(if required)
         if(boostTime > 0) {
             x *= BOOST_SCALAR;
@@ -155,6 +153,8 @@ public class Player {
         }
 
         body.setLinearVelocity(x * MAX_VELOCITY * slow_scale * confuse_x, y * MAX_VELOCITY * slow_scale * confuse_y);
+
+        // Remembers last moved direction
         if(!body.getLinearVelocity().isZero())
             lastDirection.set(body.getLinearVelocity());
 
@@ -314,6 +314,9 @@ public class Player {
     }
     public float getAngle(){
         return body.getAngle();
+    }
+    public float getAngleDegree(){
+        return body.getAngle() * MathUtils.radiansToDegrees;
     }
 
     public int getId(){
