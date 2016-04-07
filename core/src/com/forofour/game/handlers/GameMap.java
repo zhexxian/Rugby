@@ -103,18 +103,22 @@ public class GameMap {
 
         if(gameInitialized) {
             // Common logic
-            player.update(delta);
+//            player.update(delta);
+            for(Player p : playerHash.values()) {
+                p.update(delta);
+            }
+
             ball.update(delta);
 
             // Client-sided logic
             if(!isHost) {
 
-                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
+//                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
 
                 if(lastSentTime < runTime - 0.1) { // Resync every 100ms
                     // Client will receive updated location on PlayerLocations after sending his own
                     clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
-                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
+//                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
 
                     lastSentTime = runTime;
                 }
@@ -139,7 +143,7 @@ public class GameMap {
             else {
                 addTeamScores(delta);
 
-                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
+//                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
                 if(!ball.isHeld())
                     serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity()));
 
@@ -164,17 +168,23 @@ public class GameMap {
         }
         return false; // Add connection failed
     }
-
     public void dropConnection(int id) {
         playersConnected.remove(id);
         updatePlayersConnected();
+    }
+
+    public void setNumberOfBabyFaces(int numberOfBabyFaces){
+        this.numberOfBabyFaces = numberOfBabyFaces;
+    }
+    public int getNumberOfBabyFaces(){
+        int temp = numberOfBabyFaces;
+        return temp;
     }
 
     public Map<Integer, Boolean> getPlayersConnected() {
         Gdx.app.log(tag, "playersConnected List" + playersConnected.toString());
         return playersConnected;
     }
-
     public void updatePlayersConnected() {
         if(playersConnected.size() == 4) {
             lobbyFilled = true;
@@ -216,6 +226,26 @@ public class GameMap {
         return ball;
     }
 
+
+    public void consumePowerUp(int playerId){}
+    public void addPowerUp(Vector2 position, int type) {
+        PowerUp powerUp = new PowerUp(position.x, position.y, 2, box2d);
+        powerUpList.add(powerUp);
+    }
+    public void removePowerUp(){
+        // FIFO
+    }
+    public ArrayList<PowerUp> getPowerUpList() {
+        return powerUpList;
+    }
+
+    public Team getTeamA() {
+        return teamA;
+    }
+    public Team getTeamB() {
+        return teamB;
+    }
+
     public void addTeamScores(float delta) {
         //add scores
         if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
@@ -223,18 +253,8 @@ public class GameMap {
         if(teamB.getTeamList().contains(ball.getHoldingPlayer()))
             teamB.addScore(delta);
     }
-
-    public void setNumberOfBabyFaces(int numberOfBabyFaces){
-        this.numberOfBabyFaces = numberOfBabyFaces;
-    }
-
-    public int getNumberOfBabyFaces(){
-        int temp = numberOfBabyFaces;
-        return temp;
-    }
-
-    // TODO: Server commands from client, for debugging purpose
-    public void svAddPlayer() {
+    public Timer getGlobalTime() {
+        return globalTime;
     }
 
     public synchronized void clientSendMessageUDP(Object msg) {
@@ -270,22 +290,6 @@ public class GameMap {
     }
     public synchronized void updateBallMovement(Vector2 movement) {
         ball.getBody().setLinearVelocity(movement);
-    }
-
-    public Team getTeamA() {
-        return teamA;
-    }
-
-    public Team getTeamB() {
-        return teamB;
-    }
-
-    public ArrayList<PowerUp> getPowerUpList() {
-        return powerUpList;
-    }
-
-    public Timer getGlobalTime() {
-        return globalTime;
     }
 
     // Server-sided Collision

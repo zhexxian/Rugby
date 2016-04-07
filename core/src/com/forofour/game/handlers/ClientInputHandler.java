@@ -29,9 +29,23 @@ public class ClientInputHandler extends InputMultiplexer {
             client.sendMessage(new Network.PacketGamePause());
             Gdx.app.log("Keypress P", "PauseButton Sent");
         }
-//        if(keycode == Input.Keys.O) {
-//            myWorld.addBall();
-//        }
+
+        if(keycode == Input.Keys.Q) {
+            client.sendMessage(new Network.PacketPickPowerUp(player.getId(), 1));
+            Gdx.app.log("Keypress Q", "1 Sent");
+        }
+        if(keycode == Input.Keys.W) {
+            client.sendMessage(new Network.PacketPickPowerUp(player.getId(), 2));
+            Gdx.app.log("Keypress W", "2 Sent");
+        }
+        if(keycode == Input.Keys.E) {
+            client.sendMessage(new Network.PacketPickPowerUp(player.getId(), 3));
+            Gdx.app.log("Keypress E", "3 Sent");
+        }
+        if(keycode == Input.Keys.S) {
+            client.sendMessage(new Network.PacketUsePowerUp());
+            Gdx.app.log("Keypress S", "UsePowerUp Sent");
+        }
 
         if(player != null) {
             if(keycode == Input.Keys.C){

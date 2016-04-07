@@ -16,10 +16,11 @@ public class Network {
         kryo.register(Float.class);
         kryo.register(Vector2.class);
 
-        kryo.register(PacketGamePause.class);
-
-        kryo.register(PacketPlayerJoinLeave.class);
         kryo.register(PacketDebugAnnouncement.class);
+        kryo.register(PacketPlayerJoinLeave.class);
+
+        kryo.register(PacketInitRound.class);
+        kryo.register(PacketGamePause.class);
         kryo.register(PacketTeamScores.class);
 
         kryo.register(PacketAddPlayer.class);
@@ -32,7 +33,9 @@ public class Network {
         kryo.register(PacketDropBall.class);
         kryo.register(PacketSetHoldingPlayer.class);
 
-        kryo.register(PacketInitRound.class);
+        kryo.register(PacketAddPowerUp.class);
+        kryo.register(PacketUsePowerUp.class);
+        kryo.register(PacketPickPowerUp.class);
     }
 
     public static class PacketDebugAnnouncement {
@@ -146,6 +149,33 @@ public class Network {
             this.lastDirection = lastDirection;
         }
     }
+
+    public static class PacketAddPowerUp {
+        public int type;
+        public Vector2 position;
+        public PacketAddPowerUp() {}
+        public PacketAddPowerUp(Vector2 position, int type) {
+            this.position = position;
+            this.type = type;
+        }
+    }
+    public static class PacketPickPowerUp {
+        public int id;
+        public int type;
+        public PacketPickPowerUp() {}
+        public PacketPickPowerUp(int id, int type) {
+            this.id = id;
+            this.type = type;
+        }
+    }
+    public static class PacketUsePowerUp {
+        public int id;
+        public PacketUsePowerUp() {}
+        public PacketUsePowerUp(int id) {
+            this.id = id;
+        }
+    }
+
 
     public static class PacketSetHoldingPlayer {
         public int id;

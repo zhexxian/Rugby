@@ -72,7 +72,7 @@ public class MainRenderer {
 
             // Updated camera is used to render stuff
             batcher.setProjectionMatrix(cam.combined);
-//            drawSprites();
+            drawSprites();
         }
     }
 
@@ -84,11 +84,14 @@ public class MainRenderer {
 
         // Team A
         for(Player p : teamA.getTeamList()) {
+            batcher.setColor(1,1,1,p.getInvisibility_scale());
+//            Gdx.app.log("Player"+p.getId(), "Invi " + p.getInvisibility_scale());
             //change the size of player
             float scale = 3f;
 
             //rotate player according to direction of movement
             float angle = p.getLastDirection().angle();
+            Gdx.app.log("Player" + p.getId(), "Angle " + p.getLastDirection().angle());
             TextureRegion playerDirection;
             if(angle >= 45 && angle < 135)
                 playerDirection = AssetLoader.playerRegionAdown;
@@ -119,16 +122,19 @@ public class MainRenderer {
                     scale,
                     scale,
                     0);
-
+            batcher.setColor(1, 1, 1, 1);
         }
 
         // Team B
         for(Player p : teamB.getTeamList()) {
+            batcher.setColor(1,1,1,p.getInvisibility_scale());
+//            Gdx.app.log("Player" + p.getId(), "Invi " + p.getInvisibility_scale());
             //change the size of player
             float scale = 3f;
 
             //rotate player according to direction of movement
             float angle = p.getLastDirection().angle();
+            Gdx.app.log("Player" + p.getId(), "Angle " + p.getLastDirection().angle());
             TextureRegion playerDirection;
             if(angle >= 45 && angle < 135)
                 playerDirection = AssetLoader.playerRegionBdown;
@@ -159,15 +165,21 @@ public class MainRenderer {
                     scale,
                     scale,
                     0);
+            batcher.setColor(1,1,1,1);
         }
 
         // Ball
         if(ball != null) {
+            if(ball.isHeld()) { // If the user is invisible, ditto!
+                batcher.setColor(1, 1, 1, ball.getHoldingPlayer().getInvisibility_scale());
+            }
+
             batcher.draw(AssetLoader.ball,
                     ball.getBody().getPosition().x - ball.getRadius(),
                     ball.getBody().getPosition().y - ball.getRadius(),
                     ball.getRadius() * 3,
                     ball.getRadius() * 3);
+            batcher.setColor(1, 1, 1, 1);
         }
 
         // PowerUps

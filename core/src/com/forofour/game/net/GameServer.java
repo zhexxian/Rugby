@@ -10,6 +10,7 @@ import com.forofour.game.handlers.GameMap;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Created by seanlim on 1/4/2016.
@@ -87,6 +88,18 @@ public class GameServer {
                     Gdx.app.log("GameServer", "aft Holder " + map.getBall().getHoldingPlayerId());
                     Gdx.app.log("GameServer", "player" + packet.id + " called dropball");
                 }
+
+                else if(o instanceof Network.PacketPickPowerUp) {
+                    Network.PacketPickPowerUp packet = (Network.PacketPickPowerUp) o;
+                    map.getPlayerHash().get(c.getID()).acquirePowerUp(packet.type);
+                    Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type);
+                    server.sendToAllTCP(new Network.PacketPickPowerUp(c.getID(), packet.type)); // TODO: Remove this, server shall send this.
+                }
+                else if(o instanceof Network.PacketUsePowerUp) {
+                    map.getPlayerHash().get(c.getID()).usePowerUp();
+                    server.sendToAllTCP(new Network.PacketUsePowerUp(c.getID()));
+                    Gdx.app.log("GameServer", "PacketUsePowerUp, ID:" + c.getID());
+                }
             }
 
             public void connected(Connection c) {
@@ -153,6 +166,15 @@ public class GameServer {
         Vector2 ballPosition = new Vector2(GameConstants.GAME_WIDTH/2, GameConstants.GAME_HEIGHT/2);
         map.addBall(ballPosition, map.getBox2d());
         sendMessage(new Network.PacketAddBall(ballPosition));
+    }
+
+    public void addPowerUp() {
+        // 3 types - Water(Slow), Cloak(Invisibility) , Confusion(DisorientedControls)
+        Gdx.app.log("GameServer", "Assigning ball");
+        int powerupType = 1;
+        Vector2 powerupPosition = new Vector2(10, 20);
+        map.addPowerUp(powerupPosition, powerupType);
+        sendMessage(new Network.PacketAddPowerUp(powerupPosition, powerupType));
     }
 
     public GameMap getMap() {

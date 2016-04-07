@@ -37,15 +37,27 @@ public class Player {
     //TODO: move the constants to handlers/GameConstants
     private static final int MAX_VELOCITY = 30;
     private static final float BOOST_SCALAR = 1.3f;
+
     private static final float BOOST_DURATION = 1;
-    private static final float REVERSE_DIRECTION_DURATION = 5;
-    private static final float MOVE_VERY_SLOWLY_DURATION = 5;
     private static final float NO_BOOST_DURATION = 2;
+
+    private static final float SLOW_DURATION = 5;
+    private static final float CONFUSION_DURATION = 5;
+    private static final float INVISIBLE_DURATION = 5;
+
+    private float slow_scale = 1;
+    private float confuse_x = 1;
+    private float confuse_y = 1;
+    private float invisibility_scale = 1;
+
     private float boostTime = 0;
-    private float reverseDirectionTime = 0;
-    private float moveVerySlowlyTime = 0;
     private float noBoostTime = 0;
 
+    private float slowEffectTime = 0;
+    private float confusionEffectTime = 0;
+    private float invisibleEffectTime = 0;
+
+    private int powerUpType;
     private boolean hasPowerUp;
 
     public Player(int id, Vector2 pos, World box2d, GameClient client) {
@@ -100,18 +112,29 @@ public class Player {
         float deltaRad = (radGoal - radInitial);
         if(deltaRad < -Math.PI)
             deltaRad = (float) (2*Math.PI + deltaRad);
+        body.setAngularVelocity((deltaRad * getRadius()) * 5);
 
         if(boostTime > 0)
             boostTime -= delta;
         if(noBoostTime > 0)
             noBoostTime -= delta;
-        if(reverseDirectionTime > 0)
-            reverseDirectionTime -= delta;
-        if(moveVerySlowlyTime > 0)
-            moveVerySlowlyTime -= delta;
 
-        body.setAngularVelocity((deltaRad * getRadius()) * 5);
+        if(slowEffectTime > 0)
+            slowEffectTime -= delta;
+        else
+            deactivateSlowEffect();
 
+        if(confusionEffectTime > 0)
+            confusionEffectTime -= delta;
+        else
+            deactivateConfusionEffect();
+
+        if(invisibleEffectTime > 0) {
+            invisibility_scale *= 0.95; // Rate^ at which player turns
+            invisibleEffectTime -= delta;
+        }
+        else
+            deactivateInvisibleEffect();
     }
 
     public void knobMove(float x, float y) {
@@ -128,7 +151,7 @@ public class Player {
             System.out.println("Player - boost " + boostTime);
         }
 
-        body.setLinearVelocity(x * MAX_VELOCITY, y * MAX_VELOCITY);
+        body.setLinearVelocity(x * MAX_VELOCITY * slow_scale * confuse_x, y * MAX_VELOCITY * slow_scale * confuse_y);
 
         client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
     }
@@ -172,34 +195,78 @@ public class Player {
         return false;
     }
 
-    public void acquirePowerUp(){
+    public void acquirePowerUp(int type){
         hasPowerUp = true;
+        powerUpType = type;
+        Gdx.app.log("Player"+id, "Acquired" +type);
     }
     public void usePowerUp(){
-        hasPowerUp = false;
-        //reverseDirectionControl();
-        moveVerySlowly();
+        if(hasPowerUp()) {
+            hasPowerUp = false;
+            //reverseDirectionControl();
+            if (powerUpType == 1) {
+                activateSlowEffect();
+            } else if (powerUpType == 2) {
+                activateConfusionEffect(1);
+            } else if (powerUpType == 3) {
+                activateInvisibleEffect();
+            }
+            Gdx.app.log("Player" + id, "Used" + powerUpType);
+        }
+        else {
+            Gdx.app.log("Player" + id, "No power up to use");
+        }
     }
     public boolean hasPowerUp() {
         return hasPowerUp;
     }
 
-    // Power Up: poop -- direction control reversed, up is down, left is right, and vice versa
-    public void reverseDirectionControl(){
-        reverseDirectionTime = REVERSE_DIRECTION_DURATION;
-    }
-
-    public float getReverseDirectionTime() {
-        return reverseDirectionTime;
-    }
 
     // Power Up: vomit -- move very slowly
-    public void moveVerySlowly(){
-        moveVerySlowlyTime = MOVE_VERY_SLOWLY_DURATION;
+    public void activateSlowEffect(){
+        slow_scale = 0.5f;
+        slowEffectTime = SLOW_DURATION;
     }
 
-    public float getMoveVerySlowlyTime() {
-        return moveVerySlowlyTime;
+    public void activateConfusionEffect(int x){
+        switch(x) {
+            case 1: confuse_x = -1; confuse_y = -1; break;
+            case 2: confuse_x = -1; confuse_y = 1; break;
+            case 3: confuse_x = 1; confuse_y = -1; break;
+            case 4: confuse_x = 1; confuse_y = 1; break;
+            default:
+                confuse_x = 1; confuse_y = 1; break;
+        }
+        confusionEffectTime = CONFUSION_DURATION;
+        Gdx.app.log("Player"+id, "Activate x:" + confuse_x + " y:"+confuse_y);
+    }
+    public void activateInvisibleEffect(){
+        invisibleEffectTime = INVISIBLE_DURATION;
+    }
+
+    public void deactivateSlowEffect(){
+        slow_scale = 1;
+    }
+    public void deactivateConfusionEffect(){
+        confuse_x = 1;
+        confuse_y = 1;
+    }
+    public void deactivateInvisibleEffect(){
+        invisibility_scale = 1;
+    }
+
+    public float getSlowEffectTime() {
+        return slowEffectTime;
+    }
+    public float getConfusionEffectTime() {
+        return confusionEffectTime;
+    }
+
+    public float getInvisibility_scale() {
+        if(invisibility_scale < 0.2) { // Minimum Opacity of Player
+            return 0.2f;
+        }
+        return invisibility_scale;
     }
 
     public float getRadius() {

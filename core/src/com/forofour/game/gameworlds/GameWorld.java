@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.forofour.game.actors.PowerUpSlotMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.gameobjects.Ball;
@@ -146,10 +145,10 @@ public class GameWorld{
 
         //define player movement
         if(player != null) { // Player controls
-            if (player.getReverseDirectionTime() > 0) {
+            if (player.getConfusionEffectTime() > 0) {
                 player.knobMove(-getTouchpad().getKnobPercentX(), getTouchpad().getKnobPercentY());
             }
-            if (player.getMoveVerySlowlyTime() > 0) {
+            if (player.getSlowEffectTime() > 0) {
                 player.knobMove(getTouchpad().getKnobPercentX()/4, -getTouchpad().getKnobPercentY()/4);
             }
             else {
@@ -303,22 +302,22 @@ class ListenerClass implements ContactListener{
                 }
             }
         }
-        if(world.getPlayer() != null && world.getPowerUp() != null){
-            //TODO: check if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below
-            Body a = contact.getFixtureA().getBody();
-            Body b = contact.getFixtureB().getBody();
-
-            if(a.getUserData() instanceof Player && b.getUserData() instanceof PowerUp){
-                // Temporary solution: put power up out of mapview
-                ((PowerUp) b.getUserData()).setDisappear();
-                ((Player) a.getUserData()).acquirePowerUp(); // TODO: Refactor to recognize Type of PowerUp
-            }
-            else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
-                // Temporary solution: put power up out of mapview
-                ((PowerUp) a.getUserData()).setDisappear();
-                ((Player) b.getUserData()).acquirePowerUp();
-            }
-        }
+//        if(world.getPlayer() != null && world.getPowerUp() != null){
+//            //TODO: check if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below
+//            Body a = contact.getFixtureA().getBody();
+//            Body b = contact.getFixtureB().getBody();
+//
+//            if(a.getUserData() instanceof Player && b.getUserData() instanceof PowerUp){
+//                // Temporary solution: put power up out of mapview
+//                ((PowerUp) b.getUserData()).setDisappear();
+//                ((Player) a.getUserData()).acquirePowerUp(); // TODO: Refactor to recognize Type of PowerUp
+//            }
+//            else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
+//                // Temporary solution: put power up out of mapview
+//                ((PowerUp) a.getUserData()).setDisappear();
+//                ((Player) b.getUserData()).acquirePowerUp();
+//            }
+//        }
     }
 
     @Override

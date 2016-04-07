@@ -75,7 +75,7 @@ public class LobbyScreen implements Screen {
         }
 
         Gdx.app.log("LobbyScreen", "Connecting to server");
-        client.connect("192.168.1.166");
+        client.connect("192.168.1.231");
     }
 
     @Override
@@ -91,7 +91,7 @@ public class LobbyScreen implements Screen {
         batch.end();
 
         // Only if Desired number of Players are connection would the buttons be Active/Visible
-        showStartNudgeButton = client.getMap().getNumberOfBabyFaces() == GameConstants.MAX_PLAYERS; // Should it be 2 or more?
+        showStartNudgeButton = client.getMap().getNumberOfBabyFaces() >= GameConstants.MAX_PLAYERS; // Should it be 2 or more?
         if(isHost) {
             lobbyActorMaker.getButtonStartGame().setVisible(showStartNudgeButton);
             lobbyActorMaker.getButtonNudgeHost().setVisible(false);

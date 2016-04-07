@@ -102,10 +102,10 @@ public class MainOverlay extends Stage {
     }
 
     private void captureTouchpad() {
-        if (player.getReverseDirectionTime() > 0) {
+        if (player.getConfusionEffectTime() > 0) {
             player.knobMove(-touchpad.getKnobPercentX(), touchpad.getKnobPercentY());
         }
-        if (player.getMoveVerySlowlyTime() > 0) {
+        if (player.getSlowEffectTime() > 0) {
             player.knobMove(touchpad.getKnobPercentX()/4, -touchpad.getKnobPercentY()/4);
         }
         else {
