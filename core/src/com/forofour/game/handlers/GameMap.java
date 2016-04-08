@@ -52,6 +52,7 @@ public class GameMap {
     private Timer globalTime;
     private boolean gameInitialized;
     public boolean gameInitiated, gamePaused, gameEnd;
+    public int gameDuration = 90;
 
     public GameMap(GameServer server){
         this(true);
@@ -84,7 +85,7 @@ public class GameMap {
         //create two teams with different team id
         teamA = new Team(1);
         teamB = new Team(2);
-        globalTime = new Timer();
+        globalTime = new Timer(gameDuration);
     }
 
     public void restart() {
@@ -264,12 +265,12 @@ public class GameMap {
         return ball;
     }
 
-    public int addPowerUp(Vector2 position, int type) {
+    public synchronized int addPowerUp(Vector2 position, int type) {
         PowerUp powerUp = new PowerUp(position, type, ++powerUpCount, box2d);
         powerUpList.add(powerUp);
         return powerUp.getId();
     }
-    public void removePowerUp(int id){
+    public synchronized void removePowerUp(int id){
         for(PowerUp powerUp : powerUpList) {
             if(powerUp.getId() == id) {
                 powerUpRemoveList.add(powerUp);

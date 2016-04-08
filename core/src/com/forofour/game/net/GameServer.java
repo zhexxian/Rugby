@@ -13,6 +13,7 @@ import com.forofour.game.screens.MainScreen;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -26,6 +27,7 @@ public class GameServer {
     public boolean restart;
 
     private ArrayList<Integer> initiatedPlayers;
+    private ArrayList<Integer> powerUpAssignment;
 
     public GameServer(){
         random = new Random(System.currentTimeMillis());
@@ -33,6 +35,10 @@ public class GameServer {
 
         initiatedPlayers = new ArrayList<Integer>();
         initiatedPlayers.add(1);
+
+        powerUpAssignment = new ArrayList<Integer>();
+        assignSpawnTimingPowerUp();
+
 
         server = new Server();
         Network.register(server);
@@ -122,10 +128,8 @@ public class GameServer {
                 // DEBUG PURPOSES(SV COMMANDS) : Adding of PowerUps into game
                 else if(o instanceof Network.PacketAddPowerUp) {
                     Network.PacketAddPowerUp packet = (Network.PacketAddPowerUp) o;
-                    Vector2 position = new Vector2(10+random.nextInt(50),10+random.nextInt(50));
-                    int powerUpId = map.addPowerUp(position, packet.type);
-                    Gdx.app.log("GameServer", "PacketAddPowerUp, Type:" + packet.type + " ItemID:"+powerUpId);
-                    server.sendToAllTCP(new Network.PacketAddPowerUp(position, packet.type));
+                    Gdx.app.log("GameServer", "PacketAddPowerUp, Type:" + packet.type);
+                    assignPowerUp(packet.type);
                 }
 
                 // DEBUG PURPOSES(SV COMMANDS) : Acquisition of PowerUp by player
@@ -174,6 +178,14 @@ public class GameServer {
 
     public void update(float delta){
         map.update(delta);
+
+        if(!powerUpAssignment.isEmpty() && map.getGlobalTime().getElapsedSeconds()>0) {
+            if (powerUpAssignment.get(0) < map.getGlobalTime().getElapsedSeconds()) {
+                Gdx.app.log("GameServer-PowerUpAssignmet", powerUpAssignment.get(0) + " " + map.getGlobalTime().getElapsedSeconds());
+                assignPowerUp();
+                powerUpAssignment.remove(0);
+            }
+        }
     }
 
     public void shutdown() {
@@ -211,13 +223,28 @@ public class GameServer {
         sendMessage(new Network.PacketAddBall(ballPosition));
     }
 
-    public void addPowerUp() {
+    public void assignPowerUp(){
+        int type = 1 + random.nextInt(3);
+        assignPowerUp(type);
+    }
+    public void assignPowerUp(int type) {
         // 3 types - Water(Slow), Cloak(Invisibility) , Confusion(DisorientedControls)
-        Gdx.app.log("GameServer", "Assigning ball");
-        int powerupType = 1;
-        Vector2 powerupPosition = new Vector2(10, 20);
-        map.addPowerUp(powerupPosition, powerupType);
-        sendMessage(new Network.PacketAddPowerUp(powerupPosition, powerupType));
+        int distanceFromWall = 5;
+        Vector2 position = new Vector2(
+                distanceFromWall + random.nextInt((int) GameConstants.GAME_WIDTH - distanceFromWall),
+                distanceFromWall + random.nextInt((int) GameConstants.GAME_HEIGHT - distanceFromWall));
+        int powerUpId = map.addPowerUp(position, type);
+        Gdx.app.log("GameServer", "Assigning PowerUp of type"+powerUpId);
+        server.sendToAllTCP(new Network.PacketAddPowerUp(position, type));
+    }
+
+    public void assignSpawnTimingPowerUp() {
+        int initialTime = 0;
+        while(initialTime < map.gameDuration) {
+            initialTime += 15 + random.nextInt(5);
+            if(initialTime < map.gameDuration)
+                powerUpAssignment.add(initialTime);
+        }
     }
 
     public void reinitLobby() {

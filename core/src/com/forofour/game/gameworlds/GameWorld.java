@@ -82,8 +82,8 @@ public class GameWorld{
         wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
 
         //initialize game Timer
-        globalTime = new Timer();
-        globalTime.start();
+//        globalTime = new Timer();
+//        globalTime.start();
 
         //make & add actors(HUD components) to the stage
 /*        touchpad = TouchPadMaker.make(this);

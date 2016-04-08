@@ -8,7 +8,9 @@ import com.badlogic.gdx.Gdx;
 public class Timer {
 
     private boolean done = false;
-    private static long endTime = 60 * 1000;
+
+    private int gameDuration = 60; // Default timing
+    private long endTime = gameDuration * 1000;
 
     private final long nanosPerMilli = 1000000;
     private long startTime = 0;
@@ -18,6 +20,13 @@ public class Timer {
     private long startPause = 0;
 
     long elapsed;
+
+    public Timer(){
+    }
+    public Timer(int gameDuration){
+        this.gameDuration = gameDuration;
+        this.endTime = gameDuration * 1000;
+    }
 
     public boolean isRunning() {
         return running;
@@ -88,6 +97,11 @@ public class Timer {
     // Get elapsed milliseconds
     public long getElapsedMilliseconds() {
         return elapsed / nanosPerMilli;
+    }
+    // Get elapsed milliseconds
+
+    public long getElapsedSeconds() {
+        return getElapsedMilliseconds()/1000;
     }
 
     public boolean isDone(){

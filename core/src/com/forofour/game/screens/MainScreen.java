@@ -75,26 +75,15 @@ public class MainScreen implements Screen {
             // Server-sided. Holds master map
             if (isHost) {
                 server.update(delta);
-//                server.getMap().getGlobalTime().start();
-//                server.getMap().getGlobalTime().getElapsedMilliseconds();
 
-                //                server.getMap().getGlobalTime().start();
-//                server.getMap().getGlobalTime().getElapsedMilliseconds();
-
-                Gdx.app.log("ClientTime", map.getGlobalTime().getElapsed());
-                Gdx.app.log("HostTime", server.getMap().getGlobalTime().getElapsed());
+//                Gdx.app.log("ClientTime", map.getGlobalTime().getElapsed());
+//                Gdx.app.log("HostTime", server.getMap().getGlobalTime().getElapsed());
 
                 if(server.getMap().getGlobalTime().isDone()) { // Triggers End of game when i)TIME IS UP
                     server.getMap().gamePaused = true;
                     server.getMap().gameEnd = true;
                     server.sendMessage(new Network.PacketGameEnd());
                 }
-
-//                if(map.getGlobalTime().isDone()) { // Triggers End of game when i)TIME IS UP
-//                    map.gamePaused = true;
-//                    map.gameEnd = true;
-//                    server.sendMessage(new Network.PacketGameEnd());
-//                }
             }
         }
         else {
