@@ -57,6 +57,7 @@ public class MainOverlay extends Stage {
     }
 
     public void update(float delta){
+
         if(!client.getMap().gamePaused) {
             showActors();
             if(isInitialized){

@@ -146,6 +146,10 @@ public class GameServer {
 
     public void update(float delta){
         map.update(delta);
+//        if(map.getGlobalTime().isDone()) {
+//            map.gamePaused = true;
+//            sendMessage(new Network.PacketGamePause(true));
+//        }
     }
 
     public void shutdown() {

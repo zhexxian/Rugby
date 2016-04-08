@@ -6,6 +6,10 @@ import com.badlogic.gdx.Gdx;
  * Created by zhexian on 3/9/2016.
  */
 public class Timer {
+
+    private boolean done;
+    private long endTime = (long) (0.5 * 60 * 1000000000);
+
     private final long nanosPerMilli = 1000000;
     private long startTime = 0;
     private long stopTime = 0;
@@ -46,7 +50,7 @@ public class Timer {
     public void stop() {
         this.stopTime = System.nanoTime();
         this.running = false;
-        this.paused = false;
+        this.paused = true;
     }
 
     // Reset
@@ -71,7 +75,17 @@ public class Timer {
         else {
             elapsed = (stopTime - startTime);
         }
+
+        if(elapsed >= endTime){
+            done = true;
+            Gdx.app.log("Done", "True");
+        }
+
         return elapsed / nanosPerMilli;
+    }
+
+    public boolean isDone(){
+        return done;
     }
 
     public void setElapsedMilliseconds(long targetElapsed){
