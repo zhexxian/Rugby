@@ -27,6 +27,8 @@ public class MainRenderer {
     private OrthographicCamera cam;
     private CameraAdjustments camAdj;
 
+    private float runTime;
+
     // Renderers -- debugRenderer for physics debugging, shapeRenderer for visual effect
     private Box2DDebugRenderer debugRenderer;
     private SpriteBatch batcher;
@@ -55,9 +57,11 @@ public class MainRenderer {
         batcher = new SpriteBatch();
 
         initialized = false;
+        runTime = 0;
     }
 
     public void render(float delta) {
+        runTime += delta;
         if(!initialized){
             initialize();
         }
@@ -84,121 +88,10 @@ public class MainRenderer {
         // Background Floor mat
         batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
 
-        // Team A
-        for(Player p : teamA.getTeamList()) {
-            batcher.setColor(1,1,1,p.getInvisibility_scale(player.getId())); // PowerUp(Invisibility) Effect
-
-            //change the size of player
-            float scale = 3f;
-
-            //rotate player according to direction of movement
-            float angle = p.getAngleDegree();
-//            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
-            TextureRegion playerDirection;
-
-            if(angle <= 135 && angle > 45)
-                playerDirection = AssetLoader.playerRegionAdown;
-            else if(angle <= 45 && angle > -45)
-                playerDirection = AssetLoader.playerRegionAright;
-            else if(angle <= -45 && angle > -135)
-                playerDirection = AssetLoader.playerRegionAup;
-            else
-                playerDirection = AssetLoader.playerRegionAleft;
-
-            /*draw(TextureRegion region,
-                float x,
-                float y,
-                float originX,
-                float originY,
-                float width,
-                float height,
-                float scaleX,
-                float scaleY,
-                float rotation)*/
-            batcher.draw(playerDirection, // Texture
-                    p.getBody().getPosition().x-0.5f,
-                    p.getBody().getPosition().y-0.5f,
-                    1,
-                    1,
-                    p.getRadius(), // width
-                    p.getRadius(), // height
-                    scale,
-                    scale,
-                    0);
-            batcher.setColor(1, 1, 1, 1);
-        }
-
-        // Team B
-        for(Player p : teamB.getTeamList()) {
-            batcher.setColor(1,1,1,p.getInvisibility_scale(player.getId()));
-
-            //change the size of player
-            float scale = 3f;
-
-            //rotate player according to direction of movement
-            float angle = p.getAngleDegree();
-//            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
-
-//            Gdx.app.log("Player" + p.getId(), "Angle " + p.getLastDirection().angle());
-            TextureRegion playerDirection;
-            if(angle <= 135 && angle > 45)
-                playerDirection = AssetLoader.playerRegionBdown;
-            else if(angle <= 45 && angle > -45)
-                playerDirection = AssetLoader.playerRegionBright;
-            else if(angle <= -45 && angle > -135)
-                playerDirection = AssetLoader.playerRegionBup;
-            else
-                playerDirection = AssetLoader.playerRegionBleft;
-
-            /*draw(TextureRegion region,
-                float x,
-                float y,
-                float originX,
-                float originY,
-                float width,
-                float height,
-                float scaleX,
-                float scaleY,
-                float rotation)*/
-            batcher.draw(playerDirection, // Texture
-                    p.getBody().getPosition().x-0.5f,
-                    p.getBody().getPosition().y-0.5f,
-                    1f,
-                    1f,
-                    p.getRadius(), // width
-                    p.getRadius(), // height
-                    scale,
-                    scale,
-                    0);
-            batcher.setColor(1,1,1,1);
-        }
-
-        // Ball
-        if(ball != null) {
-            if(ball.isHeld()) { // If the ball holder is invisible, ditto!
-                batcher.setColor(1,1,1,ball.getHoldingPlayer().getInvisibility_scale(player.getId()));
-            }
-
-            batcher.draw(AssetLoader.ball,
-                    ball.getBody().getPosition().x - ball.getRadius(),
-                    ball.getBody().getPosition().y - ball.getRadius(),
-                    ball.getRadius() * 3,
-                    ball.getRadius() * 3);
-            batcher.setColor(1, 1, 1, 1);
-        }
-
-        // PowerUps
-        powerUpList = map.getPowerUpList();
-        if(powerUpList!=null) {
-            for (PowerUp powerUp : powerUpList) {
-                batcher.draw(AssetLoader.powerUp,
-                        powerUp.getBody().getPosition().x - powerUp.getRadius(),
-                        powerUp.getBody().getPosition().y - powerUp.getRadius(),
-                        powerUp.getRadius() * 2,
-                        powerUp.getRadius() * 2);
-            }
-        }
-        batcher.end();
+        renderTeamA();
+        renderTeamB();
+        renderBall();
+        renderPowerUps();
     }
 
     public void initialize(){
@@ -215,5 +108,149 @@ public class MainRenderer {
                 teamA != null && teamB != null) {
             initialized = true;
         }
+    }
+
+    public void renderTeamA() {
+        // Team A
+        for(Player p : teamA.getTeamList()) {
+            batcher.setColor(1,1,1,p.getInvisibility_scale(player.getId())); // PowerUp(Invisibility) Effect
+
+            //change the size of player
+            float scale = 3f;
+
+            //rotate player according to direction of movement
+            float angle = p.getAngleDegree();
+//            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
+            TextureRegion playerDirection;
+
+//            if(angle <= 135 && angle > 45)
+//                playerDirection = AssetLoader.playerRegionAdown;
+//            else if(angle <= 45 && angle > -45)
+//                playerDirection = AssetLoader.playerRegionAright;
+//            else if(angle <= -45 && angle > -135)
+//                playerDirection = AssetLoader.playerRegionAup;
+//            else
+//                playerDirection = AssetLoader.playerRegionAleft;
+            if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
+                if (angle <= 135 && angle > 45)
+                    playerDirection = AssetLoader.playerAnimationDownA.getKeyFrame(runTime);
+                else if (angle <= 45 && angle > -45)
+                    playerDirection = AssetLoader.playerAnimationRightA.getKeyFrame(runTime);
+                else if (angle <= -45 && angle > -135)
+                    playerDirection = AssetLoader.playerAnimationUpA.getKeyFrame(runTime);
+                else
+                    playerDirection = AssetLoader.playerAnimationLeftA.getKeyFrame(runTime);
+            }
+            else {
+                if (angle <= 135 && angle > 45)
+                    playerDirection = AssetLoader.playerRegionAdown1;
+                else if (angle <= 45 && angle > -45)
+                    playerDirection = AssetLoader.playerRegionAright1;
+                else if (angle <= -45 && angle > -135)
+                    playerDirection = AssetLoader.playerRegionAup1;
+                else
+                    playerDirection = AssetLoader.playerRegionAleft1;
+            }
+
+
+            /*draw(TextureRegion region,
+                float x,
+                float y,
+                float originX,
+                float originY,
+                float width,
+                float height,
+                float scaleX,
+                float scaleY,
+                float rotation)*/
+                batcher.draw(playerDirection, // Texture
+                        p.getBody().getPosition().x - 0.5f,
+                        p.getBody().getPosition().y - 0.5f,
+                        1,
+                        1,
+                        p.getRadius(), // width
+                        p.getRadius(), // height
+                        scale,
+                        scale,
+                        0);
+            batcher.setColor(1, 1, 1, 1);
+        }
+    }
+
+    public void renderTeamB() {
+        // Team B
+        for(Player p : teamB.getTeamList()) {
+            batcher.setColor(1,1,1,p.getInvisibility_scale(player.getId()));
+
+            //change the size of player
+            float scale = 3f;
+
+            //rotate player according to direction of movement
+            float angle = p.getAngleDegree();
+
+            TextureRegion playerDirection;
+            if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
+                if (angle <= 135 && angle > 45)
+                    playerDirection = AssetLoader.playerAnimationDownB.getKeyFrame(runTime);
+                else if (angle <= 45 && angle > -45)
+                    playerDirection = AssetLoader.playerAnimationRightB.getKeyFrame(runTime);
+                else if (angle <= -45 && angle > -135)
+                    playerDirection = AssetLoader.playerAnimationUpB.getKeyFrame(runTime);
+                else
+                    playerDirection = AssetLoader.playerAnimationLeftB.getKeyFrame(runTime);
+            }
+            else {
+                if (angle <= 135 && angle > 45)
+                    playerDirection = AssetLoader.playerRegionBdown1;
+                else if (angle <= 45 && angle > -45)
+                    playerDirection = AssetLoader.playerRegionBright1;
+                else if (angle <= -45 && angle > -135)
+                    playerDirection = AssetLoader.playerRegionBup1;
+                else
+                    playerDirection = AssetLoader.playerRegionBleft1;
+            }
+
+            batcher.draw(playerDirection, // Texture
+                    p.getBody().getPosition().x-0.5f,
+                    p.getBody().getPosition().y-0.5f,
+                    1f,
+                    1f,
+                    p.getRadius(), // width
+                    p.getRadius(), // height
+                    scale,
+                    scale,
+                    0);
+            batcher.setColor(1,1,1,1);
+        }
+    }
+
+    private void renderBall() {
+        // Ball
+        if(ball != null) {
+            if(ball.isHeld()) { // If the ball holder is invisible, ditto!
+                batcher.setColor(1,1,1,ball.getHoldingPlayer().getInvisibility_scale(player.getId()));
+            }
+
+            batcher.draw(AssetLoader.ball,
+                    ball.getBody().getPosition().x - ball.getRadius(),
+                    ball.getBody().getPosition().y - ball.getRadius(),
+                    ball.getRadius() * 3,
+                    ball.getRadius() * 3);
+            batcher.setColor(1, 1, 1, 1);
+        }
+    }
+    private void renderPowerUps() {
+        // PowerUps
+        powerUpList = map.getPowerUpList();
+        if(powerUpList!=null) {
+            for (PowerUp powerUp : powerUpList) {
+                batcher.draw(AssetLoader.powerUp,
+                        powerUp.getBody().getPosition().x - powerUp.getRadius(),
+                        powerUp.getBody().getPosition().y - powerUp.getRadius(),
+                        powerUp.getRadius() * 2,
+                        powerUp.getRadius() * 2);
+            }
+        }
+        batcher.end();
     }
 }
