@@ -21,6 +21,9 @@ public class Network {
 
         kryo.register(PacketInitRound.class);
         kryo.register(PacketGamePause.class);
+        kryo.register(PacketGameEnd.class);
+        kryo.register(PacketReinitLobby.class);
+
         kryo.register(PacketTeamScores.class);
 
         kryo.register(PacketAddPlayer.class);
@@ -56,6 +59,20 @@ public class Network {
         }
         public PacketGamePause(boolean gamePaused) {
             this.gamePaused = gamePaused;
+        }
+    }
+
+    public static class PacketGameEnd { // Server to trigger GameEnd state, Client to reply PlayAgain Intentions
+        public boolean playAgain;
+        public PacketGameEnd() {
+        }
+        public PacketGameEnd(boolean playAgain) {
+            this.playAgain = playAgain;
+        }
+    }
+
+    public static class PacketReinitLobby {
+        public PacketReinitLobby() {
         }
     }
 

@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.forofour.game.MyGdxGame;
 import com.forofour.game.gameobjects.PowerUp;
 import com.forofour.game.handlers.GameMap;
+import com.forofour.game.screens.LobbyScreen;
 
 import java.io.IOException;
 
@@ -17,6 +19,7 @@ public class GameClient {
 
     private Client client;
     private GameMap map;
+    public boolean restart;
 
     public GameClient(){
         map = new GameMap(this);
@@ -42,6 +45,17 @@ public class GameClient {
                     Network.PacketGamePause packet = (Network.PacketGamePause) o;
                     map.gamePaused = packet.gamePaused;
                     Gdx.app.log("GameClient", "PauseButton Received from Server");
+                }
+
+                else if(o instanceof Network.PacketGameEnd) {
+//                    Network.PacketGameEnd packet = (Network.PacketGameEnd) o;
+                    map.gamePaused = true;
+                    map.gameEnd = true;
+                    Gdx.app.log("GameClient", "Game End Received from Server");
+                }
+                else if(o instanceof Network.PacketReinitLobby) {
+                    reinitLobby(); // If SERVER allows, to show BUTTON to PLAYAGAIN
+                    Gdx.app.log("GameClient", "ReinitLobby ALLOWED Received from Server");
                 }
 
                 else if(o instanceof Network.PacketPlayerJoinLeave) {
@@ -185,8 +199,21 @@ public class GameClient {
         }
     }
 
+    public void reinitLobby() {
+        //Show Client-Sided button to "PLAY AGAIN". Only if server allows
+    }
+
     public void shutdown() {
         client.close();
         client.stop();
+    }
+
+    public void dispose() {
+        try {
+            client.dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        map.dispose();
     }
 }

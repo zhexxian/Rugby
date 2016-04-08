@@ -51,8 +51,7 @@ public class GameMap {
 
     private Timer globalTime;
     private boolean gameInitialized;
-    public boolean gameInitiated;
-    public boolean gamePaused;
+    public boolean gameInitiated, gamePaused, gameEnd;
 
     public GameMap(GameServer server){
         this(true);
@@ -72,20 +71,10 @@ public class GameMap {
         lastSentTime = 0;
         this.isHost = isHost;
 
-        //get screen size parameters
-        float gameWidth = GameConstants.GAME_WIDTH;
-        float gameHeight = GameConstants.GAME_HEIGHT;
-
         box2d = new World(new Vector2(0f, 0f), true);
         if(isHost)
             box2d.setContactListener(new ListenerClass(this));
-
-        //define the physics world boundaries
-        float wallThickness = 1;
-        wallTop = new Wall(0, 0, gameWidth, wallThickness, box2d);
-        wallBottom = new Wall(0, gameHeight-wallThickness, gameWidth, wallThickness, box2d);
-        wallLeft = new Wall(0, 0, wallThickness, gameHeight, box2d);
-        wallRight = new Wall(gameWidth-wallThickness, 0, wallThickness, gameHeight, box2d);
+        addWallBoundaries();
 
         playerHash = new HashMap<Integer, Player>();
         powerUpList = new ArrayList<PowerUp>();
@@ -96,6 +85,36 @@ public class GameMap {
         teamA = new Team(1);
         teamB = new Team(2);
         globalTime = new Timer();
+    }
+
+    public void restart() {
+        gameInitialized = false;
+        gamePaused = false;
+        runTime = 0;
+        lastSentTime = 0;
+
+        box2d.dispose();
+        box2d = new World(new Vector2(0f, 0f), true);
+        if(isHost)
+            box2d.setContactListener(new ListenerClass(this));
+        addWallBoundaries(); //define the physics world boundaries
+
+        playerHash.clear();
+        powerUpList.clear();
+        powerUpRemoveList.clear();
+        powerUpCount = 0;
+        teamA.clear();
+        teamB.clear();
+        globalTime.reset();
+    }
+
+    public void addWallBoundaries() {
+        //define the physics world boundaries
+        float wallThickness = 1;
+        wallTop = new Wall(0, 0, GameConstants.GAME_WIDTH, wallThickness, box2d);
+        wallBottom = new Wall(0, GameConstants.GAME_HEIGHT-wallThickness, GameConstants.GAME_WIDTH, wallThickness, box2d);
+        wallLeft = new Wall(0, 0, wallThickness, GameConstants.GAME_HEIGHT, box2d);
+        wallRight = new Wall(GameConstants.GAME_WIDTH-wallThickness, 0, wallThickness, GameConstants.GAME_HEIGHT, box2d);
     }
 
     // Client updates itself and sends updates to server
@@ -321,6 +340,10 @@ public class GameMap {
     }
     public synchronized void updateBallMovement(Vector2 movement) {
         ball.getBody().setLinearVelocity(movement);
+    }
+
+    public void dispose() {
+        box2d.dispose();
     }
 
     // Server-sided Collision

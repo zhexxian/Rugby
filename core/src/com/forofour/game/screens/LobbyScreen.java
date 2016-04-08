@@ -37,6 +37,14 @@ public class LobbyScreen implements Screen {
     private String playerName;
     boolean showStartNudgeButton;
 
+    public LobbyScreen(String hostname) {
+        this(false, false);
+    }
+    public LobbyScreen(GameServer server) {
+        this(false, true);
+        this.server = server;
+    }
+
     public LobbyScreen(boolean tutorialMode, final boolean isHost) {
         this.isHost = isHost;
 
@@ -67,11 +75,12 @@ public class LobbyScreen implements Screen {
     @Override
     public void show(){
 
-        client = new GameClient();
+        client = new GameClient(); // Launch a new client
 
         if(isHost){
             Gdx.app.log("LobbyScreen", "Starting server");
-            server = new GameServer();
+            if(server == null)
+                server = new GameServer();
         }
 
         Gdx.app.log("LobbyScreen", "Connecting to server");
@@ -128,6 +137,7 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        batch.dispose();
     }
 }

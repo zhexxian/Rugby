@@ -23,6 +23,12 @@ public class Team {
             listOfTeams = new ArrayList<Team>();
         listOfTeams.add(this);
     }
+
+    public void clear() {
+        score = 0;
+        teamList.clear();
+    }
+
     public void addPlayer(Player p){
         teamList.add(p);
         p.setTeamId(id);

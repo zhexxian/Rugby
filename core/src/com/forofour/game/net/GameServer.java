@@ -5,8 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.forofour.game.MyGdxGame;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
+import com.forofour.game.screens.LobbyScreen;
+import com.forofour.game.screens.MainScreen;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,13 +23,17 @@ public class GameServer {
     private Server server;
     private GameMap map;
     private Random random;
+    public boolean restart;
+
     private ArrayList<Integer> initiatedPlayers;
 
     public GameServer(){
         random = new Random(System.currentTimeMillis());
         map = new GameMap(this);
+
         initiatedPlayers = new ArrayList<Integer>();
         initiatedPlayers.add(1);
+
         server = new Server();
         Network.register(server);
 
@@ -58,8 +65,29 @@ public class GameServer {
                     Network.PacketGamePause packet = (Network.PacketGamePause) o;
                     Gdx.app.log("GameServer", "PauseButton Received from Client");
                     map.gamePaused = !map.gamePaused;
+                    if(map.gamePaused)
+                        map.getGlobalTime().pause();
+                    else
+                        map.getGlobalTime().start();
                     server.sendToAllTCP(new Network.PacketGamePause(map.gamePaused));
                     Gdx.app.log("GameServer", "Pause value sent " + map.gamePaused);
+                }
+
+                else if(o instanceof Network.PacketGameEnd) {
+                    Network.PacketGameEnd packet = (Network.PacketGameEnd) o;
+                    Gdx.app.log("GameServer", "Game End Received from client");
+                    boolean playAgain = packet.playAgain;
+                    Gdx.app.log("GameServer", "Player"+c.getID() + " PlayAgain" + playAgain);
+                    if(map.gameEnd) {
+                        if(playAgain) {
+                            if(c.getID() == 1) {
+                                Gdx.app.log("GameServer", "Server initiated playagain");
+                                reinitLobby();
+                                sendMessage(new Network.PacketReinitLobby());
+                                restart = true;
+                            }
+                        }
+                    }
                 }
 
                 // Updates location of specific player
@@ -104,7 +132,7 @@ public class GameServer {
                 else if(o instanceof Network.PacketPickPowerUp) {
                     Network.PacketPickPowerUp packet = (Network.PacketPickPowerUp) o;
                     map.getPlayerHash().get(c.getID()).acquirePowerUp(packet.type);
-                    Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type + " ItemID:"+packet.powerUpId);
+                    Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type + " ItemID:" + packet.powerUpId);
                     server.sendToAllTCP(new Network.PacketPickPowerUp(c.getID(), packet.type, -1)); // -1 as arbitary powerUpId
                 }
 
@@ -146,10 +174,6 @@ public class GameServer {
 
     public void update(float delta){
         map.update(delta);
-//        if(map.getGlobalTime().isDone()) {
-//            map.gamePaused = true;
-//            sendMessage(new Network.PacketGamePause(true));
-//        }
     }
 
     public void shutdown() {
@@ -196,7 +220,16 @@ public class GameServer {
         sendMessage(new Network.PacketAddPowerUp(powerupPosition, powerupType));
     }
 
+    public void reinitLobby() {
+        map.restart();
+        initiatedPlayers.clear();
+    }
+
     public GameMap getMap() {
         return map;
+    }
+
+    public void dispose() {
+        map.dispose();
     }
 }

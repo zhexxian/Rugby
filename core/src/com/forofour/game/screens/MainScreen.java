@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.forofour.game.MyGdxGame;
 import com.forofour.game.actors.TouchPadMaker;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameworlds.MainRenderer;
@@ -74,6 +75,26 @@ public class MainScreen implements Screen {
             // Server-sided. Holds master map
             if (isHost) {
                 server.update(delta);
+//                server.getMap().getGlobalTime().start();
+//                server.getMap().getGlobalTime().getElapsedMilliseconds();
+
+                //                server.getMap().getGlobalTime().start();
+//                server.getMap().getGlobalTime().getElapsedMilliseconds();
+
+                Gdx.app.log("ClientTime", map.getGlobalTime().getElapsed());
+                Gdx.app.log("HostTime", server.getMap().getGlobalTime().getElapsed());
+
+                if(server.getMap().getGlobalTime().isDone()) { // Triggers End of game when i)TIME IS UP
+                    server.getMap().gamePaused = true;
+                    server.getMap().gameEnd = true;
+                    server.sendMessage(new Network.PacketGameEnd());
+                }
+
+//                if(map.getGlobalTime().isDone()) { // Triggers End of game when i)TIME IS UP
+//                    map.gamePaused = true;
+//                    map.gameEnd = true;
+//                    server.sendMessage(new Network.PacketGameEnd());
+//                }
             }
         }
         else {
@@ -83,6 +104,20 @@ public class MainScreen implements Screen {
         renderer.render(delta);
         overlay.update(delta);
 //        fpsLogger.log();
+
+        if(isHost) {
+            if (server.restart) {
+                // Restarts host into lobbyScreen at instant
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, true));
+            }
+        }
+        else {
+            if (client.restart) {
+                // Shows PlayAgain button on client's screen
+                // Button should launch LobbyScreen and reconnect to sameHost
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, false));
+            }
+        }
     }
 
     @Override
@@ -110,5 +145,9 @@ public class MainScreen implements Screen {
     @Override
     public void dispose() {
         overlay.dispose();
+        if(server != null)
+            server.dispose();
+        if(client != null)
+            client.dispose();
     }
 }
