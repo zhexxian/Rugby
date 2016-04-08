@@ -33,7 +33,7 @@ public class SplashScreen implements Screen {
 
     @Override
     public void show() {
-        sprite = new Sprite(AssetLoader.ball);
+        sprite = new Sprite(AssetLoader.splashScreen);
         sprite.setColor(1, 1, 1, 0);
 
         float width = Gdx.graphics.getWidth();
@@ -59,8 +59,8 @@ public class SplashScreen implements Screen {
             }
         };
 
-        Tween.to(sprite, SpriteAccessor.ALPHA, .8f).target(1)
-                .ease(TweenEquations.easeInOutQuad).repeatYoyo(1, .4f)
+        Tween.to(sprite, SpriteAccessor.ALPHA, 1.5f).target(1)
+                .ease(TweenEquations.easeInOutQuad).repeatYoyo(1, .6f)
                 .setCallback(cb).setCallbackTriggers(TweenCallback.COMPLETE)
                 .start(manager);
     }

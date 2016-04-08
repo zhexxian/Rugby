@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class AssetLoader {
 
+    public static Texture splash;
+
     public static Texture bg, menu;
 
     public static Texture ball;
@@ -27,6 +29,7 @@ public class AssetLoader {
     public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
 
 
+    public static TextureRegion splashScreen;
     public static TextureRegion bgMenu;
     public static TextureRegion bgRegion;
 
@@ -39,6 +42,10 @@ public class AssetLoader {
     public static TextureRegion powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
 
     public static void load() {
+        //splash screen
+        splash = new Texture("Team 404.png");
+        splashScreen = new TextureRegion(splash);
+
         //menu background
         menu = new Texture(Gdx.files.internal("sprites/start-screen.png"));
         bgMenu = new TextureRegion(menu);
