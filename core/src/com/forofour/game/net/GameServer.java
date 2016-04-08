@@ -55,38 +55,32 @@ public class GameServer {
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("Number of player in lobby: " + map.getPlayersConnected().size()));
                     }
                     server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
-                }
-
-                else if(o instanceof Network.PacketInitRound) {
+                } else if (o instanceof Network.PacketInitRound) {
                     Network.PacketInitRound packet = (Network.PacketInitRound) o;
                     Gdx.app.log("GameServer", " initiated p" + c.getID());
                     initiatedPlayers.add(c.getID());
-                    if(initiatedPlayers.containsAll(map.getPlayersConnected().keySet()))
+                    if (initiatedPlayers.containsAll(map.getPlayersConnected().keySet()))
                         map.gameInitiated = true;
                     Gdx.app.log("GameServer", "initPlayers - " + initiatedPlayers);
                     Gdx.app.log("GameServer", "playersConnected - " + map.getPlayersConnected().keySet());
-                }
-
-                else if(o instanceof Network.PacketGamePause) {
+                } else if (o instanceof Network.PacketGamePause) {
                     Network.PacketGamePause packet = (Network.PacketGamePause) o;
                     Gdx.app.log("GameServer", "PauseButton Received from Client");
                     map.gamePaused = !map.gamePaused;
-                    if(map.gamePaused)
+                    if (map.gamePaused)
                         map.getGlobalTime().pause();
                     else
                         map.getGlobalTime().start();
                     server.sendToAllTCP(new Network.PacketGamePause(map.gamePaused));
                     Gdx.app.log("GameServer", "Pause value sent " + map.gamePaused);
-                }
-
-                else if(o instanceof Network.PacketGameEnd) {
+                } else if (o instanceof Network.PacketGameEnd) {
                     Network.PacketGameEnd packet = (Network.PacketGameEnd) o;
                     Gdx.app.log("GameServer", "Game End Received from client");
                     boolean playAgain = packet.playAgain;
-                    Gdx.app.log("GameServer", "Player"+c.getID() + " PlayAgain" + playAgain);
-                    if(map.gameEnd) {
-                        if(playAgain) {
-                            if(c.getID() == 1) {
+                    Gdx.app.log("GameServer", "Player" + c.getID() + " PlayAgain" + playAgain);
+                    if (map.gameEnd) {
+                        if (playAgain) {
+                            if (c.getID() == 1) {
                                 Gdx.app.log("GameServer", "Server initiated playagain");
                                 reinitLobby();
                                 sendMessage(new Network.PacketReinitLobby());
@@ -97,25 +91,21 @@ public class GameServer {
                 }
 
                 // Updates location of specific player
-                else if(o instanceof Network.PacketPlayerState) {
+                else if (o instanceof Network.PacketPlayerState) {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;
 //                    Gdx.app.log("GameServer", "State Updates for player" + "-" + c.getID() + "-" + packet.id);
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
                     server.sendToAllTCP(new Network.PacketPlayerState(packet.id, packet.position, packet.angle));
-                }
-
-                else if(o instanceof Network.PacketPlayerUpdateFast) {
+                } else if (o instanceof Network.PacketPlayerUpdateFast) {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
 //                    Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);
                     map.updatePlayerMovement(packet.id, packet.movement);
                     server.sendToAllTCP(new Network.PacketPlayerUpdateFast(packet.id, packet.movement));
-                }
-
-                else if(o instanceof Network.PacketDropBall) {
+                } else if (o instanceof Network.PacketDropBall) {
                     Network.PacketDropBall packet = (Network.PacketDropBall) o;
                     Gdx.app.log("GameServer", "bef Holder " + map.getBall().getHoldingPlayerId());
                     // Check that dropper is indeed holder
-                    if(map.getBall().getHoldingPlayerId() == ((Network.PacketDropBall) o).id) {
+                    if (map.getBall().getHoldingPlayerId() == ((Network.PacketDropBall) o).id) {
                         map.updateDropBall();
                         server.sendToAllTCP(new Network.PacketDropBall(packet.id));
                     }
@@ -126,14 +116,14 @@ public class GameServer {
                 }
 
                 // DEBUG PURPOSES(SV COMMANDS) : Adding of PowerUps into game
-                else if(o instanceof Network.PacketAddPowerUp) {
+                else if (o instanceof Network.PacketAddPowerUp) {
                     Network.PacketAddPowerUp packet = (Network.PacketAddPowerUp) o;
                     Gdx.app.log("GameServer", "PacketAddPowerUp, Type:" + packet.type);
                     assignPowerUp(packet.type);
                 }
 
                 // DEBUG PURPOSES(SV COMMANDS) : Acquisition of PowerUp by player
-                else if(o instanceof Network.PacketPickPowerUp) {
+                else if (o instanceof Network.PacketPickPowerUp) {
                     Network.PacketPickPowerUp packet = (Network.PacketPickPowerUp) o;
                     map.getPlayerHash().get(c.getID()).acquirePowerUp(packet.type);
                     Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type + " ItemID:" + packet.powerUpId);
@@ -141,7 +131,7 @@ public class GameServer {
                 }
 
                 // Player's USE of PowerUp
-                else if(o instanceof Network.PacketUsePowerUp) {
+                else if (o instanceof Network.PacketUsePowerUp) {
                     int generatedChoice = random.nextInt(4);
                     map.getPlayerHash().get(c.getID()).usePowerUp(generatedChoice);
                     server.sendToAllTCP(new Network.PacketUsePowerUp(c.getID(), generatedChoice));
@@ -167,12 +157,13 @@ public class GameServer {
 
         try{
             server.bind(Network.port, Network.portUDP);
+            Gdx.app.log("Server", "Binded to " + Network.port + " " + Network.portUDP);
         } catch (IOException ex){
             ex.printStackTrace();
         }
 
         server.start();
-        System.out.println("Server is running");
+        Gdx.app.log("Server", "Started");
 
     }
 

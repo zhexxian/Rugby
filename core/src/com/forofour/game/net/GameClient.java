@@ -5,12 +5,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.forofour.game.MyGdxGame;
-import com.forofour.game.gameobjects.PowerUp;
 import com.forofour.game.handlers.GameMap;
-import com.forofour.game.screens.LobbyScreen;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * Created by seanlim on 1/4/2016.
@@ -183,6 +181,21 @@ public class GameClient {
         return null;
     }
 
+    public boolean quickConnect(){
+        Gdx.app.log("Client", "Discovering on " + Network.portUDP);
+        InetAddress address = client.discoverHost(Network.portUDP, 5000);
+        System.out.println(address);
+        try {
+            Gdx.app.log("Client", "Connecting to" + address);
+            client.connect(1000, address, Network.port, Network.portUDP);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Gdx.app.log("Client", "Failed to connected to host");
+            return false;
+        }
+    }
+
     public GameMap getMap(){
         return map;
     }
@@ -201,6 +214,7 @@ public class GameClient {
 
     public void reinitLobby() {
         //Show Client-Sided button to "PLAY AGAIN". Only if server allows
+        shutdown();
     }
 
     public void shutdown() {

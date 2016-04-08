@@ -52,7 +52,7 @@ public class GameMap {
     private Timer globalTime;
     private boolean gameInitialized;
     public boolean gameInitiated, gamePaused, gameEnd;
-    public int gameDuration = 90;
+    public int gameDuration = 30;
 
     public GameMap(GameServer server){
         this(true);

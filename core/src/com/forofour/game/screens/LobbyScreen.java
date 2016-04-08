@@ -19,6 +19,7 @@ import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,13 +74,18 @@ public class LobbyScreen implements Screen {
         client = new GameClient(); // Launch a new client
 
         if(isHost){
-            Gdx.app.log("LobbyScreen", "Starting server");
             if(server == null)
                 server = new GameServer();
+            Gdx.app.log("LobbyScreen(host)", "Started server");
+            client.connect("localhost");
+            Gdx.app.log("LobbyScreen(host)", "Client connected to server");
         }
 
-        Gdx.app.log("LobbyScreen", "Connecting to server");
-        client.connect("192.168.1.231");
+        else {
+            client.quickConnect();
+            Gdx.app.log("LobbyScreen", "Connecting to server");
+        }
+
     }
 
     @Override
