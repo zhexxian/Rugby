@@ -19,6 +19,7 @@ import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,14 @@ public class LobbyScreen implements Screen {
     private String playerName;
     boolean showStartNudgeButton;
 
+    public LobbyScreen(String hostname) {
+        this(false, false);
+    }
+    public LobbyScreen(GameServer server) {
+        this(false, true);
+        this.server = server;
+    }
+
     public LobbyScreen(boolean tutorialMode, final boolean isHost) {
         this.isHost = isHost;
 
@@ -52,11 +61,6 @@ public class LobbyScreen implements Screen {
                 if(isHost) {
                     server.sendMessage(new Network.PacketInitRound(true));
                 }
-                // Old implementation of buttons press
-//                if(isHost)
-//                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
-//                else
-//                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
             }
         });
 
@@ -67,15 +71,21 @@ public class LobbyScreen implements Screen {
     @Override
     public void show(){
 
-        client = new GameClient();
+        client = new GameClient(); // Launch a new client
 
         if(isHost){
-            Gdx.app.log("LobbyScreen", "Starting server");
-            server = new GameServer();
+            if(server == null)
+                server = new GameServer();
+            Gdx.app.log("LobbyScreen(host)", "Started server");
+            client.connect("localhost");
+            Gdx.app.log("LobbyScreen(host)", "Client connected to server");
         }
 
-        Gdx.app.log("LobbyScreen", "Connecting to server");
-        client.connect("localhost");
+        else {
+            client.quickConnect();
+            Gdx.app.log("LobbyScreen", "Connecting to server");
+        }
+
     }
 
     @Override
@@ -128,6 +138,11 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        batch.dispose();
+        if(client != null)
+            client.dispose();
+        if(server != null)
+            server.dispose();
     }
 }

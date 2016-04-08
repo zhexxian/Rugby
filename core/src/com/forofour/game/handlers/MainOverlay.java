@@ -73,12 +73,28 @@ public class MainOverlay extends Stage {
         }
         else {
             hideActors();
+            // TODO: Include Gameend Actors Show/Hide logic here.
+            // TODO: Scores can be acquired from TeamA/TeamB within map
+            //hideGameEndOverlay();
+            if(client.getMap().gameEnd) {
+              //  showGameEndOverlay();
+
+                // Only if Server intends to "PlayAgain", would Client see button to "PlayAgain".
+                // Intentions to "PlayAgain" will launch LobbyScreen again
+            }
         }
 
         getCamera().update();
         act(delta);
         draw();
     }
+
+    private void showGameEndOverlay() {
+    }
+
+    private void hideGameEndOverlay() {
+    }
+
     private void initialized() {
         player = client.getMap().getPlayer();
         teamA = client.getMap().getTeamA();

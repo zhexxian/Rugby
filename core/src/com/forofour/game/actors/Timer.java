@@ -7,16 +7,26 @@ import com.badlogic.gdx.Gdx;
  */
 public class Timer {
 
-    private boolean done;
-    private long endTime = (long) (0.5 * 60 * 1000000000);
+    private boolean done = false;
+
+    private int gameDuration = 60; // Default timing
+    private long endTime = gameDuration * 1000;
 
     private final long nanosPerMilli = 1000000;
     private long startTime = 0;
     private long stopTime = 0;
     private boolean running = false;
-
     private boolean paused = false;
     private long startPause = 0;
+
+    long elapsed;
+
+    public Timer(){
+    }
+    public Timer(int gameDuration){
+        this.gameDuration = gameDuration;
+        this.endTime = gameDuration * 1000;
+    }
 
     public boolean isRunning() {
         return running;
@@ -49,8 +59,8 @@ public class Timer {
     // Stop measuring
     public void stop() {
         this.stopTime = System.nanoTime();
-        this.running = false;
         this.paused = true;
+        this.done = true;
     }
 
     // Reset
@@ -61,11 +71,11 @@ public class Timer {
 
         this.startPause = 0;
         this.paused = false;
+
+        this.done = false;
     }
 
-    // Get elapsed milliseconds
-    public long getElapsedMilliseconds() {
-        long elapsed;
+    public void update() {
         if (running && paused) {
             elapsed = (System.nanoTime() - startTime) + (System.nanoTime() -  startPause);
         }
@@ -76,12 +86,22 @@ public class Timer {
             elapsed = (stopTime - startTime);
         }
 
-        if(elapsed >= endTime){
-            done = true;
+//        Gdx.app.log("Timer",elapsed + " " + endTime*nanosPerMilli);
+
+        if(elapsed >= endTime * nanosPerMilli){
+            stop();
             Gdx.app.log("Done", "True");
         }
+    }
 
+    // Get elapsed milliseconds
+    public long getElapsedMilliseconds() {
         return elapsed / nanosPerMilli;
+    }
+    // Get elapsed milliseconds
+
+    public long getElapsedSeconds() {
+        return getElapsedMilliseconds()/1000;
     }
 
     public boolean isDone(){

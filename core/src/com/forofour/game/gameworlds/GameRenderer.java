@@ -89,7 +89,7 @@ public class GameRenderer {
 
         debugRenderer.render(world.getBox2d(), cam.combined);
         //drawShapes();
-        drawSprites();
+//        drawSprites();
 
         // Update stage buttons visibility states if necessary
         renderButtons();
@@ -118,7 +118,7 @@ public class GameRenderer {
 
     }
 
-    private void drawSprites() {
+    /*private void drawSprites() {
         batcher.begin();
 
         // Background Floor mat
@@ -141,7 +141,7 @@ public class GameRenderer {
             else
                 playerDirection = AssetLoader.playerRegionAright;
 
-            /*draw(TextureRegion region,
+            *//*draw(TextureRegion region,
                 float x,
                 float y,
                 float originX,
@@ -150,7 +150,7 @@ public class GameRenderer {
                 float height,
                 float scaleX,
                 float scaleY,
-                float rotation)*/
+                float rotation)*//*
             batcher.draw(playerDirection, // Texture
                     p.getBody().getPosition().x-0.5f,
                     p.getBody().getPosition().y-0.5f,
@@ -181,7 +181,7 @@ public class GameRenderer {
             else
                 playerDirection = AssetLoader.playerRegionBright;
 
-            /*draw(TextureRegion region,
+            *//*draw(TextureRegion region,
                 float x,
                 float y,
                 float originX,
@@ -190,7 +190,7 @@ public class GameRenderer {
                 float height,
                 float scaleX,
                 float scaleY,
-                float rotation)*/
+                float rotation)*//*
             batcher.draw(playerDirection, // Texture
                     p.getBody().getPosition().x-0.5f,
                     p.getBody().getPosition().y-0.5f,
@@ -223,7 +223,7 @@ public class GameRenderer {
 
         batcher.end();
 
-    }
+    }*/
 
     public OrthographicCamera getCam(){
         return cam;

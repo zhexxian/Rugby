@@ -3,9 +3,12 @@ package com.forofour.game.handlers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.forofour.game.MyGdxGame;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
+import com.forofour.game.screens.LobbyScreen;
+import com.forofour.game.screens.MenuScreen;
 
 /**
  * Created by seanlim on 4/4/2016.
@@ -28,6 +31,19 @@ public class ClientInputHandler extends InputMultiplexer {
         if(keycode == Input.Keys.P){
             client.sendMessage(new Network.PacketGamePause());
             Gdx.app.log("Keypressed P", "PauseButton Sent");
+        }
+        if(keycode == Input.Keys.R){
+            client.sendMessage(new Network.PacketGameEnd(true));
+            Gdx.app.log("Keypressed R", "PlayAgain(TRUE) Button Sent");
+        }
+        if(keycode == Input.Keys.F){
+            client.sendMessage(new Network.PacketGameEnd(false));
+            ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+            Gdx.app.log("Keypressed F", "PlayAgain(FALSE) Button Sent");
+        }
+        if(keycode == Input.Keys.L){
+            client.restart = true;
+            Gdx.app.log("Keypressed L", "ReinitLobby Button Pressed");
         }
 
         // ADD THE POWER UP INTO THE SERVER

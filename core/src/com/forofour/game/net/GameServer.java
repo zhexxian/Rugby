@@ -5,11 +5,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.forofour.game.MyGdxGame;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
+import com.forofour.game.screens.LobbyScreen;
+import com.forofour.game.screens.MainScreen;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -20,13 +24,22 @@ public class GameServer {
     private Server server;
     private GameMap map;
     private Random random;
+    public boolean restart;
+
     private ArrayList<Integer> initiatedPlayers;
+    private ArrayList<Integer> powerUpAssignment;
 
     public GameServer(){
         random = new Random(System.currentTimeMillis());
         map = new GameMap(this);
+
         initiatedPlayers = new ArrayList<Integer>();
         initiatedPlayers.add(1);
+
+        powerUpAssignment = new ArrayList<Integer>();
+        assignSpawnTimingPowerUp();
+
+
         server = new Server();
         Network.register(server);
 
@@ -42,46 +55,57 @@ public class GameServer {
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("Number of player in lobby: " + map.getPlayersConnected().size()));
                     }
                     server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
-                }
-
-                else if(o instanceof Network.PacketInitRound) {
+                } else if (o instanceof Network.PacketInitRound) {
                     Network.PacketInitRound packet = (Network.PacketInitRound) o;
                     Gdx.app.log("GameServer", " initiated p" + c.getID());
                     initiatedPlayers.add(c.getID());
-                    if(initiatedPlayers.containsAll(map.getPlayersConnected().keySet()))
+                    if (initiatedPlayers.containsAll(map.getPlayersConnected().keySet()))
                         map.gameInitiated = true;
                     Gdx.app.log("GameServer", "initPlayers - " + initiatedPlayers);
                     Gdx.app.log("GameServer", "playersConnected - " + map.getPlayersConnected().keySet());
-                }
-
-                else if(o instanceof Network.PacketGamePause) {
+                } else if (o instanceof Network.PacketGamePause) {
                     Network.PacketGamePause packet = (Network.PacketGamePause) o;
                     Gdx.app.log("GameServer", "PauseButton Received from Client");
                     map.gamePaused = !map.gamePaused;
+                    if (map.gamePaused)
+                        map.getGlobalTime().pause();
+                    else
+                        map.getGlobalTime().start();
                     server.sendToAllTCP(new Network.PacketGamePause(map.gamePaused));
                     Gdx.app.log("GameServer", "Pause value sent " + map.gamePaused);
+                } else if (o instanceof Network.PacketGameEnd) {
+                    Network.PacketGameEnd packet = (Network.PacketGameEnd) o;
+                    Gdx.app.log("GameServer", "Game End Received from client");
+                    boolean playAgain = packet.playAgain;
+                    Gdx.app.log("GameServer", "Player" + c.getID() + " PlayAgain" + playAgain);
+                    if (map.gameEnd) {
+                        if (playAgain) {
+                            if (c.getID() == 1) {
+                                Gdx.app.log("GameServer", "Server initiated playagain");
+                                reinitLobby();
+                                sendMessage(new Network.PacketReinitLobby());
+                                restart = true;
+                            }
+                        }
+                    }
                 }
 
                 // Updates location of specific player
-                else if(o instanceof Network.PacketPlayerState) {
+                else if (o instanceof Network.PacketPlayerState) {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;
 //                    Gdx.app.log("GameServer", "State Updates for player" + "-" + c.getID() + "-" + packet.id);
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
                     server.sendToAllTCP(new Network.PacketPlayerState(packet.id, packet.position, packet.angle));
-                }
-
-                else if(o instanceof Network.PacketPlayerUpdateFast) {
+                } else if (o instanceof Network.PacketPlayerUpdateFast) {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
 //                    Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);
                     map.updatePlayerMovement(packet.id, packet.movement);
                     server.sendToAllTCP(new Network.PacketPlayerUpdateFast(packet.id, packet.movement));
-                }
-
-                else if(o instanceof Network.PacketDropBall) {
+                } else if (o instanceof Network.PacketDropBall) {
                     Network.PacketDropBall packet = (Network.PacketDropBall) o;
                     Gdx.app.log("GameServer", "bef Holder " + map.getBall().getHoldingPlayerId());
                     // Check that dropper is indeed holder
-                    if(map.getBall().getHoldingPlayerId() == ((Network.PacketDropBall) o).id) {
+                    if (map.getBall().getHoldingPlayerId() == ((Network.PacketDropBall) o).id) {
                         map.updateDropBall();
                         server.sendToAllTCP(new Network.PacketDropBall(packet.id));
                     }
@@ -92,24 +116,22 @@ public class GameServer {
                 }
 
                 // DEBUG PURPOSES(SV COMMANDS) : Adding of PowerUps into game
-                else if(o instanceof Network.PacketAddPowerUp) {
+                else if (o instanceof Network.PacketAddPowerUp) {
                     Network.PacketAddPowerUp packet = (Network.PacketAddPowerUp) o;
-                    Vector2 position = new Vector2(10+random.nextInt(50),10+random.nextInt(50));
-                    int powerUpId = map.addPowerUp(position, packet.type);
-                    Gdx.app.log("GameServer", "PacketAddPowerUp, Type:" + packet.type + " ItemID:"+powerUpId);
-                    server.sendToAllTCP(new Network.PacketAddPowerUp(position, packet.type));
+                    Gdx.app.log("GameServer", "PacketAddPowerUp, Type:" + packet.type);
+                    assignPowerUp(packet.type);
                 }
 
                 // DEBUG PURPOSES(SV COMMANDS) : Acquisition of PowerUp by player
-                else if(o instanceof Network.PacketPickPowerUp) {
+                else if (o instanceof Network.PacketPickPowerUp) {
                     Network.PacketPickPowerUp packet = (Network.PacketPickPowerUp) o;
                     map.getPlayerHash().get(c.getID()).acquirePowerUp(packet.type);
-                    Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type + " ItemID:"+packet.powerUpId);
+                    Gdx.app.log("GameServer", "PacketPickPowerUp, ID:" + c.getID() + " Type:" + packet.type + " ItemID:" + packet.powerUpId);
                     server.sendToAllTCP(new Network.PacketPickPowerUp(c.getID(), packet.type, -1)); // -1 as arbitary powerUpId
                 }
 
                 // Player's USE of PowerUp
-                else if(o instanceof Network.PacketUsePowerUp) {
+                else if (o instanceof Network.PacketUsePowerUp) {
                     int generatedChoice = random.nextInt(4);
                     map.getPlayerHash().get(c.getID()).usePowerUp(generatedChoice);
                     server.sendToAllTCP(new Network.PacketUsePowerUp(c.getID(), generatedChoice));
@@ -135,21 +157,26 @@ public class GameServer {
 
         try{
             server.bind(Network.port, Network.portUDP);
+            Gdx.app.log("Server", "Binded to " + Network.port + " " + Network.portUDP);
         } catch (IOException ex){
             ex.printStackTrace();
         }
 
         server.start();
-        System.out.println("Server is running");
+        Gdx.app.log("Server", "Started");
 
     }
 
     public void update(float delta){
         map.update(delta);
-//        if(map.getGlobalTime().isDone()) {
-//            map.gamePaused = true;
-//            sendMessage(new Network.PacketGamePause(true));
-//        }
+
+        if(!powerUpAssignment.isEmpty() && map.getGlobalTime().getElapsedSeconds()>0) {
+            if (powerUpAssignment.get(0) < map.getGlobalTime().getElapsedSeconds()) {
+                Gdx.app.log("GameServer-PowerUpAssignmet", powerUpAssignment.get(0) + " " + map.getGlobalTime().getElapsedSeconds());
+                assignPowerUp();
+                powerUpAssignment.remove(0);
+            }
+        }
     }
 
     public void shutdown() {
@@ -187,16 +214,40 @@ public class GameServer {
         sendMessage(new Network.PacketAddBall(ballPosition));
     }
 
-    public void addPowerUp() {
+    public void assignPowerUp(){
+        int type = 1 + random.nextInt(3);
+        assignPowerUp(type);
+    }
+    public void assignPowerUp(int type) {
         // 3 types - Water(Slow), Cloak(Invisibility) , Confusion(DisorientedControls)
-        Gdx.app.log("GameServer", "Assigning ball");
-        int powerupType = 1;
-        Vector2 powerupPosition = new Vector2(10, 20);
-        map.addPowerUp(powerupPosition, powerupType);
-        sendMessage(new Network.PacketAddPowerUp(powerupPosition, powerupType));
+        int distanceFromWall = 5;
+        Vector2 position = new Vector2(
+                distanceFromWall + random.nextInt((int) GameConstants.GAME_WIDTH - distanceFromWall),
+                distanceFromWall + random.nextInt((int) GameConstants.GAME_HEIGHT - distanceFromWall));
+        int powerUpId = map.addPowerUp(position, type);
+        Gdx.app.log("GameServer", "Assigning PowerUp of type"+powerUpId);
+        server.sendToAllTCP(new Network.PacketAddPowerUp(position, type));
+    }
+
+    public void assignSpawnTimingPowerUp() {
+        int initialTime = 0;
+        while(initialTime < map.gameDuration) {
+            initialTime += 15 + random.nextInt(5);
+            if(initialTime < map.gameDuration)
+                powerUpAssignment.add(initialTime);
+        }
+    }
+
+    public void reinitLobby() {
+        map.restart();
+        initiatedPlayers.clear();
     }
 
     public GameMap getMap() {
         return map;
+    }
+
+    public void dispose() {
+        map.dispose();
     }
 }
