@@ -90,6 +90,7 @@ public class MainOverlay extends Stage {
     }
 
     private void showGameEndOverlay() {
+        //end screen display
     }
 
     private void hideGameEndOverlay() {
@@ -171,4 +172,5 @@ public class MainOverlay extends Stage {
         else
             PowerUpSlotMaker.setEmptySlotStyle();
     }
+
 }
