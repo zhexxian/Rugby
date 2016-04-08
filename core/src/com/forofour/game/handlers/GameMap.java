@@ -124,6 +124,7 @@ public class GameMap {
         box2d.step(delta, 8, 3);
         box2d.clearForces();
         sweepDeadBodies();
+        globalTime.update();
 
         if(gameInitialized) {
             // Common logic

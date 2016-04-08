@@ -60,11 +60,6 @@ public class LobbyScreen implements Screen {
                 if(isHost) {
                     server.sendMessage(new Network.PacketInitRound(true));
                 }
-                // Old implementation of buttons press
-//                if(isHost)
-//                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
-//                else
-//                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
             }
         });
 
@@ -139,5 +134,9 @@ public class LobbyScreen implements Screen {
     public void dispose() {
         stage.dispose();
         batch.dispose();
+        if(client != null)
+            client.dispose();
+        if(server != null)
+            server.dispose();
     }
 }

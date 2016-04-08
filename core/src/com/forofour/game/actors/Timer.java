@@ -8,7 +8,7 @@ import com.badlogic.gdx.Gdx;
 public class Timer {
 
     private boolean done = false;
-    private static long endTime = 10 * 1000;
+    private static long endTime = 60 * 1000;
 
     private final long nanosPerMilli = 1000000;
     private long startTime = 0;
@@ -16,6 +16,8 @@ public class Timer {
     private boolean running = false;
     private boolean paused = false;
     private long startPause = 0;
+
+    long elapsed;
 
     public boolean isRunning() {
         return running;
@@ -64,9 +66,7 @@ public class Timer {
         this.done = false;
     }
 
-    // Get elapsed milliseconds
-    public long getElapsedMilliseconds() {
-        long elapsed;
+    public void update() {
         if (running && paused) {
             elapsed = (System.nanoTime() - startTime) + (System.nanoTime() -  startPause);
         }
@@ -83,7 +83,10 @@ public class Timer {
             stop();
             Gdx.app.log("Done", "True");
         }
+    }
 
+    // Get elapsed milliseconds
+    public long getElapsedMilliseconds() {
         return elapsed / nanosPerMilli;
     }
 
