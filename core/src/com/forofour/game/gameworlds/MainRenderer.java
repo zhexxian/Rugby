@@ -74,7 +74,7 @@ public class MainRenderer {
 
             // Updated camera is used to render stuff
             batcher.setProjectionMatrix(cam.combined);
-//            drawSprites();
+            drawSprites();
         }
     }
 
@@ -95,14 +95,15 @@ public class MainRenderer {
             float angle = p.getAngleDegree();
 //            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
             TextureRegion playerDirection;
-            if(angle >= 45 && angle < 135)
+
+            if(angle <= 135 && angle > 45)
                 playerDirection = AssetLoader.playerRegionAdown;
-            else if(angle >= 135 && angle < 225)
-                playerDirection = AssetLoader.playerRegionAleft;
-            else if(angle >= 225 && angle < 315)
+            else if(angle <= 45 && angle > -45)
+                playerDirection = AssetLoader.playerRegionAright;
+            else if(angle <= -45 && angle > -135)
                 playerDirection = AssetLoader.playerRegionAup;
             else
-                playerDirection = AssetLoader.playerRegionAright;
+                playerDirection = AssetLoader.playerRegionAleft;
 
             /*draw(TextureRegion region,
                 float x,
@@ -140,14 +141,14 @@ public class MainRenderer {
 
 //            Gdx.app.log("Player" + p.getId(), "Angle " + p.getLastDirection().angle());
             TextureRegion playerDirection;
-            if(angle >= 45 && angle < 135)
+            if(angle <= 135 && angle > 45)
                 playerDirection = AssetLoader.playerRegionBdown;
-            else if(angle >= 135 && angle < 225)
-                playerDirection = AssetLoader.playerRegionBleft;
-            else if(angle >= 225 && angle < 315)
+            else if(angle <= 45 && angle > -45)
+                playerDirection = AssetLoader.playerRegionBright;
+            else if(angle <= -45 && angle > -135)
                 playerDirection = AssetLoader.playerRegionBup;
             else
-                playerDirection = AssetLoader.playerRegionBright;
+                playerDirection = AssetLoader.playerRegionBleft;
 
             /*draw(TextureRegion region,
                 float x,
@@ -187,8 +188,9 @@ public class MainRenderer {
         }
 
         // PowerUps
-        for(PowerUp powerUp : powerUpList) {
-            if (!powerUp.isOutOfFrame()) {
+        powerUpList = map.getPowerUpList();
+        if(powerUpList!=null) {
+            for (PowerUp powerUp : powerUpList) {
                 batcher.draw(AssetLoader.powerUp,
                         powerUp.getBody().getPosition().x - powerUp.getRadius(),
                         powerUp.getBody().getPosition().y - powerUp.getRadius(),
@@ -196,7 +198,6 @@ public class MainRenderer {
                         powerUp.getRadius() * 2);
             }
         }
-
         batcher.end();
     }
 

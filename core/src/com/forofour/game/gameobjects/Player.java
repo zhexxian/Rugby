@@ -163,6 +163,10 @@ public class Player {
         client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
     }
 
+    public void powerUp() {
+        client.sendMessage(new Network.PacketUsePowerUp());
+    }
+
     public void boost() {
         // Returns if not allowed to boost
         if(noBoostTime > 0) {

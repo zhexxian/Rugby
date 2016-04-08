@@ -76,12 +76,8 @@ public class PowerUpSlotMaker {
                 else if(powerSlot.getStyle().equals(powerUpStyle1)) {
                     System.out.println("Pressed on Power Up 1 Slot");
                     setEmptySlotStyle();
-//                    client.getMap().getPlayer().usePowerUp();
-//                    ((GameWorld) actor.getStage()).getPlayer().usePowerUp();
+                    client.getMap().getPlayer().powerUp();
                 }
-
-//                if(world.getPlayer() != null)
-//                    world.getPlayer().boost();
             }
         });
         return powerSlot;

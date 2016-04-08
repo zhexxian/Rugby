@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.forofour.game.actors.ButtonMaker;
+import com.forofour.game.actors.PowerUpSlotMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.actors.Timer;
 import com.forofour.game.actors.TouchPadMaker;
@@ -39,14 +40,14 @@ public class MainOverlay extends Stage {
         tossButton = ButtonMaker.getTossButton(client);
         globalLabel = TextLabelMaker.getTimeLabel(client);
         teamLabel = TextLabelMaker.getTimeLabel(client);
-//        powerSlot = PowerUpSlotMaker.getPowerSlot(client);
+        powerSlot = PowerUpSlotMaker.getPowerSlot(client);
 
         addActor(TouchPadMaker.wrap(touchpad));
         addActor(ButtonMaker.wrap1(boostButton));
         addActor(ButtonMaker.wrap2(tossButton));
         addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
-//        addActor(PowerUpSlotMaker.wrap1(powerSlot));
+        addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
         isInitialized = false;
     }
@@ -92,11 +93,13 @@ public class MainOverlay extends Stage {
         touchpad.setVisible(false);
         boostButton.setVisible(false);
         tossButton.setVisible(false);
+        powerSlot.setVisible(false);
         globalLabel.setVisible(false);
         teamLabel.setVisible(false);
     }
     public void showActors() {
         touchpad.setVisible(true);
+        powerSlot.setVisible(true);
         globalLabel.setVisible(true);
         teamLabel.setVisible(true);
     }
@@ -130,6 +133,7 @@ public class MainOverlay extends Stage {
     }
 
     private void updateButtons() {
+        // Boost, Toss Buttons
         if(player != null) {
             if(player.hasBall()) {
                 tossButton.setVisible(true);
@@ -143,5 +147,11 @@ public class MainOverlay extends Stage {
             tossButton.setVisible(false);
             boostButton.setVisible(false);
         }
+
+        // PowerUp Slot
+        if(player.hasPowerUp())
+            PowerUpSlotMaker.setPowerUpStyle1();
+        else
+            PowerUpSlotMaker.setEmptySlotStyle();
     }
 }
