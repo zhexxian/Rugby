@@ -28,6 +28,11 @@ public class Timer {
         this.endTime = gameDuration * 1000;
     }
 
+    public void setGameDuration(int duration) {
+        this.gameDuration = duration;
+        this.endTime = duration * 1000;
+    }
+
     public boolean isRunning() {
         return running;
     }

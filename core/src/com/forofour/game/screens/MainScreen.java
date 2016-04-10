@@ -132,7 +132,7 @@ public class MainScreen implements Screen {
     public void hide() {
         client.shutdown();
         if (server != null)
-            server.shutdown();
+            server.shutdown(false);
     }
 
     @Override

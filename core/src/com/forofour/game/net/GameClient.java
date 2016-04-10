@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.forofour.game.handlers.GameMap;
+import com.forofour.game.tutorialMode.TutorialStates;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,10 +17,15 @@ public class GameClient {
 
     private Client client;
     private GameMap map;
+    private TutorialStates tutorialStates;
+    private boolean tutorialMode;
     public boolean serverReady, playAgain, playEnd;
 
-    public GameClient(){
+    public GameClient(boolean tutorialMode){
+        this.tutorialMode = tutorialMode;
         map = new GameMap(this);
+        if(tutorialMode)
+            tutorialStates = new TutorialStates(map);
 
         client = new Client();
         client.start();
@@ -31,6 +37,11 @@ public class GameClient {
                 if (o instanceof Network.PacketDebugAnnouncement){
                     Network.PacketDebugAnnouncement packet = (Network.PacketDebugAnnouncement) o;
                     Gdx.app.log("GameClient", packet.getMsg());
+                }
+
+                else if(o instanceof Network.PacketShutdown) {
+                    map.shutdown = true;
+                    Gdx.app.log("GameClient", "Exit lobby received from server");
                 }
 
                 // Receives packet when server clicks on "StartGame"
@@ -57,8 +68,7 @@ public class GameClient {
                     if(packet.serverReady) {
                         Gdx.app.log("GameClient", "ReinitLobby ALLOWED Received from Server");
                         reinitLobby(); // If SERVER allows, to show BUTTON to PLAYAGAIN
-                    }
-                    else {
+                    } else {
                         Gdx.app.log("GameClient", "ReinitLobby DISALLOWED Received from Server");
 //                        reinitMenu();
                     }

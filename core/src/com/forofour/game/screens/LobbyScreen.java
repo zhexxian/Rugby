@@ -1,6 +1,7 @@
 package com.forofour.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -53,7 +54,20 @@ public class LobbyScreen implements Screen {
 
         stage = new Stage(new ExtendViewport(
                 GameConstants.GAME_WIDTH,
-                GameConstants.GAME_HEIGHT));
+                GameConstants.GAME_HEIGHT)) {
+            @Override
+            public boolean keyDown(int keyCode){
+                if (keyCode == Input.Keys.BACK || keyCode == Input.Keys.BACKSPACE) {
+                    if(server != null) {
+                        server.shutdown(true);
+                    }
+                    if(client != null)
+                        client.shutdown();
+                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                }
+                return super.keyDown(keyCode);
+            }
+        };
 
         lobbyActorMaker = new LobbyActorMaker(stage);
         lobbyActorMaker.getButtonStartGame().addListener(new ChangeListener() {
@@ -71,17 +85,19 @@ public class LobbyScreen implements Screen {
         lobbyActorMaker.getButtonNudgeHost().setVisible(false);
 
         Gdx.input.setInputProcessor(stage);
+        Gdx.input.setCatchBackKey(true);
+
         batch = new SpriteBatch();
     }
 
     @Override
     public void show(){
 
-        client = new GameClient(); // Launch a new client
+        client = new GameClient(tutorialMode); // Launch a new client
 
         if(isHost){
             if(server == null)
-                server = new GameServer();
+                server = new GameServer(tutorialMode);
             Gdx.app.log("LobbyScreen(host)", "Started server");
             client.connect("localhost");
             Gdx.app.log("LobbyScreen(host)", "Client connected to server");
@@ -91,7 +107,6 @@ public class LobbyScreen implements Screen {
             client.quickConnect();
             Gdx.app.log("LobbyScreen", "Connecting to server");
         }
-
     }
 
     @Override
@@ -121,6 +136,11 @@ public class LobbyScreen implements Screen {
             lobbyActorMaker.getButtonNudgeHost().setVisible(showStartNudgeButton);
             if(client.getMap().gameInitiated) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
+            }
+            if(client.getMap().shutdown) {
+                if(client != null)
+                    client.shutdown();
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
         }
     }

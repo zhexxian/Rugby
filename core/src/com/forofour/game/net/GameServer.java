@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
+import com.forofour.game.tutorialMode.TutorialStates;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,15 +20,22 @@ public class GameServer {
 
     private Server server;
     private GameMap map;
+    private TutorialStates tutorialStates;
+
     private Random random;
+    private boolean tutorialMode;
     public boolean playRestart, playEnd;
 
     private ArrayList<Integer> initiatedPlayers;
     private ArrayList<Integer> powerUpAssignment;
 
-    public GameServer(){
+    public GameServer(boolean tutorialMode){
+        this.tutorialMode = tutorialMode;
         random = new Random(System.currentTimeMillis());
         map = new GameMap(this);
+        if(tutorialMode) {
+            tutorialStates = new TutorialStates(map);
+        }
 
         initiatedPlayers = new ArrayList<Integer>();
         initiatedPlayers.add(1);
@@ -182,7 +190,9 @@ public class GameServer {
         }
     }
 
-    public void shutdown() {
+    public void shutdown(boolean restart) {
+        if(restart)
+            sendMessage(new Network.PacketShutdown());
         server.close();
         server.stop();
     }
@@ -193,10 +203,14 @@ public class GameServer {
 
     public void assignPlayers() {
         if(map.getPlayersConnected() != null) {
+            int playerNumber = 0;
             for(Integer id : map.getPlayersConnected().keySet()) {
                 Gdx.app.log("GameServer", "Assigning player" + id);
-                int i = map.getPlayerHash().size()*10;
-                Vector2 pos = new Vector2(10+i, 10+i);
+//                int i = map.getPlayerHash().size()*10;
+                int x = GameConstants.PLAYER_POSITION[playerNumber][0];
+                int y = GameConstants.PLAYER_POSITION[playerNumber++][1];
+
+                Vector2 pos = new Vector2(x, y);
                 if(id%2 != 0) {
                     map.addPlayer(false, id, 1, pos, map.getBox2d());
                     sendMessage(new Network.PacketAddPlayer(id, 1, pos));

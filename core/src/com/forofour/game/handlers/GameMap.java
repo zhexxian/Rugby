@@ -51,7 +51,7 @@ public class GameMap {
 
     private Timer globalTime;
     private boolean gameInitialized;
-    public boolean gameInitiated, gamePaused, gameEnd;
+    public boolean shutdown, gameInitiated, gamePaused, gameEnd;
     public int gameDuration = 5;
 
     public GameMap(GameServer server){
@@ -67,7 +67,9 @@ public class GameMap {
 
     private GameMap(boolean isHost) {
         gameInitialized = false;
+        shutdown = false;
         gamePaused = false;
+        gameEnd =false;
         runTime = 0;
         lastSentTime = 0; // Used for periodic updates to/from server.
         this.isHost = isHost;
@@ -107,6 +109,10 @@ public class GameMap {
         teamA.clear();
         teamB.clear();
         globalTime.reset();
+    }
+
+    public void setGameDuration(int duration){
+        globalTime.setGameDuration(duration);
     }
 
     public void addWallBoundaries() {

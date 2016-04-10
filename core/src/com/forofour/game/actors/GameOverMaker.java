@@ -18,7 +18,7 @@ import com.forofour.game.handlers.GameConstants;
  */
 public class GameOverMaker {
 
-    private static float SIZE_SCALE = (float) 0.2;
+    private static float SIZE_SCALE = 0.2f;
 
     private Stage endStage;
     private static BitmapFont textFont;

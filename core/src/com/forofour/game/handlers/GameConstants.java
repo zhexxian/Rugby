@@ -20,6 +20,7 @@ public class GameConstants {
 
     //number of players
     public static final int MAX_PLAYERS = 2;
+    public static final int[][] PLAYER_POSITION = new int[4][2];
 
     //game duration
     public static final int GAME_DURATION = 120;
@@ -33,5 +34,9 @@ public class GameConstants {
     public static void init() {
         GameConstants.SCALE_POS = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH; //scale factor
         GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS; //calculated game height
+        PLAYER_POSITION[0][0] = 10; PLAYER_POSITION[0][1] = 10;
+        PLAYER_POSITION[1][0] = 150; PLAYER_POSITION[1][1] = 10;
+        PLAYER_POSITION[2][0] = 10; PLAYER_POSITION[2][1] = 90;
+        PLAYER_POSITION[3][0] = 150; PLAYER_POSITION[3][1] = 90;
     }
 }

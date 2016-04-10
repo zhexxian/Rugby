@@ -66,7 +66,7 @@ public class TouchPadMaker {
         //Create new TouchPad with the created style
         touchpad = new Touchpad(10, touchpadStyle);
 
-        touchpad.setDebug(true);
+        touchpad.setDebug(false);
         touchpad.setBounds(50, 50, 150, 150); // Initial position and bounds. Will be overwritten by wrapper
 
         return touchpad;

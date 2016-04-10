@@ -18,6 +18,7 @@ public class Network {
 
         kryo.register(PacketDebugAnnouncement.class);
         kryo.register(PacketPlayerJoinLeave.class);
+        kryo.register(PacketShutdown.class);
 
         kryo.register(PacketInitRound.class);
         kryo.register(PacketGamePause.class);
@@ -50,6 +51,11 @@ public class Network {
         }
         public String getMsg() {
             return "--- Server Announcement Start --- : " + msg;
+        }
+    }
+
+    public static class PacketShutdown {
+        public PacketShutdown() {
         }
     }
 
