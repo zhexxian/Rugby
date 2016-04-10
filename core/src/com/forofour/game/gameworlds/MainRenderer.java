@@ -3,6 +3,7 @@ package com.forofour.game.gameworlds;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -124,6 +125,17 @@ public class MainRenderer {
             TextureRegion playerDirection;
 
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
+                if(p.isBoosting()) {
+                    for(Animation animation : AssetLoader.TeamAnimationA){
+                        animation.setFrameDuration(0.08f); // Faster animation when boosting
+                    }
+                }
+                else {
+                    for(Animation animation : AssetLoader.TeamAnimationA){
+                        animation.setFrameDuration(0.16f); // Slow animation when boosting
+                    }
+                }
+
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerAnimationDownA.getKeyFrame(runTime);
                 else if (angle <= 45 && angle > -45)
@@ -182,6 +194,17 @@ public class MainRenderer {
 
             TextureRegion playerDirection;
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
+                if(p.isBoosting()) {
+                    for(Animation animation : AssetLoader.TeamAnimationB){
+                        animation.setFrameDuration(0.1f);
+                    }
+                }
+                else {
+                    for(Animation animation : AssetLoader.TeamAnimationB){
+                        animation.setFrameDuration(0.2f);
+                    }
+                }
+
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerAnimationDownB.getKeyFrame(runTime);
                 else if (angle <= 45 && angle > -45)

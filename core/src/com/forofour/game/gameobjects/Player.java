@@ -40,7 +40,7 @@ public class Player {
 
     //TODO: move the constants to handlers/GameConstants
     private static final int MAX_VELOCITY = 30;
-    private static final float BOOST_SCALAR = 1.3f;
+    private static final float BOOST_SCALAR = 1.5f;
 
     private static final float BOOST_DURATION = 1;
     private static final float NO_BOOST_DURATION = 2;
@@ -143,6 +143,12 @@ public class Player {
         }
         else
             deactivateInvisibleEffect();
+    }
+
+    public boolean isBoosting(){
+        if(boostTime > 0)
+            return true;
+        return false;
     }
 
     public void knobMove(float x, float y) {

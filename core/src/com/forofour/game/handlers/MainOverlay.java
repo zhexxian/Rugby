@@ -164,7 +164,7 @@ public class MainOverlay extends Stage {
             // Host will see both choices upon game end
             buttonPlayAgain.setVisible(true);
             buttonMainMenu.setVisible(true);
-            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
+//            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
         }
         else {
             // Client will see only MainMenu button

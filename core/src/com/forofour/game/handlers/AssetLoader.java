@@ -47,6 +47,9 @@ public class AssetLoader {
     public static TextureRegion playerRegionAleft2, playerRegionBleft2;
     public static TextureRegion playerRegionAright2, playerRegionBright2;
 
+    public static Animation[] TeamAnimationA;
+    public static Animation[] TeamAnimationB;
+
     public static Animation playerAnimationDownA, playerAnimationRightA, playerAnimationUpA, playerAnimationLeftA;
     public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
 
@@ -106,6 +109,7 @@ public class AssetLoader {
         playerAnimationDownA = new Animation(0.1f, playerAdown);
         playerAnimationLeftA = new Animation(0.1f, playerAleft);
         playerAnimationRightA = new Animation(0.1f, playerAright);
+        TeamAnimationA = new Animation[]{playerAnimationUpA, playerAnimationDownA, playerAnimationLeftA, playerAnimationRightA};
 
         playerAnimationUpA.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
         playerAnimationDownA.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
@@ -149,6 +153,7 @@ public class AssetLoader {
         playerAnimationDownB = new Animation(0.1f, playerBdown);
         playerAnimationLeftB = new Animation(0.1f, playerBleft);
         playerAnimationRightB = new Animation(0.1f, playerBright);
+        TeamAnimationB = new Animation[]{playerAnimationUpB, playerAnimationDownB, playerAnimationLeftB, playerAnimationRightB};
 
         playerAnimationUpB.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
         playerAnimationDownB.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
