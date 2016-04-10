@@ -52,7 +52,7 @@ public class GameMap {
     private Timer globalTime;
     private boolean gameInitialized;
     public boolean gameInitiated, gamePaused, gameEnd;
-    public int gameDuration = 30;
+    public int gameDuration = 5;
 
     public GameMap(GameServer server){
         this(true);
@@ -69,7 +69,7 @@ public class GameMap {
         gameInitialized = false;
         gamePaused = false;
         runTime = 0;
-        lastSentTime = 0;
+        lastSentTime = 0; // Used for periodic updates to/from server.
         this.isHost = isHost;
 
         box2d = new World(new Vector2(0f, 0f), true);

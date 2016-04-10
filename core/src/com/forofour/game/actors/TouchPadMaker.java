@@ -17,7 +17,7 @@ public class TouchPadMaker {
 
     private static float POS_X = 20;
     private static float POS_Y = 20;
-    private static float SIZE_SCALE = (float) 1;
+    private static float SIZE_SCALE = 0.2f;
     private static Touchpad touchpad;
     private static Touchpad.TouchpadStyle touchpadStyle;
     private static Skin touchpadSkin;
@@ -79,7 +79,7 @@ public class TouchPadMaker {
         Container wrapper = new Container(tp);
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X * GameConstants.SCALE_POS, POS_Y * GameConstants.SCALE_POS);
-        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS/5, SIZE_SCALE * GameConstants.SCALE_POS/5);
+        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS, SIZE_SCALE * GameConstants.SCALE_POS);
 
         return wrapper;
     }

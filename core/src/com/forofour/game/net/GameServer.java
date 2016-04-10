@@ -5,15 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.forofour.game.MyGdxGame;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
-import com.forofour.game.screens.LobbyScreen;
-import com.forofour.game.screens.MainScreen;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -24,7 +20,7 @@ public class GameServer {
     private Server server;
     private GameMap map;
     private Random random;
-    public boolean restart;
+    public boolean playRestart, playEnd;
 
     private ArrayList<Integer> initiatedPlayers;
     private ArrayList<Integer> powerUpAssignment;
@@ -38,7 +34,6 @@ public class GameServer {
 
         powerUpAssignment = new ArrayList<Integer>();
         assignSpawnTimingPowerUp();
-
 
         server = new Server();
         Network.register(server);
@@ -55,14 +50,17 @@ public class GameServer {
                         server.sendToAllTCP(new Network.PacketDebugAnnouncement("Number of player in lobby: " + map.getPlayersConnected().size()));
                     }
                     server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
+
                 } else if (o instanceof Network.PacketInitRound) {
                     Network.PacketInitRound packet = (Network.PacketInitRound) o;
-                    Gdx.app.log("GameServer", " initiated p" + c.getID());
+                    Gdx.app.log("GameServer", " initiated player" + c.getID());
                     initiatedPlayers.add(c.getID());
+                    // NOTE : WOULD HOST EVEN RECEIVE THIS? IF SO, HOW TO START TUTORIAL MODE?
                     if (initiatedPlayers.containsAll(map.getPlayersConnected().keySet()))
                         map.gameInitiated = true;
                     Gdx.app.log("GameServer", "initPlayers - " + initiatedPlayers);
                     Gdx.app.log("GameServer", "playersConnected - " + map.getPlayersConnected().keySet());
+
                 } else if (o instanceof Network.PacketGamePause) {
                     Network.PacketGamePause packet = (Network.PacketGamePause) o;
                     Gdx.app.log("GameServer", "PauseButton Received from Client");
@@ -78,13 +76,18 @@ public class GameServer {
                     Gdx.app.log("GameServer", "Game End Received from client");
                     boolean playAgain = packet.playAgain;
                     Gdx.app.log("GameServer", "Player" + c.getID() + " PlayAgain" + playAgain);
-                    if (map.gameEnd) {
+                    if (map.gameEnd) { // End State of game
                         if (playAgain) {
                             if (c.getID() == 1) {
-                                Gdx.app.log("GameServer", "Server initiated playagain");
+                                Gdx.app.log("GameServer", "Server initiated playRestart");
+                                sendMessage(new Network.PacketReinitLobby(true));
                                 reinitLobby();
-                                sendMessage(new Network.PacketReinitLobby());
-                                restart = true;
+                            }
+                        } else {
+                            if (c.getID() == 1) {
+                                Gdx.app.log("GameServer", "Server initiated endGame");
+                                sendMessage(new Network.PacketReinitLobby(false));
+                                reinitMenu();
                             }
                         }
                     }
@@ -241,6 +244,13 @@ public class GameServer {
     public void reinitLobby() {
         map.restart();
         initiatedPlayers.clear();
+        playRestart = true;
+    }
+
+    public void reinitMenu(){
+        map.restart();
+        initiatedPlayers.clear();
+        playEnd = true;
     }
 
     public GameMap getMap() {

@@ -3,22 +3,21 @@ package com.forofour.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.forofour.game.MyGdxGame;
-import com.forofour.game.actors.TouchPadMaker;
-import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameworlds.MainRenderer;
 import com.forofour.game.handlers.ClientInputHandler;
 import com.forofour.game.handlers.GameMap;
-import com.forofour.game.handlers.InputHandler;
 import com.forofour.game.handlers.MainOverlay;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.forofour.game.net.Network;
 
 /**
- * Created by seanlim on 4/4/2016.
+ * Sequence of events :
+ * 1. When desired # of players are connected "StartGame" button appears on Host
+ * 2. Click on "StartGame" by host, get Clients to launch MainScreen
+ * 3. When all Clients have launched MainScreen, Server will launch MainScreen(Server is last to launch the screen)
+ * 4. Server will procees with Assignment of Players, Ball, and PowerUps
  */
 public class MainScreen implements Screen {
 
@@ -43,7 +42,7 @@ public class MainScreen implements Screen {
 
         map = client.getMap();
         renderer = new MainRenderer(map);
-        overlay = new MainOverlay(client);
+        overlay = new MainOverlay(isHost, client);
 
         Gdx.input.setInputProcessor(new ClientInputHandler(overlay)); // Stage itself is an inputAdapter
 
@@ -95,16 +94,21 @@ public class MainScreen implements Screen {
 //        fpsLogger.log();
 
         if(isHost) {
-            if (server.restart) {
+            if (server.playRestart) {
                 // Restarts host into lobbyScreen at instant
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, true));
             }
+            if(server.playEnd) {
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+            }
         }
         else {
-            if (client.restart) {
-                // Shows PlayAgain button on client's screen
-                // Button should launch LobbyScreen and reconnect to sameHost
+            if (client.playAgain) {
+                // Restart client into LobbyScreen and reconnect to sameHost
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, false));
+            }
+            if (client.playEnd) {
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
         }
     }

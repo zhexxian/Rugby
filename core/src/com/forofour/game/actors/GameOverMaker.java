@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -15,6 +17,8 @@ import com.forofour.game.handlers.GameConstants;
  * Created by zhexian on 08-Apr-16.
  */
 public class GameOverMaker {
+
+    private static float SIZE_SCALE = (float) 0.2;
 
     private Stage endStage;
     private static BitmapFont textFont;
@@ -27,9 +31,9 @@ public class GameOverMaker {
     private TextButton buttonPlayAgain;
     private TextButton buttonMainMenu;
 
-    private int BUTTON_WIDTH = 40;
-    private int BUTTON_HEIGHT = 10;
-    private int BUTTON_GAP = 5;
+    private static int BUTTON_WIDTH = 40;
+    private static int BUTTON_HEIGHT = 10;
+//    private int BUTTON_GAP = 5;
 
     public GameOverMaker(Stage stage){
         //set the game end stage
@@ -43,7 +47,6 @@ public class GameOverMaker {
         texture.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Linear); // linear filtering in nearest mipmap image
         endFont = new BitmapFont(Gdx.files.internal("fonts/baskek.fnt"),
                 new TextureRegion(texture), false);
-        endFont.getData().setScale(0.15f);
 
         //set game end font
         endSkin.add("menuFont", endFont);
@@ -65,35 +68,18 @@ public class GameOverMaker {
         //back to main menu button
         buttonMainMenu = new TextButton("Main Menu", normal);
 
-        buttonPlayAgain.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
-        buttonPlayAgain.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
-                GameConstants.GAME_HEIGHT / 2 - BUTTON_HEIGHT / 2);
-/*        buttonStartGame.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true));
-            }
-        });*/
+        buttonPlayAgain.setDebug(true);
+        buttonMainMenu.setDebug(true);
 
-        buttonMainMenu.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
-        buttonMainMenu.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
-                GameConstants.GAME_HEIGHT / 2 - BUTTON_HEIGHT / 2);
-/*        buttonNudgeHost.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-            }
-        });*/
-
-        stage.addActor(buttonPlayAgain);
-        stage.addActor(buttonMainMenu);
+        // Size have to be done here
+        buttonPlayAgain.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttonMainMenu.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
         //Set background image
         endSkin.add("touchBackground", new Texture("sprites/buttons/joystick-out-black.png"));
         //Create Drawable's from TouchPad skin
         semiTranslucentBackground = endSkin.getDrawable("touchBackground");
     }
-
 
     public TextButton getButtonPlayAgain() {
         return buttonPlayAgain;
@@ -118,8 +104,41 @@ public class GameOverMaker {
 
     }
 
-
     public Stage getMenuStage() {
         return endStage;
+    }
+
+    public static Container wrap1(TextButton ib) {
+        // X,Y origin is at bottom left of the screen.
+        float POS_X1 = GameConstants.GAME_WIDTH/2;
+        float POS_Y1 = GameConstants.GAME_HEIGHT/2 + ib.getHeight();
+
+        float scalePosX = Gdx.graphics.getWidth()/ GameConstants.GAME_WIDTH;
+        float scalePosY = Gdx.graphics.getHeight()/ GameConstants.GAME_HEIGHT;
+
+        Container wrapper = new Container(ib);
+        wrapper.setTransform(true);
+
+        wrapper.setPosition(POS_X1 * scalePosX, POS_Y1 * scalePosY);
+        wrapper.setScale(SIZE_SCALE * scalePosX, SIZE_SCALE * scalePosY);
+
+        return wrapper;
+    }
+
+    public static Container wrap2(TextButton ib) {
+        // X,Y origin is at bottom left of the screen.
+        float POS_X2 = GameConstants.GAME_WIDTH/2;
+        float POS_Y2 = GameConstants.GAME_HEIGHT/2 - ib.getHeight();
+
+        float scalePosX = Gdx.graphics.getWidth()/ GameConstants.GAME_WIDTH;
+        float scalePosY = Gdx.graphics.getHeight()/ GameConstants.GAME_HEIGHT;
+
+        Container wrapper = new Container(ib);
+        wrapper.setTransform(true);
+
+        wrapper.setPosition(POS_X2 * scalePosX, POS_Y2 * scalePosY);
+        wrapper.setScale(SIZE_SCALE * scalePosX, SIZE_SCALE * scalePosY);
+
+        return wrapper;
     }
 }

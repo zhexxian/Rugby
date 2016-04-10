@@ -72,7 +72,11 @@ public class Network {
     }
 
     public static class PacketReinitLobby {
+        public boolean serverReady;
         public PacketReinitLobby() {
+        }
+        public PacketReinitLobby(boolean serverReady) {
+            this.serverReady = serverReady;
         }
     }
 

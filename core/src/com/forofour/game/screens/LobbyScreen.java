@@ -35,6 +35,7 @@ public class LobbyScreen implements Screen {
     private GameServer server;
     private GameClient client;
     private boolean isHost;
+    private boolean tutorialMode;
     private String playerName;
     boolean showStartNudgeButton;
 
@@ -48,6 +49,7 @@ public class LobbyScreen implements Screen {
 
     public LobbyScreen(boolean tutorialMode, final boolean isHost) {
         this.isHost = isHost;
+        this.tutorialMode = tutorialMode;
 
         stage = new Stage(new ExtendViewport(
                 GameConstants.GAME_WIDTH,
@@ -60,9 +62,13 @@ public class LobbyScreen implements Screen {
                 Gdx.app.log("StartButton", "Clicked!");
                 if(isHost) {
                     server.sendMessage(new Network.PacketInitRound(true));
+                    Gdx.app.log("StartButton", "PacketInitRound(true) sent");
                 }
             }
         });
+
+        lobbyActorMaker.getButtonNudgeHost().setVisible(false);
+        lobbyActorMaker.getButtonNudgeHost().setVisible(false);
 
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
@@ -93,6 +99,8 @@ public class LobbyScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+
+        // TODO: Drawing does not scale accordingly to the phone
         batch.begin();
         for(int i=0; i<client.getMap().getNumberOfBabyFaces(); i++){
             batch.draw(AssetLoader.powerUp,
@@ -102,14 +110,14 @@ public class LobbyScreen implements Screen {
 
         // Only if Desired number of Players are connection would the buttons be Active/Visible
         showStartNudgeButton = client.getMap().getNumberOfBabyFaces() >= GameConstants.MAX_PLAYERS; // Should it be 2 or more?
+
         if(isHost) {
+            // Shows
             lobbyActorMaker.getButtonStartGame().setVisible(showStartNudgeButton);
-            lobbyActorMaker.getButtonNudgeHost().setVisible(false);
-            if(server.getMap().gameInitiated) {
+            if(server.getMap().gameInitiated || tutorialMode) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
             }
         } else {
-            lobbyActorMaker.getButtonStartGame().setVisible(false);
             lobbyActorMaker.getButtonNudgeHost().setVisible(showStartNudgeButton);
             if(client.getMap().gameInitiated) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));

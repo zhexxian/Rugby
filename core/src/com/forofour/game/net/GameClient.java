@@ -1,7 +1,6 @@
 package com.forofour.game.net;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -17,7 +16,7 @@ public class GameClient {
 
     private Client client;
     private GameMap map;
-    public boolean restart;
+    public boolean serverReady, playAgain, playEnd;
 
     public GameClient(){
         map = new GameMap(this);
@@ -34,9 +33,11 @@ public class GameClient {
                     Gdx.app.log("GameClient", packet.getMsg());
                 }
 
+                // Receives packet when server clicks on "StartGame"
                 else if(o instanceof Network.PacketInitRound) {
                     Network.PacketInitRound packet = (Network.PacketInitRound) o;
                     map.gameInitiated = packet.initiate;
+                    Gdx.app.log("GameClient", "InitRound Received from Server " + packet.initiate);
                 }
 
                 else if(o instanceof Network.PacketGamePause) {
@@ -49,11 +50,18 @@ public class GameClient {
 //                    Network.PacketGameEnd packet = (Network.PacketGameEnd) o;
                     map.gamePaused = true;
                     map.gameEnd = true;
-                    Gdx.app.log("GameClient", "Game End Received from Server");
+                    Gdx.app.log("GameClient", "Game End Received from Server " + map.gameEnd);
                 }
                 else if(o instanceof Network.PacketReinitLobby) {
-                    reinitLobby(); // If SERVER allows, to show BUTTON to PLAYAGAIN
-                    Gdx.app.log("GameClient", "ReinitLobby ALLOWED Received from Server");
+                    Network.PacketReinitLobby packet = (Network.PacketReinitLobby) o;
+                    if(packet.serverReady) {
+                        Gdx.app.log("GameClient", "ReinitLobby ALLOWED Received from Server");
+                        reinitLobby(); // If SERVER allows, to show BUTTON to PLAYAGAIN
+                    }
+                    else {
+                        Gdx.app.log("GameClient", "ReinitLobby DISALLOWED Received from Server");
+//                        reinitMenu();
+                    }
                 }
 
                 else if(o instanceof Network.PacketPlayerJoinLeave) {
@@ -213,8 +221,14 @@ public class GameClient {
     }
 
     public void reinitLobby() {
-        //Show Client-Sided button to "PLAY AGAIN". Only if server allows
         shutdown();
+        //Show Client-Sided button to "PLAY AGAIN". Only if server allows
+        serverReady = true;
+    }
+
+    public void reinitMenu(){
+        shutdown();
+        playEnd = true;
     }
 
     public void shutdown() {

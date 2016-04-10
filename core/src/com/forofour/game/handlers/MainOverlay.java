@@ -1,10 +1,15 @@
 package com.forofour.game.handlers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.forofour.game.actors.ButtonMaker;
+import com.forofour.game.actors.GameOverMaker;
 import com.forofour.game.actors.PowerUpSlotMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.actors.Timer;
@@ -13,17 +18,24 @@ import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Team;
 import com.forofour.game.net.GameClient;
+import com.forofour.game.net.Network;
 
 /**
  * Created by seanlim on 4/4/2016.
  */
 public class MainOverlay extends Stage {
 
+    private boolean isHost;
+//    private GameServer server;
     private GameClient client;
 
+    // HUD Components
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton, powerSlot;
     private Label globalLabel, teamLabel;
+
+    // GameEnd Components
+    private TextButton buttonPlayAgain, buttonMainMenu;
 
     private boolean isInitialized;
     private Player player;
@@ -31,9 +43,12 @@ public class MainOverlay extends Stage {
     private Team teamA, teamB;
     private Timer globalTime;
 
-    public MainOverlay(GameClient client){
+    public MainOverlay(final boolean isHost, final GameClient client){
         super();
+        this.isHost = isHost;
+//        this.server = server;
         this.client = client;
+
         //make & add actors(HUD components) to the stage
         touchpad = TouchPadMaker.make(client);
         boostButton = ButtonMaker.getBoostButton(client);
@@ -49,6 +64,42 @@ public class MainOverlay extends Stage {
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
         addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
+        // make & add End Game components to the stage
+        GameOverMaker gameOver = new GameOverMaker(this);
+        buttonPlayAgain = gameOver.getButtonPlayAgain();
+        buttonMainMenu = gameOver.getButtonMainMenu();
+        buttonPlayAgain.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(isHost) {
+                    client.sendMessage(new Network.PacketGameEnd(true));
+                    Gdx.app.log("MainOverlay", "PlayAgain(TRUE) Button Sent");
+                }
+                else {
+                    client.playAgain = true;
+                }
+            }
+        });
+        buttonMainMenu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(isHost) {
+                    client.sendMessage(new Network.PacketGameEnd(false));
+                    // No change of states here
+                    // Allow server to register change and announce to server.
+                    Gdx.app.log("MainOverlay", "PlayEnd Button Sent");
+                }
+                else {
+//                    client.sendMessage(new Network.PacketGameEnd(false));
+                    client.playAgain = false;
+                    client.playEnd = true;
+                }
+            }
+        });
+        addActor(GameOverMaker.wrap1(buttonPlayAgain));
+        addActor(GameOverMaker.wrap2(buttonMainMenu));
+        hideEndgameOverlay();
+
         isInitialized = false;
     }
 
@@ -57,15 +108,14 @@ public class MainOverlay extends Stage {
     }
 
     public void update(float delta){
-
         if(!client.getMap().gamePaused) {
             showActors();
+            hideEndgameOverlay();
             if(isInitialized){
                 captureTouchpad();
                 updateTime();
                 updateScore(globalTime.getElapsedMilliseconds()/1000);
                 updateButtons();
-
             }
             else {
                 initialized();
@@ -73,11 +123,13 @@ public class MainOverlay extends Stage {
         }
         else {
             hideActors();
-            // TODO: Include Gameend Actors Show/Hide logic here.
+            // TODO: Include EndGame Actors Show/Hide logic here.
             // TODO: Scores can be acquired from TeamA/TeamB within map
-            //hideGameEndOverlay();
+            hideEndgameOverlay();
+            Gdx.app.log("MainOverlay", "Actors hidden");
             if(client.getMap().gameEnd) {
-              //  showGameEndOverlay();
+                Gdx.app.log("MainOverlay-GameEnded", isHost + " " + client.serverReady);
+                showEndgameOverlay(isHost, client.serverReady);
 
                 // Only if Server intends to "PlayAgain", would Client see button to "PlayAgain".
                 // Intentions to "PlayAgain" will launch LobbyScreen again
@@ -89,11 +141,26 @@ public class MainOverlay extends Stage {
         draw();
     }
 
-    private void showGameEndOverlay() {
-        //end screen display
+    private void hideEndgameOverlay() {
+        buttonPlayAgain.setVisible(false);
+        buttonMainMenu.setVisible(false);
     }
 
-    private void hideGameEndOverlay() {
+    private void showEndgameOverlay(boolean isHost, boolean hostReady) {
+        if(isHost) {
+            // Host will see both choices upon game end
+            buttonPlayAgain.setVisible(true);
+            buttonMainMenu.setVisible(true);
+            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
+        }
+        else {
+            // Client will see only MainMenu button
+            // Only when host is Ready, shall client have the option to PlayAgain
+            if(hostReady){
+                buttonPlayAgain.setVisible(true);
+            }
+            buttonMainMenu.setVisible(true);
+        }
     }
 
     private void initialized() {

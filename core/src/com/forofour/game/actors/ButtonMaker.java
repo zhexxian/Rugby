@@ -28,7 +28,7 @@ public class ButtonMaker {
 //    private static float POS_X2 = 160 - 23;
 //    private static float POS_Y2 = 10;
 
-    private static float SIZE_SCALE = (float) 0.6;
+    private static float SIZE_SCALE = (float) 0.2;
 
     private static ImageButton boostButton, tossButton;
     private static ImageButton.ImageButtonStyle imageButtonStyle;
@@ -108,7 +108,7 @@ public class ButtonMaker {
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X1 * scalePosX, POS_Y1 * scalePosY);
-        wrapper.setScale(SIZE_SCALE * scalePosX/3, SIZE_SCALE * scalePosY/3);
+        wrapper.setScale(SIZE_SCALE * scalePosX, SIZE_SCALE * scalePosY);
 
         return wrapper;
     }
@@ -120,7 +120,7 @@ public class ButtonMaker {
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X2 * scalePosX, POS_Y2 * scalePosY);
-        wrapper.setScale(SIZE_SCALE * scalePosX/3, SIZE_SCALE * scalePosY/3);
+        wrapper.setScale(SIZE_SCALE * scalePosX, SIZE_SCALE * scalePosY);
 
         return wrapper;
     }

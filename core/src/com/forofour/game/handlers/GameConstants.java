@@ -6,9 +6,6 @@
 package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
-import com.forofour.game.net.GameClient;
-import com.forofour.game.net.GameServer;
-import com.forofour.game.screens.GameScreen;
 
 
 public class GameConstants {
@@ -25,7 +22,7 @@ public class GameConstants {
     public static final int MAX_PLAYERS = 2;
 
     //game duration
-    public static final int GAME_DURATION = 60;
+    public static final int GAME_DURATION = 120;
     public static final int GAME_DURATION_MS = GAME_DURATION*1000;
     public static final int GAME_DURATION_NS = GAME_DURATION_MS*1000000;
 

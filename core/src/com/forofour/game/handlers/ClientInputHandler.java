@@ -7,7 +7,6 @@ import com.forofour.game.MyGdxGame;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
-import com.forofour.game.screens.LobbyScreen;
 import com.forofour.game.screens.MenuScreen;
 
 /**
@@ -42,7 +41,7 @@ public class ClientInputHandler extends InputMultiplexer {
             Gdx.app.log("Keypressed F", "PlayAgain(FALSE) Button Sent");
         }
         if(keycode == Input.Keys.L){
-            client.restart = true;
+            client.playAgain = true;
             Gdx.app.log("Keypressed L", "ReinitLobby Button Pressed");
         }
 

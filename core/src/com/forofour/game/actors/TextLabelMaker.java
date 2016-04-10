@@ -20,8 +20,8 @@ public class TextLabelMaker {
     private static final float POS_X2 = GameConstants.GAME_WIDTH/2;
     private static final float POS_Y2 = 12;
 
-    private static final float SIZE_SCALE1 = 0.25f;
-    private static final float SIZE_SCALE2 = 0.35f;
+    private static final float SIZE_SCALE1 = 0.25f; // Global Time
+    private static final float SIZE_SCALE2 = 0.35f; // Team Score
 
     private static BitmapFont textFont;
     private static Label.LabelStyle textStyle;

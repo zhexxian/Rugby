@@ -123,14 +123,6 @@ public class MainRenderer {
 //            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
             TextureRegion playerDirection;
 
-//            if(angle <= 135 && angle > 45)
-//                playerDirection = AssetLoader.playerRegionAdown;
-//            else if(angle <= 45 && angle > -45)
-//                playerDirection = AssetLoader.playerRegionAright;
-//            else if(angle <= -45 && angle > -135)
-//                playerDirection = AssetLoader.playerRegionAup;
-//            else
-//                playerDirection = AssetLoader.playerRegionAleft;
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerAnimationDownA.getKeyFrame(runTime);
