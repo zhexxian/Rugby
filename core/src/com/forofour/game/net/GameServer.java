@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.tutorialMode.TutorialStates;
@@ -35,7 +36,7 @@ public class GameServer {
         map = new GameMap(this);
 
         if(tutorialMode) {
-            tutorialStates = new TutorialStates(map); // Sets the TutorialMode gameDuration and access to other states
+            tutorialStates = new TutorialStates(map, this); // Sets the TutorialMode gameDuration and access to other states
         }
 
         initiatedPlayers = new ArrayList<Integer>();
@@ -236,6 +237,7 @@ public class GameServer {
         int type = 1 + random.nextInt(3);
         assignPowerUp(type);
     }
+
     public void assignPowerUp(int type) {
         // 3 types - Water(Slow), Cloak(Invisibility) , Confusion(DisorientedControls)
         int distanceFromWall = 5;
@@ -274,5 +276,9 @@ public class GameServer {
 
     public void dispose() {
         map.dispose();
+    }
+
+    public TutorialStates getTutorialStates(){
+        return tutorialStates;
     }
 }

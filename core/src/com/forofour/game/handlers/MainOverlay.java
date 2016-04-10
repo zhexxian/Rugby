@@ -19,6 +19,7 @@ import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Team;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
+import com.forofour.game.tutorialMode.TutorialStates;
 
 /**
  * Created by seanlim on 4/4/2016.
@@ -42,6 +43,14 @@ public class MainOverlay extends Stage {
     private Ball ball;
     private Team teamA, teamB;
     private Timer globalTime;
+
+    // Tutorial States
+    private TutorialStates tutorialStates;
+
+    public MainOverlay(final boolean isHost, final GameClient client, TutorialStates tutorialStates) {
+        this(isHost, client);
+        this.tutorialStates = tutorialStates;
+    }
 
     public MainOverlay(final boolean isHost, final GameClient client){
         super();
@@ -108,27 +117,31 @@ public class MainOverlay extends Stage {
     }
 
     public void update(float delta){
-        if(!client.getMap().gamePaused) {
+        if (!client.getMap().gamePaused) {
             showActors();
             hideEndgameOverlay();
-            if(isInitialized){
+            if (isInitialized) {
                 captureTouchpad();
                 updateTime();
-                updateScore(globalTime.getElapsedMilliseconds()/1000);
+                updateScore(globalTime.getElapsedMilliseconds() / 1000);
                 updateButtons();
-            }
-            else {
+
+                if(tutorialStates != null) {
+                    tutorialStates.updateTutorialStates();
+                    tutorialStates.printStates();
+                    // TODO: Include Tutorial Actors Show/Hide logic
+                    // TODO: TutorialStates contain the triggers e.g. PlayerMoved, BallPicked, BallTossed
+                }
+
+            } else {
                 initialized();
             }
-        }
-        else {
+        } else {
             hideActors();
             // TODO: Include EndGame Actors Show/Hide logic here.
             // TODO: Scores can be acquired from TeamA/TeamB within map
             hideEndgameOverlay();
-            Gdx.app.log("MainOverlay", "Actors hidden");
-            if(client.getMap().gameEnd) {
-                Gdx.app.log("MainOverlay-GameEnded", isHost + " " + client.serverReady);
+            if (client.getMap().gameEnd) {
                 showEndgameOverlay(isHost, client.serverReady);
 
                 // Only if Server intends to "PlayAgain", would Client see button to "PlayAgain".

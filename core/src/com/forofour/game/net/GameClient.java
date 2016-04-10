@@ -16,6 +16,8 @@ import java.net.InetAddress;
 public class GameClient {
 
     private Client client;
+    private String hostAddress;
+
     private GameMap map;
     private TutorialStates tutorialStates;
     private boolean tutorialMode;
@@ -190,26 +192,33 @@ public class GameClient {
 
     public Integer connect(String host){
         try{
-            client.connect(10000, host, Network.port, Network.portUDP);
-            Gdx.app.log("GameClient", "Unable to connect to host");
+            this.hostAddress = host;
+            Gdx.app.log("Client", "Connecting(specific) to " + host);
+            client.connect(5000, host, Network.port, Network.portUDP);
+            Gdx.app.log("Client", "Connected to host");
             return client.getID();
         } catch(IOException ex) {
-            Gdx.app.log("GameClient", "Connected to host");
+            Gdx.app.log("Client", "Failed to connect to host");
+            map.shutdown = true;
         }
         return null;
     }
 
     public boolean quickConnect(){
         Gdx.app.log("Client", "Discovering on " + Network.portUDP);
-        InetAddress address = client.discoverHost(Network.portUDP, 5000);
-        System.out.println(address);
+        InetAddress address = client.discoverHost(Network.portUDP, 1000);
+        this.hostAddress = address.getHostAddress();
+        Gdx.app.log("Client", "Found server on " + address);
+        Gdx.app.log("Client", "Server HostAddress " + hostAddress);
+        Gdx.app.log("Client", "Server HostName " + address.getHostName());
         try {
-            Gdx.app.log("Client", "Connecting to" + address);
+            Gdx.app.log("Client", "Connecting(quick) to " + address);
             client.connect(1000, address, Network.port, Network.portUDP);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            Gdx.app.log("Client", "Failed to connected to host");
+            Gdx.app.log("Client", "Failed to connect to host at " + address);
+            map.shutdown = true;
             return false;
         }
     }
@@ -253,5 +262,9 @@ public class GameClient {
             e.printStackTrace();
         }
         map.dispose();
+    }
+
+    public String getHostAddress(){
+        return hostAddress;
     }
 }

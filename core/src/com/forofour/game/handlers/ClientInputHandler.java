@@ -79,6 +79,16 @@ public class ClientInputHandler extends InputMultiplexer {
             Gdx.app.log("Keypressed S", "UsePowerUp Sent");
         }
 
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.BACKSPACE) {
+//            if(server != null) {
+//                server.shutdown(true);
+//            }
+            // TODO: Indication from server to rest of the clients about Dropped Connection
+            if(client != null)
+                client.shutdown();
+            ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+        }
+
         if(player != null) {
             if(keycode == Input.Keys.T){
                 player.dropBall();

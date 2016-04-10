@@ -11,6 +11,7 @@ import com.forofour.game.handlers.MainOverlay;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
+import com.forofour.game.tutorialMode.TutorialStates;
 
 /**
  * Sequence of events :
@@ -22,6 +23,7 @@ import com.forofour.game.net.Network;
 public class MainScreen implements Screen {
 
     private boolean tutorialMode;
+
     private GameMap map;
     private MainRenderer renderer;
     private MainOverlay overlay;
@@ -42,7 +44,13 @@ public class MainScreen implements Screen {
 
         map = client.getMap();
         renderer = new MainRenderer(map);
-        overlay = new MainOverlay(isHost, client);
+        if(tutorialMode) {
+            Gdx.app.log("MainScreen", "Tutorial Mode");
+            overlay = new MainOverlay(isHost, client, server.getTutorialStates());
+        }
+        else {
+            overlay = new MainOverlay(isHost, client);
+        }
 
         Gdx.input.setInputProcessor(new ClientInputHandler(overlay)); // Stage itself is an inputAdapter
 
@@ -93,7 +101,7 @@ public class MainScreen implements Screen {
         overlay.update(delta);
 //        fpsLogger.log();
 
-        if(isHost) {
+        if(isHost) { // Server-sided
             if (server.playRestart) {
                 // Restarts host into lobbyScreen at instant
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, true));
@@ -101,11 +109,18 @@ public class MainScreen implements Screen {
             if(server.playEnd) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
+            if(tutorialMode) {
+                if(server.getTutorialStates().isDone()) {
+                    // Returns to TutorialScreen upon Done with Tutorial
+                    ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                }
+            }
         }
-        else {
+        else { // Client-sided
             if (client.playAgain) {
                 // Restart client into LobbyScreen and reconnect to sameHost
-                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, false));
+//                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, false));
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(client.getHostAddress()));
             }
             if (client.playEnd) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());

@@ -31,7 +31,9 @@ public class LobbyScreen implements Screen {
     private GameClient client;
     private boolean isHost;
     private boolean tutorialMode;
-    private String playerName;
+
+    private String playerName; // Not implemented
+    private String hostname;
 
     private TextButton buttonStartGame;
     private TextButton buttonNudgeHost;
@@ -39,6 +41,7 @@ public class LobbyScreen implements Screen {
 
     public LobbyScreen(String hostname) {
         this(false, false);
+        this.hostname = hostname;
     }
     public LobbyScreen(GameServer server) {
         this(false, true);
@@ -48,6 +51,8 @@ public class LobbyScreen implements Screen {
     public LobbyScreen(boolean tutorialMode, final boolean isHost) {
         this.isHost = isHost;
         this.tutorialMode = tutorialMode;
+        this.playerName = "";
+        this.hostname = "";
 
         stage = new Stage(new ExtendViewport(
                 GameConstants.GAME_WIDTH,
@@ -103,7 +108,12 @@ public class LobbyScreen implements Screen {
         }
 
         else {
-            client.quickConnect();
+            if(hostname != ""){
+                client.connect(hostname);
+            }
+            else {
+                client.quickConnect();
+            }
             Gdx.app.log("LobbyScreen", "Connecting to server");
         }
     }
@@ -129,7 +139,7 @@ public class LobbyScreen implements Screen {
             buttonStartGame.setVisible(showStartNudgeButton);
             buttonNudgeHost.setVisible(false);
             if(server.getMap().gameInitiated || tutorialMode) {
-                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
+                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(tutorialMode, true, playerName, server, client));
             }
         } else {
             buttonStartGame.setVisible(false);
