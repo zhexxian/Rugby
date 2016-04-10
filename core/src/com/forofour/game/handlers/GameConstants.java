@@ -19,7 +19,7 @@ public class GameConstants {
     public static final float CONTROLS_Y_OFFSET = 15f;
 
     //number of players
-    public static final int MAX_PLAYERS = 2;
+    public static final int MIN_MULTIPLAYER_NUMBER = 2;
     public static final int[][] PLAYER_POSITION = new int[4][2];
 
     //game duration

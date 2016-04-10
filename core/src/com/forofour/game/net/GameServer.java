@@ -33,8 +33,9 @@ public class GameServer {
         this.tutorialMode = tutorialMode;
         random = new Random(System.currentTimeMillis());
         map = new GameMap(this);
+
         if(tutorialMode) {
-            tutorialStates = new TutorialStates(map);
+            tutorialStates = new TutorialStates(map); // Sets the TutorialMode gameDuration and access to other states
         }
 
         initiatedPlayers = new ArrayList<Integer>();
@@ -211,8 +212,8 @@ public class GameServer {
                 int y = GameConstants.PLAYER_POSITION[playerNumber++][1];
 
                 Vector2 pos = new Vector2(x, y);
-                if(id%2 != 0) {
-                    map.addPlayer(false, id, 1, pos, map.getBox2d());
+                if(playerNumber%2 != 0) { // TeamAssignment dependent on playerNumber
+                    map.addPlayer(false, id, 1, pos, map.getBox2d());  // Control, PlayerId, TeamNumber, Location
                     sendMessage(new Network.PacketAddPlayer(id, 1, pos));
                 }
                 else {

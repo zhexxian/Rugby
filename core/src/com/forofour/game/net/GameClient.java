@@ -25,7 +25,7 @@ public class GameClient {
         this.tutorialMode = tutorialMode;
         map = new GameMap(this);
         if(tutorialMode)
-            tutorialStates = new TutorialStates(map);
+            tutorialStates = new TutorialStates(map); // Sets the TutorialMode gameDuration and access to other states
 
         client = new Client();
         client.start();

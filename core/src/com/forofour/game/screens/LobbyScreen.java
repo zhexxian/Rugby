@@ -7,22 +7,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
 import com.forofour.game.MyGdxGame;
 import com.forofour.game.actors.LobbyActorMaker;
-import com.forofour.game.actors.MenuActorMaker;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
-
-import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by seanlim on 1/4/2016.
@@ -38,6 +32,9 @@ public class LobbyScreen implements Screen {
     private boolean isHost;
     private boolean tutorialMode;
     private String playerName;
+
+    private TextButton buttonStartGame;
+    private TextButton buttonNudgeHost;
     boolean showStartNudgeButton;
 
     public LobbyScreen(String hostname) {
@@ -70,24 +67,26 @@ public class LobbyScreen implements Screen {
         };
 
         lobbyActorMaker = new LobbyActorMaker(stage);
-        lobbyActorMaker.getButtonStartGame().addListener(new ChangeListener() {
+        buttonStartGame = lobbyActorMaker.getButtonStartGame();
+        buttonNudgeHost = lobbyActorMaker.getButtonNudgeHost();
+        buttonStartGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.log("StartButton", "Clicked!");
-                if(isHost) {
+                if (isHost) {
                     server.sendMessage(new Network.PacketInitRound(true));
                     Gdx.app.log("StartButton", "PacketInitRound(true) sent");
                 }
             }
         });
+        buttonStartGame.setVisible(false);
+        buttonNudgeHost.setVisible(false);
 
-        lobbyActorMaker.getButtonNudgeHost().setVisible(false);
-        lobbyActorMaker.getButtonNudgeHost().setVisible(false);
+        batch = new SpriteBatch();
 
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchBackKey(true);
 
-        batch = new SpriteBatch();
     }
 
     @Override
@@ -124,16 +123,17 @@ public class LobbyScreen implements Screen {
         batch.end();
 
         // Only if Desired number of Players are connection would the buttons be Active/Visible
-        showStartNudgeButton = client.getMap().getNumberOfBabyFaces() >= GameConstants.MAX_PLAYERS; // Should it be 2 or more?
-
+        showStartNudgeButton = client.getMap().getNumberOfBabyFaces() >= GameConstants.MIN_MULTIPLAYER_NUMBER; // Should it be 2 or more?
         if(isHost) {
             // Shows
-            lobbyActorMaker.getButtonStartGame().setVisible(showStartNudgeButton);
+            buttonStartGame.setVisible(showStartNudgeButton);
+            buttonNudgeHost.setVisible(false);
             if(server.getMap().gameInitiated || tutorialMode) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, true, playerName, server, client));
             }
         } else {
-            lobbyActorMaker.getButtonNudgeHost().setVisible(showStartNudgeButton);
+            buttonStartGame.setVisible(false);
+            buttonNudgeHost.setVisible(showStartNudgeButton);
             if(client.getMap().gameInitiated) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
             }

@@ -167,7 +167,7 @@ public class GameWorld{
     //add player to the game
     public void addPlayer() {
         if(playerList != null) {
-            if(playerList.size() < GameConstants.MAX_PLAYERS) {
+            if(playerList.size() < GameConstants.MIN_MULTIPLAYER_NUMBER) {
                 //add player to a random location
                 Random r = new Random();
                 player = new Player(r.nextInt((int) GameConstants.GAME_WIDTH), r.nextInt((int) GameConstants.GAME_HEIGHT), 2f, ball, box2d);
