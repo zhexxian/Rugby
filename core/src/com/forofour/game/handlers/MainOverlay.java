@@ -48,19 +48,17 @@ public class MainOverlay extends Stage {
     private TutorialStates tutorialStates;
 
     public MainOverlay(final boolean isHost, final GameClient client, TutorialStates tutorialStates) {
-        this(isHost, client);
-        this.tutorialStates = tutorialStates;
-    }
-
-    public MainOverlay(final boolean isHost, final GameClient client){
         super();
+
         this.isHost = isHost;
-//        this.server = server;
         this.client = client;
+        this.tutorialStates = tutorialStates;
+        if(this.tutorialStates != null)
+            Gdx.app.log("MainOverlay", "tutorialMode");
 
         //make & add actors(HUD components) to the stage
         touchpad = TouchPadMaker.make(client);
-        boostButton = ButtonMaker.getBoostButton(client);
+        boostButton = ButtonMaker.getBoostButton(client, tutorialStates);
         tossButton = ButtonMaker.getTossButton(client);
         globalLabel = TextLabelMaker.getTimeLabel(client);
         teamLabel = TextLabelMaker.getTimeLabel(client);
@@ -236,6 +234,9 @@ public class MainOverlay extends Stage {
         if(player != null) {
             if(player.hasBall()) {
                 tossButton.setVisible(true);
+                boostButton.setVisible(false);
+            } else if(player.isBoosting()) {
+                tossButton.setVisible(false);
                 boostButton.setVisible(false);
             } else {
                 tossButton.setVisible(false);

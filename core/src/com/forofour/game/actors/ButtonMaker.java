@@ -10,6 +10,7 @@ import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
+import com.forofour.game.tutorialMode.TutorialStates;
 
 /**
  * Make necessary buttons for game play, toss/boost.
@@ -67,7 +68,7 @@ public class ButtonMaker {
         return tossButton;
     }*/
 
-    public static ImageButton getBoostButton(final GameClient client) {
+    public static ImageButton getBoostButton(final GameClient client, final TutorialStates tutorialStates) {
 
         imageButtonStyle = new ImageButton.ImageButtonStyle();
         imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.boostRegion);
@@ -77,9 +78,15 @@ public class ButtonMaker {
         boostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Boost");
-                if(client.getMap().getPlayer() != null)
+                Gdx.app.log("BoostButton", "Button Pressed");
+                if(client.getMap().getPlayer() != null) {
+                    Gdx.app.log("BoostButton", "Button Pressed");
                     client.getMap().getPlayer().boost();
+                }
+                if(tutorialStates != null) {
+                    Gdx.app.log("BoostButton", "Button Pressed");
+                    tutorialStates.usedBoost();
+                }
             }
         });
         return boostButton;

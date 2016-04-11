@@ -126,6 +126,7 @@ public class MainRenderer {
             TextureRegion playerDirection;
 
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
+                // TODO: Tie FrameDuration to playerVelocity
                 if(p.isBoosting()) {
                     for(Animation animation : AssetLoader.TeamAnimationA){
                         animation.setFrameDuration(0.08f); // Faster animation when boosting

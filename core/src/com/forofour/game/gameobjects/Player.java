@@ -144,6 +144,7 @@ public class Player {
     }
 
     public boolean isBoosting(){
+//        Gdx.app.log("isBoosting4", "Vel: " + body.getLinearVelocity().len());
         if(boostTime > 0)
             return true;
         return false;

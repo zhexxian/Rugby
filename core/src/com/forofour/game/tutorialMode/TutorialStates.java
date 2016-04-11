@@ -15,6 +15,14 @@ public class TutorialStates {
     private GameServer server;
 
     private static int duration = 90;
+
+    private int boostCount = 0;
+    private int tossCount = 0;
+    private int pickCount = 0;
+
+    public boolean wasBoosting = false;
+    public boolean hadBall = false;
+
     private boolean movedPlayer = false;
     private boolean boostedPlayer = false;
     private boolean pickedBall = false;
@@ -43,24 +51,43 @@ public class TutorialStates {
         if(map != null) {
             if(map.getPlayer() != null) {
                 Player player = map.getPlayer();
+
+                // Update tutorialStates
                 if(player.positionChanged())
                     movedPlayer = true;
-                if(player.isBoosting())
+                if(boostCount >= 3) { // boostCount, only state that triggered by Tapping of BoostButton
                     boostedPlayer = true;
-                if(player.hasBall())
+                }
+                if(player.hasBall()) {
                     pickedBall = true;
-                if(pickedBall && !player.hasBall())
+                    hadBall = true;
+                }
+                if(tossCount >= 3) {
                     tossedBall = true;
+                }
                 if(player.hasPowerUp())
                     pickedPowerUp = true;
                 if(pickedPowerUp && !player.hasPowerUp())
                     usedPowerUp = true;
+
+                // To increase count when ball has been tossed
+                if(hadBall && !player.hasBall()) {
+                    hadBall = false;
+                    usedToss();
+                }
             }
             if(movedPlayer && pickedBall && tossedBall && !spawnedPowerUp) {
                 spawnInvisibility();
                 spawnedPowerUp = true;
             }
         }
+    }
+
+    public void usedToss() {
+        tossCount += 1;
+    }
+    public void usedBoost() {
+        boostCount += 1;
     }
 
     public boolean usedPowerUp() {
@@ -102,7 +129,7 @@ public class TutorialStates {
     }
 
     public void printStates() {
-        Gdx.app.log("TutorialStates", "--- States Start ---");
+        Gdx.app.log("TutorialStates", "--- Tutorial States ---");
         Gdx.app.log("TutorialStates", "PlayerMoved " + movedPlayer);
         Gdx.app.log("TutorialStates", "BallPicked " + pickedBall);
         Gdx.app.log("TutorialStates", "BallTossed " + tossedBall);
@@ -110,7 +137,9 @@ public class TutorialStates {
         Gdx.app.log("TutorialStates", "PowerUpPicked " + pickedPowerUp);
         Gdx.app.log("TutorialStates", "PowerUpUsed " + usedPowerUp);
         Gdx.app.log("TutorialStates", "Complete " + isComplete());
-        Gdx.app.log("TutorialStates", "--- States End ---");
+
+        Gdx.app.log("TutorialStates", "BoostCount " + boostCount);
+        Gdx.app.log("TutorialStates", "TossCount " + tossCount);
     }
 
     public static int getDuration(){
