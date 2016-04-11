@@ -19,6 +19,7 @@ import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by seanlim on 4/4/2016.
@@ -38,7 +39,7 @@ public class MainRenderer {
     private Ball ball;
     private Player player;
     private Team teamA, teamB;
-    private ArrayList<PowerUp> powerUpList;
+    private CopyOnWriteArrayList<PowerUp> powerUpList;
 
     private boolean initialized;
 
@@ -256,7 +257,6 @@ public class MainRenderer {
     }
     private void renderPowerUps() {
         // PowerUps
-        powerUpList = map.getPowerUpList();
         if(powerUpList!=null) {
             for (PowerUp powerUp : powerUpList) {
                 batcher.draw(AssetLoader.powerUp,
@@ -265,6 +265,9 @@ public class MainRenderer {
                         powerUp.getRadius() * 2,
                         powerUp.getRadius() * 2);
             }
+        }
+        else {
+            powerUpList = map.getPowerUpList();
         }
         batcher.end();
     }

@@ -102,9 +102,10 @@ public class GameClient {
                 }
                 else if(o instanceof Network.PacketBallState) {
                     Network.PacketBallState packet = (Network.PacketBallState) o;
-                    map.updateBallState(packet.position, packet.angle);
-                    if(!packet.isHeld)
+                    if(!packet.isHeld) {
+                        map.updateBallState(packet.position, packet.angle);
                         map.updateDropBall();
+                    }
                 }
                 else if(o instanceof Network.PacketBallUpdateFast) { // Ball velocity & Player holder ID
                     Network.PacketBallUpdateFast packet = (Network.PacketBallUpdateFast) o;
@@ -148,7 +149,7 @@ public class GameClient {
                 // Addition of PowerUp to game
                 else if(o instanceof Network.PacketAddPowerUp) {
                     Network.PacketAddPowerUp packet = (Network.PacketAddPowerUp) o;
-                    Gdx.app.log("GameClient", "PacketAddPowerUp, Type:" + packet.type + " Position:" +packet.position);
+                    Gdx.app.log("GameClient", "PacketAddPowerUp, Type:" + packet.type + " Position:" + packet.position);
                     map.addPowerUp(packet.position, packet.type);
                 }
 

@@ -129,6 +129,7 @@ public class MainOverlay extends Stage {
                 if(tutorialStates != null) {
                     tutorialStates.updateTutorialStates();
                     tutorialStates.printStates();
+
                     // TODO: Include Tutorial Actors Show/Hide logic
                     // TODO: TutorialStates contain the triggers e.g. PlayerMoved, BallPicked, BallTossed
                 }

@@ -21,6 +21,7 @@ import com.forofour.game.net.Network;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by seanlim on 4/4/2016.
@@ -43,8 +44,8 @@ public class GameMap {
     private Wall wallTop, wallBottom, wallLeft, wallRight;
     private Player player;
     private Ball ball;
-    private ArrayList<PowerUp> powerUpList;
-    private ArrayList<PowerUp> powerUpRemoveList;
+    private CopyOnWriteArrayList<PowerUp> powerUpList;
+    private CopyOnWriteArrayList<PowerUp> powerUpRemoveList;
     private int powerUpCount;
 
     private HashMap<Integer, Player> playerHash;
@@ -82,8 +83,8 @@ public class GameMap {
         addWallBoundaries();
 
         playerHash = new HashMap<Integer, Player>();
-        powerUpList = new ArrayList<PowerUp>();
-        powerUpRemoveList = new ArrayList<PowerUp>();
+        powerUpList = new CopyOnWriteArrayList<PowerUp>();
+        powerUpRemoveList = new CopyOnWriteArrayList<PowerUp>();
         powerUpCount = 0;
 
         //create two teams with different team id
@@ -146,9 +147,9 @@ public class GameMap {
             // Client-sided logic
             if(!isHost) {
 //                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
-                if(runTime - lastSentTime > 0.1) { // Resync every 100ms
+                if(runTime - lastSentTime > 0.5) { // Resync every 100ms
                     // Client will receive updated location on PlayerLocations after sending his own
-                    clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
+                    clientSendMessage(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
 //                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
                     lastSentTime = runTime;
                 }
@@ -171,12 +172,11 @@ public class GameMap {
                 globalTime.start();
             }
             else {
+                addTeamScores(delta);
+
                 for(Player p : playerHash.values()) {
                     serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity()));
                 }
-
-                addTeamScores(delta);
-
 //                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
 //                if(!ball.isHeld())
                     serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity()));
@@ -290,7 +290,7 @@ public class GameMap {
             }
         }
     }
-    public ArrayList<PowerUp> getPowerUpList() {
+    public CopyOnWriteArrayList<PowerUp> getPowerUpList() {
         return powerUpList;
     }
 
@@ -410,11 +410,15 @@ public class GameMap {
                 else if(runTime - lastPlayerCollisionTime > 0.1){
                     // TODO: Player collision should be between opposing team members only
                     if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
-                        if(map.getBall().getHoldingPlayer().equals(a.getUserData()) ||
-                                map.getBall().getHoldingPlayer().equals(b.getUserData())) {
-                            Gdx.app.log("Collision", "between players");
-                            map.getBall().triggerCollision();
-                            serverSendMessage(new Network.PacketDropBall());
+                        Player playerA = (Player) a.getUserData();
+                        Player playerB = (Player) b.getUserData();
+                        if(map.getBall().getHoldingPlayer().equals(playerA) ||
+                                map.getBall().getHoldingPlayer().equals(playerB)) {
+                            Gdx.app.log("Collision", "Between ball holder and opposing player");
+                            if(playerA.getTeamId() != playerB.getTeamId()) {
+                                map.getBall().triggerCollision();
+                                serverSendMessage(new Network.PacketDropBall());
+                            }
                         }
                     }
 //                    lastPlayerCollisionTime = runTime;

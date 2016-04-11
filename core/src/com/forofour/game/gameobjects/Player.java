@@ -88,7 +88,7 @@ public class Player {
         fixtureDef.shape = boundingCircle;
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 1f;
-        fixtureDef.restitution = 0.2f; // Make it bounce a little bit
+        fixtureDef.restitution = 0f; // Make it bounce a little bit
         fixture = body.createFixture(fixtureDef);
 
         boundingCircle.dispose();

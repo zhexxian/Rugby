@@ -32,7 +32,7 @@ public class GameServer {
     private ArrayList<Integer> powerUpAssignment;
 
     public GameServer(boolean tutorialMode){
-        Log.set(Log.LEVEL_TRACE);
+//        Log.set(Log.LEVEL_TRACE);
         this.tutorialMode = tutorialMode;
         random = new Random(System.currentTimeMillis());
         map = new GameMap(this);
@@ -111,6 +111,7 @@ public class GameServer {
 //                    Gdx.app.log("GameServer", "State Updates for player" + "-" + c.getID() + "-" + packet.id);
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
                     server.sendToAllTCP(new Network.PacketPlayerState(packet.id, packet.position, packet.angle));
+
                 } else if (o instanceof Network.PacketPlayerUpdateFast) {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
 //                    Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);

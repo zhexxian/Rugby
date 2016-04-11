@@ -102,7 +102,7 @@ public class Ball extends BodyDef{
     public void loseHoldingPlayer(){
         if(holdingPlayer != null) {
             body.setActive(true); // Enable Physics
-            immunityTime = 2;
+            immunityTime = 1;
 
             // Formulate the offset from player origin to release the ball
             Vector2 offset = new Vector2();
