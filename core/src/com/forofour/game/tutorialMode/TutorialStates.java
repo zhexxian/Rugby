@@ -14,7 +14,7 @@ public class TutorialStates {
     private GameMap map;
     private GameServer server;
 
-    private int duration = 90;
+    private static int duration = 90;
     private boolean movedPlayer = false;
     private boolean pickedBall = false;
     private boolean tossedBall = false;
@@ -106,5 +106,9 @@ public class TutorialStates {
         Gdx.app.log("TutorialStates", "PowerUpUsed " + usedPowerUp);
         Gdx.app.log("TutorialStates", "Complete " + isComplete());
         Gdx.app.log("TutorialStates", "--- States End ---");
+    }
+
+    public static int getDuration(){
+        return duration;
     }
 }

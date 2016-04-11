@@ -36,7 +36,7 @@ public class GameConstants {
         GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS; //calculated game height
         PLAYER_POSITION[0][0] = 10; PLAYER_POSITION[0][1] = 10;
         PLAYER_POSITION[1][0] = 150; PLAYER_POSITION[1][1] = 10;
-        PLAYER_POSITION[2][0] = 10; PLAYER_POSITION[2][1] = 90;
-        PLAYER_POSITION[3][0] = 150; PLAYER_POSITION[3][1] = 90;
+        PLAYER_POSITION[2][0] = 10; PLAYER_POSITION[2][1] = 80;
+        PLAYER_POSITION[3][0] = 150; PLAYER_POSITION[3][1] = 80;
     }
 }

@@ -13,8 +13,6 @@ import com.badlogic.gdx.utils.Array;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
 
-import java.util.Random;
-
 /**
  * Created by seanlim on 19/2/2016.
  */

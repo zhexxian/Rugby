@@ -33,6 +33,7 @@ public class GameMap {
     private String tag;
     private float runTime;
     private float lastSentTime;
+    private float lastPlayerCollisionTime;
 
     private Map<Integer,Boolean> playersConnected = new HashMap<Integer, Boolean>();
     private boolean lobbyFilled = false;
@@ -72,6 +73,7 @@ public class GameMap {
         gameEnd =false;
         runTime = 0;
         lastSentTime = 0; // Used for periodic updates to/from server.
+        lastPlayerCollisionTime = 0; // Used for periodic collision checks;
         this.isHost = isHost;
 
         box2d = new World(new Vector2(0f, 0f), true);
@@ -95,6 +97,7 @@ public class GameMap {
         gamePaused = false;
         runTime = 0;
         lastSentTime = 0;
+        lastPlayerCollisionTime = 0;
 
         box2d.dispose();
         box2d = new World(new Vector2(0f, 0f), true);
@@ -143,7 +146,7 @@ public class GameMap {
             // Client-sided logic
             if(!isHost) {
 //                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
-                if(lastSentTime < runTime - 0.1) { // Resync every 100ms
+                if(runTime - lastSentTime > 0.1) { // Resync every 100ms
                     // Client will receive updated location on PlayerLocations after sending his own
                     clientSendMessageUDP(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
 //                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
@@ -168,15 +171,19 @@ public class GameMap {
                 globalTime.start();
             }
             else {
+                for(Player p : playerHash.values()) {
+                    serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity()));
+                }
+
                 addTeamScores(delta);
 
 //                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
-                if(!ball.isHeld())
+//                if(!ball.isHeld())
                     serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity()));
 
-                if(lastSentTime < runTime - 0.1) { // Resync every 100ms
-                    if(!ball.isHeld())
-                        serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0));
+                if(runTime - lastSentTime > 0.1) { // Resync every 100ms
+//                    if(!ball.isHeld())
+                        serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0, ball.isHeld())); // Always send ball location
                     if(!playersConnected.containsKey(false)) {
                         serverSendMessage(new Network.PacketTeamScores(teamA.getScore(), teamB.getScore())); // to Update client games
                     }
@@ -350,6 +357,10 @@ public class GameMap {
         ball.getBody().setLinearVelocity(movement);
     }
 
+    public float getRunTime() {
+        return runTime;
+    }
+
     public void dispose() {
         box2d.dispose();
     }
@@ -382,20 +393,21 @@ public class GameMap {
                     Gdx.app.log("Collision", "Ball is not held");
 
                     if(a.getUserData() instanceof Ball && b.getUserData() instanceof Player) {
-                        Gdx.app.log("Collision", "Collided with player"+ ((Player) b.getUserData()).getId());
-                        ((Ball) a.getUserData()).setHoldingPlayer((Player) b.getUserData());
+                        Gdx.app.log("Collision", "Collided with player" + ((Player) b.getUserData()).getId());
+//                        ((Ball) a.getUserData()).setHoldingPlayer((Player) b.getUserData());
+                        updateHoldingPlayer(((Player) b.getUserData()).getId()); // Testing
 //                        serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity(), ((Player) b.getUserData()).getId()));
                         serverSendMessage(new Network.PacketSetHoldingPlayer(((Player) b.getUserData()).getId()));
                     }
                     if(b.getUserData() instanceof Ball && a.getUserData() instanceof Player) {
-                        Gdx.app.log("Collision", "Collided with player"+ ((Player) a.getUserData()).getId());
-                        ((Ball) b.getUserData()).setHoldingPlayer((Player) a.getUserData());
+                        Gdx.app.log("Collision", "Collided with player" + ((Player) a.getUserData()).getId());
+//                        ((Ball) b.getUserData()).setHoldingPlayer((Player) a.getUserData());
+                        updateHoldingPlayer(((Player) a.getUserData()).getId());
                         serverSendMessage(new Network.PacketSetHoldingPlayer(((Player) a.getUserData()).getId()));
                     }
 
                 }
-                else {
-
+                else if(runTime - lastPlayerCollisionTime > 0.1){
                     // TODO: Player collision should be between opposing team members only
                     if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
                         if(map.getBall().getHoldingPlayer().equals(a.getUserData()) ||
@@ -405,6 +417,7 @@ public class GameMap {
                             serverSendMessage(new Network.PacketDropBall());
                         }
                     }
+//                    lastPlayerCollisionTime = runTime;
                 }
             }
             if(map.getPlayer() != null && map.getPowerUpList() != null){

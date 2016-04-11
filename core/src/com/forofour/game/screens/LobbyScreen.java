@@ -112,7 +112,8 @@ public class LobbyScreen implements Screen {
                 client.connect(hostname);
             }
             else {
-                client.quickConnect();
+                if(!client.quickConnect())
+                    client.getMap().shutdown = true;
             }
             Gdx.app.log("LobbyScreen", "Connecting to server");
         }

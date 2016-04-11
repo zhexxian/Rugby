@@ -19,15 +19,14 @@ public class GameClient {
     private String hostAddress;
 
     private GameMap map;
-    private TutorialStates tutorialStates;
     private boolean tutorialMode;
     public boolean serverReady, playAgain, playEnd;
 
     public GameClient(boolean tutorialMode){
         this.tutorialMode = tutorialMode;
         map = new GameMap(this);
-        if(tutorialMode)
-            tutorialStates = new TutorialStates(map); // Sets the TutorialMode gameDuration and access to other states
+        if(this.tutorialMode)
+            map.setGameDuration(TutorialStates.getDuration()); // Sets the TutorialMode gameDuration and access to other states
 
         client = new Client();
         client.start();
@@ -104,6 +103,8 @@ public class GameClient {
                 else if(o instanceof Network.PacketBallState) {
                     Network.PacketBallState packet = (Network.PacketBallState) o;
                     map.updateBallState(packet.position, packet.angle);
+                    if(!packet.isHeld)
+                        map.updateDropBall();
                 }
                 else if(o instanceof Network.PacketBallUpdateFast) { // Ball velocity & Player holder ID
                     Network.PacketBallUpdateFast packet = (Network.PacketBallUpdateFast) o;
@@ -206,21 +207,24 @@ public class GameClient {
 
     public boolean quickConnect(){
         Gdx.app.log("Client", "Discovering on " + Network.portUDP);
-        InetAddress address = client.discoverHost(Network.portUDP, 1000);
-        this.hostAddress = address.getHostAddress();
+        InetAddress address = client.discoverHost(Network.portUDP, 5000);
+
         Gdx.app.log("Client", "Found server on " + address);
-        Gdx.app.log("Client", "Server HostAddress " + hostAddress);
-        Gdx.app.log("Client", "Server HostName " + address.getHostName());
-        try {
-            Gdx.app.log("Client", "Connecting(quick) to " + address);
-            client.connect(1000, address, Network.port, Network.portUDP);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Gdx.app.log("Client", "Failed to connect to host at " + address);
-            map.shutdown = true;
-            return false;
+        if(address != null) {
+            Gdx.app.log("Client", "Server HostAddress " + address.getHostAddress());
+            Gdx.app.log("Client", "Server HostName " + address.getHostName());
+            this.hostAddress = address.getHostAddress();
+            try {
+                Gdx.app.log("Client", "Connecting(quick) to " + address);
+                client.connect(1000, address, Network.port, Network.portUDP);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                Gdx.app.log("Client", "Failed to connect to host at " + address);
+                return false;
+            }
         }
+        return false;
     }
 
     public GameMap getMap(){
@@ -265,6 +269,8 @@ public class GameClient {
     }
 
     public String getHostAddress(){
-        return hostAddress;
+        String address = hostAddress;
+        hostAddress = "";
+        return address;
     }
 }

@@ -68,9 +68,9 @@ public class MainRenderer {
         }
 
         // Fill the entire screen with black, to prevent potential flickering.
-        //Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        debugRenderer.render(map.getBox2d(), cam.combined);
+//        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Necessary to clear to prevent potential flickering
+//        debugRenderer.render(map.getBox2d(), cam.combined);
 
         if(initialized) {
             // Viewport follows player

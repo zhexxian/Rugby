@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
@@ -31,6 +32,7 @@ public class GameServer {
     private ArrayList<Integer> powerUpAssignment;
 
     public GameServer(boolean tutorialMode){
+        Log.set(Log.LEVEL_TRACE);
         this.tutorialMode = tutorialMode;
         random = new Random(System.currentTimeMillis());
         map = new GameMap(this);
@@ -113,7 +115,7 @@ public class GameServer {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
 //                    Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);
                     map.updatePlayerMovement(packet.id, packet.movement);
-                    server.sendToAllTCP(new Network.PacketPlayerUpdateFast(packet.id, packet.movement));
+//                    server.sendToAllTCP(new Network.PacketPlayerUpdateFast(packet.id, packet.movement));
                 } else if (o instanceof Network.PacketDropBall) {
                     Network.PacketDropBall packet = (Network.PacketDropBall) o;
                     Gdx.app.log("GameServer", "bef Holder " + map.getBall().getHoldingPlayerId());

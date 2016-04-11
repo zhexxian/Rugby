@@ -141,10 +141,12 @@ public class Network {
     public static class PacketBallState {
         public Vector2 position;
         public Float angle;
+        public boolean isHeld;
         public PacketBallState(){}
-        public PacketBallState(Vector2 position, float angle) {
+        public PacketBallState(Vector2 position, float angle, boolean isHeld) {
             this.position = position;
             this.angle = angle;
+            this.isHeld = isHeld;
         }
     }
 

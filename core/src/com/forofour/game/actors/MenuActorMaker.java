@@ -22,12 +22,12 @@ import com.forofour.game.screens.LobbyScreen;
 public class MenuActorMaker {
     private Stage menuStage;
     private BitmapFont menuFont;
-    private TextButton buttonQuick;
+//    private TextButton buttonQuick;
     private TextButton buttonHost;
-    private TextButton buttonLogout;
+//    private TextButton buttonLogout;
     private TextButton buttonJoin;
     private TextButton buttonTutorial;
-    private TextButton buttonSettings;
+//    private TextButton buttonSettings;
 
     private int BUTTON_WIDTH = 40;
     private int BUTTON_HEIGHT = 10;
@@ -65,7 +65,7 @@ public class MenuActorMaker {
         buttonTutorial = new TextButton("Tutorial", normal);
         buttonHost = new TextButton("Host Game", normal);
         buttonJoin = new TextButton("Join Game", normal);
-        buttonSettings = new TextButton("Settings", normal);
+//        buttonSettings = new TextButton("Settings", normal);
 
         buttonTutorial.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonTutorial.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
@@ -97,7 +97,7 @@ public class MenuActorMaker {
             }
         });
 
-        buttonSettings.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
+/*        buttonSettings.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonSettings.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
                 (BUTTON_HEIGHT + BUTTON_GAP));
         buttonSettings.addListener(new ChangeListener() {
@@ -105,17 +105,17 @@ public class MenuActorMaker {
             public void changed(ChangeEvent event, Actor actor) {
 
             }
-        });
+        });*/
 
         stage.addActor(buttonTutorial);
         stage.addActor(buttonHost);
         stage.addActor(buttonJoin);
-        stage.addActor(buttonSettings);
+//        stage.addActor(buttonSettings);
     }
 
-    public TextButton getButtonSettings() {
-        return buttonSettings;
-    }
+//    public TextButton getButtonSettings() {
+//        return buttonSettings;
+//    }
 
     public TextButton getButtonJoin() {
         return buttonJoin;
@@ -125,13 +125,13 @@ public class MenuActorMaker {
         return buttonHost;
     }
 
-    public TextButton getButtonLogout() {
+    /*public TextButton getButtonLogout() {
         return buttonLogout;
-    }
+    }*/
 
-    public TextButton getButtonQuick() {
+   /* public TextButton getButtonQuick() {
         return buttonQuick;
-    }
+    }*/
 
     public TextButton getButtonTutorial() {
         return buttonTutorial;
