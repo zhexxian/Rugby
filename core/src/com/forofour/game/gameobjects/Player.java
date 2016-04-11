@@ -93,7 +93,7 @@ public class Player {
 
         boundingCircle.dispose();
         lastDirection = Vector2.Zero;
-        lastPosition = body.getPosition().cpy(); // Remembers Original Position
+        lastPosition = new Vector2(x, y); // Remembers Original Position
 
         hasPowerUp = false;
     }
@@ -308,10 +308,11 @@ public class Player {
     }
 
     public boolean positionChanged() {
-        if(!lastPosition.epsilonEquals(getPosition(), 10)) {
+        // If difference is more than set amount, epsilon returns false
+        if(!lastPosition.epsilonEquals(getPosition(), 20)) {
             return true;
         }
-        return true;
+        return false;
     }
 
     public float getAngle(){

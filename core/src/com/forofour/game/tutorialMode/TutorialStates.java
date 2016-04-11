@@ -16,6 +16,7 @@ public class TutorialStates {
 
     private static int duration = 90;
     private boolean movedPlayer = false;
+    private boolean boostedPlayer = false;
     private boolean pickedBall = false;
     private boolean tossedBall = false;
     private boolean pickedPowerUp = false;
@@ -44,6 +45,8 @@ public class TutorialStates {
                 Player player = map.getPlayer();
                 if(player.positionChanged())
                     movedPlayer = true;
+                if(player.isBoosting())
+                    boostedPlayer = true;
                 if(player.hasBall())
                     pickedBall = true;
                 if(pickedBall && !player.hasBall())
@@ -76,12 +79,14 @@ public class TutorialStates {
         return pickedBall;
     }
 
+    public boolean boostedPlayer() {return boostedPlayer;}
+
     public boolean movedPlayer() {
         return movedPlayer;
     }
 
     public boolean isComplete() {
-        if(movedPlayer && pickedBall && tossedBall && pickedPowerUp && usedPowerUp) {
+        if(movedPlayer && boostedPlayer && pickedBall && tossedBall && pickedPowerUp && usedPowerUp) {
             quit = true;
             return true;
         }
