@@ -47,6 +47,10 @@ public class MainOverlay extends Stage {
     // Tutorial States
     private TutorialStates tutorialStates;
 
+    public MainOverlay(final boolean isHost, final GameClient client){
+        this(isHost, client, null);
+    }
+
     public MainOverlay(final boolean isHost, final GameClient client, TutorialStates tutorialStates) {
         super();
 

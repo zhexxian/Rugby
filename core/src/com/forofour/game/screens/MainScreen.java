@@ -44,8 +44,10 @@ public class MainScreen implements Screen {
 
         map = client.getMap();
         renderer = new MainRenderer(map);
-        overlay = new MainOverlay(isHost, client, server.getTutorialStates());
-
+        if(tutorialMode)
+            overlay = new MainOverlay(isHost, client, server.getTutorialStates());
+        else
+            overlay = new MainOverlay(isHost, client);
         Gdx.input.setInputProcessor(new ClientInputHandler(overlay)); // Stage itself is an inputAdapter
 
     }

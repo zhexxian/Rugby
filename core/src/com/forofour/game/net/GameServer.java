@@ -22,7 +22,7 @@ public class GameServer {
 
     private Server server;
     private GameMap map;
-    private TutorialStates tutorialStates;
+    private TutorialStates tutorialStates = null;
 
     private Random random;
     private boolean tutorialMode;
