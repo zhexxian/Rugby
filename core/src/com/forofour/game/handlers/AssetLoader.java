@@ -4,6 +4,7 @@ package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -64,10 +65,11 @@ public class AssetLoader {
     public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
 
     // Sounds/Music
-    public static Sound mainMusic;
-    public static Sound fart;
-    public static Sound ingameMusic;
-    public static Sound powerUpMusic;
+    public static Music mainMusic;
+    public static Sound fartBoostSound;
+    public static Music ingameMusic;
+    public static Sound powerUpSound;
+
 
 
     public static void load() {
@@ -227,10 +229,10 @@ public class AssetLoader {
         tossRegionDown = new TextureRegion(tossButtonDown);
 
         //sound
-        mainMusic = Gdx.audio.newSound(Gdx.files.internal("data/mainmenu.wav"));
-        fart = Gdx.audio.newSound(Gdx.files.internal("data/fart1.wav"));
-        ingameMusic = Gdx.audio.newSound(Gdx.files.internal("data/ingame.wav"));
-        powerUpMusic = Gdx.audio.newSound(Gdx.files.internal("data/powerup.wav"));
+        mainMusic = Gdx.audio.newMusic(Gdx.files.internal("data/mainmenu.wav"));
+        fartBoostSound = Gdx.audio.newSound(Gdx.files.internal("data/fart1.wav"));
+        ingameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/ingame.wav"));
+        powerUpSound = Gdx.audio.newSound(Gdx.files.internal("data/powerup.wav"));
 
 
 

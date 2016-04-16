@@ -31,8 +31,8 @@ public class MenuScreen implements Screen {
         batch = new SpriteBatch();
 
         // music initialized
-        long id = AssetLoader.mainMusic.loop();
-        AssetLoader.mainMusic.setLooping(id,true);
+        AssetLoader.mainMusic.setLooping(true);
+        AssetLoader.mainMusic.setVolume(0.5f);
         AssetLoader.mainMusic.play();
     }
 
@@ -67,7 +67,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resume() {
-        AssetLoader.mainMusic.resume();
+        AssetLoader.mainMusic.play();
     }
 
     @Override
