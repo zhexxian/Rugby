@@ -19,6 +19,8 @@ public class PowerUp {
     private CircleShape boundingCircle ;
     private Fixture fixture;
 
+    private static final float POWER_UP_SIZE = 2f;
+
     private int type;
     private int id;
 
@@ -26,7 +28,7 @@ public class PowerUp {
     private boolean outOfFrame;
 
     public PowerUp(Vector2 position, int type, int powerUpId, World box2d) {
-        this(position.x, position.y, 2, box2d);
+        this(position.x, position.y, POWER_UP_SIZE, box2d);
         this.type = type;
         this.id = powerUpId;
     }

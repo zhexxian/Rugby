@@ -92,6 +92,7 @@ public class MainRenderer {
 
         renderTeamA();
         renderTeamB();
+
         renderBall();
         renderPowerUps();
     }
@@ -114,8 +115,29 @@ public class MainRenderer {
 
     public void renderTeamA() {
         // Team A
+        // For each player the render should be in the following sequence
+        // 1. Invisibility (It cloaks the entire player + effects)
+        // 2. Slow (Bottoms most layer)
+        // 3. Player in the respective direction
+        // 4. Confusion (Top most layer)
+
         for(Player p : teamA.getTeamList()) {
+            // Invisibility effect
             batcher.setColor(1,1,1,p.getInvisibility_scale(player.getId())); // PowerUp(Invisibility) Effect
+
+            // Slowed effect
+            if(p.isSlowed()) {
+                batcher.draw(AssetLoader.powerUpEffectRegion1, // Texture
+                        p.getBody().getPosition().x,
+                        p.getBody().getPosition().y,
+                        p.getRadius()-0.5f, // Offset would be the difference of radius from 2
+                        -p.getRadius()/5,
+                        p.getRadius(), // width
+                        p.getRadius()/1.5f, // height
+                        p.getRadius(), // scale
+                        p.getRadius(), // scale
+                        0);
+            }
 
 
             //rotate player according to direction of movement
@@ -157,12 +179,33 @@ public class MainRenderer {
             }
 
             // As render begins from TopLeft of body's position, Offset by the radius is required.
-            // Offset is multiplied by a scalar to adjust for difference in units between Box2d and Renderer
             batcher.draw(playerDirection, // Texture
-                    p.getBody().getPosition().x - p.getRadius() * GameConstants.RENDER_POS_SCALE,
-                    p.getBody().getPosition().y - p.getRadius() * GameConstants.RENDER_POS_SCALE,
-                    p.getRadius() * GameConstants.RENDER_RADIUS_SCALE,
-                    p.getRadius() * GameConstants.RENDER_RADIUS_SCALE);
+                    p.getBody().getPosition().x,
+                    p.getBody().getPosition().y,
+                    p.getRadius()-0.5f, // Offset would be the difference of radius from 2
+                    p.getRadius()-0.5f,
+                    p.getRadius(), // width
+                    p.getRadius(), // height
+                    p.getRadius(), // scale
+                    p.getRadius(), // scale
+                    0);
+
+            System.out.println(GameConstants.SCALE_POS + " " + GameConstants.RENDER_RADIUS_SCALE + " " + p.getRadius());
+
+            // Confused Effect
+            if(p.isConfused()) {
+                batcher.draw(AssetLoader.powerUpEffectRegion2, // Texture
+                        p.getBody().getPosition().x,
+                        p.getBody().getPosition().y,
+                        p.getRadius()-0.5f, // Offset would be the difference of radius from 2
+                        p.getRadius()*2-0.5f,
+                        p.getRadius(), // width
+                        p.getRadius(), // height
+                        p.getRadius(), // scale
+                        p.getRadius(), // scale
+                        0);
+            }
+
             batcher.setColor(1, 1, 1, 1);
         }
     }
@@ -172,8 +215,19 @@ public class MainRenderer {
         for(Player p : teamB.getTeamList()) {
             batcher.setColor(1,1,1,p.getInvisibility_scale(player.getId()));
 
-            //change the size of player
-            float scale = GameConstants.SCALE_POS/2;
+            // Slowed effect
+            if(p.isSlowed()) {
+                batcher.draw(AssetLoader.powerUpEffectRegion1, // Texture
+                        p.getBody().getPosition().x,
+                        p.getBody().getPosition().y,
+                        p.getRadius()-0.5f, // Offset would be the difference of radius from 2
+                        -p.getRadius()/5,
+                        p.getRadius(), // width
+                        p.getRadius()/1.5f, // height
+                        p.getRadius(), // scale
+                        p.getRadius(), // scale
+                        0);
+            }
 
             //rotate player according to direction of movement
             float angle = p.getAngleDegree();
@@ -212,12 +266,31 @@ public class MainRenderer {
             }
 
             // As render begins from TopLeft of body's position, Offset by the radius is required.
-            // Offset is multiplied by a scalar to adjust for difference in units between Box2d and Renderer
             batcher.draw(playerDirection, // Texture
-                    p.getBody().getPosition().x - p.getRadius() * GameConstants.RENDER_POS_SCALE,
-                    p.getBody().getPosition().y - p.getRadius() * GameConstants.RENDER_POS_SCALE,
-                    p.getRadius() * GameConstants.RENDER_RADIUS_SCALE,
-                    p.getRadius() * GameConstants.RENDER_RADIUS_SCALE);
+                    p.getBody().getPosition().x,
+                    p.getBody().getPosition().y,
+                    p.getRadius()-0.5f, // Offset would be the difference of radius from 2
+                    p.getRadius()-0.5f,
+                    p.getRadius(), // width
+                    p.getRadius(), // height
+                    p.getRadius(), // scale
+                    p.getRadius(), // scale
+                    0);
+
+            // Confused Effect
+            if(p.isConfused()) {
+                batcher.draw(AssetLoader.powerUpEffectRegion2, // Texture
+                        p.getBody().getPosition().x,
+                        p.getBody().getPosition().y,
+                        p.getRadius()-0.5f, // Offset would be the difference of radius from 2
+                        p.getRadius()*2-0.5f,
+                        p.getRadius(), // width
+                        p.getRadius(), // height
+                        p.getRadius(), // scale
+                        p.getRadius(), // scale
+                        0);
+            }
+
             batcher.setColor(1,1,1,1);
         }
     }
@@ -230,13 +303,20 @@ public class MainRenderer {
             }
 
             // As render begins from TopLeft of body's position, Offset by the radius is required.
-            // Offset is multiplied by a scalar to adjust for difference in units between Box2d and Renderer
-            batcher.draw(AssetLoader.ball,
-                    ball.getBody().getPosition().x - ball.getRadius()* GameConstants.RENDER_POS_SCALE,
-                    ball.getBody().getPosition().y - ball.getRadius()* GameConstants.RENDER_POS_SCALE,
-                    ball.getRadius() * GameConstants.RENDER_RADIUS_SCALE,
-                    ball.getRadius() * GameConstants.RENDER_RADIUS_SCALE);
+            batcher.draw(AssetLoader.ballRegion,
+                    ball.getBody().getPosition().x,
+                    ball.getBody().getPosition().y,
+                    ball.getRadius(),
+                    ball.getRadius(),
+                    ball.getRadius(), // width
+                    ball.getRadius(), // height
+                    ball.getRadius(),
+                    ball.getRadius(),
+                    0);
             batcher.setColor(1, 1, 1, 1);
+
+
+//            System.out.println(ball.getRadius() * GameConstants.RENDER_RADIUS_SCALE + " " + GameConstants.RENDER_RADIUS_SCALE);
         }
     }
     private void renderPowerUps() {
@@ -244,10 +324,15 @@ public class MainRenderer {
         if(powerUpList!=null) {
             for (PowerUp powerUp : powerUpList) {
                 batcher.draw(AssetLoader.powerUpRegion,
-                        powerUp.getBody().getPosition().x - powerUp.getRadius()* GameConstants.SCALE_POS/4,
-                        powerUp.getBody().getPosition().y - powerUp.getRadius()* GameConstants.SCALE_POS/4,
-                        powerUp.getRadius() * GameConstants.SCALE_POS/2,
-                        powerUp.getRadius() * GameConstants.SCALE_POS/2);
+                        powerUp.getBody().getPosition().x,
+                        powerUp.getBody().getPosition().y,
+                        powerUp.getRadius()*1.2f - 0.4f,
+                        powerUp.getRadius()*1.2f - 0.4f,
+                        powerUp.getRadius()*1.2f, // width
+                        powerUp.getRadius()*1.2f, // height
+                        powerUp.getRadius()*1.2f,
+                        powerUp.getRadius()*1.2f,
+                        0);
             }
         }
         else {

@@ -37,6 +37,8 @@ public class Player {
     private Vector2 lastPosition;
 
     //TODO: move the constants to handlers/GameConstants
+    private static final float PLAYER_SIZE = 2.5f;
+
     private static final int MAX_VELOCITY = 30;
     private static final float BOOST_SCALAR = 1.5f;
 
@@ -63,7 +65,7 @@ public class Player {
     private boolean hasPowerUp;
 
     public Player(int id, Vector2 pos, World box2d, GameClient client) {
-        this(pos.x, pos.y, 2, null, box2d);
+        this(pos.x, pos.y, PLAYER_SIZE, null, box2d);
         this.id = id;
         this.client = client;
     }
@@ -149,6 +151,11 @@ public class Player {
             return true;
         return false;
     }
+    public boolean isBoostCooldown(){
+        if(boostTime > 0 || noBoostTime > 0)
+            return true;
+        return false;
+    }
 
     public void knobMove(float x, float y) {
         // Apply boost multiplier(if required)
@@ -214,7 +221,7 @@ public class Player {
     }
 
     // Call from server that powerUp usage is being called.
-    // generateChoice - Random number from server
+    // generateChoice - Random number from server to instantiate type of confusion
     public void usePowerUp(int generatedChoice){
         if(hasPowerUp()) {
             hasPowerUp = false;
@@ -275,6 +282,17 @@ public class Player {
     }
     public void deactivateInvisibleEffect(){
         invisibility_scale = 1;
+    }
+
+    public boolean isSlowed(){
+        if(slowEffectTime > 0)
+            return true;
+        return false;
+    }
+    public boolean isConfused(){
+        if(confusionEffectTime > 0)
+            return true;
+        return false;
     }
 
     public float getSlowEffectTime() {

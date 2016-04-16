@@ -281,7 +281,7 @@ public class MainOverlay extends Stage {
             if(player.hasBall()) {
                 tossButton.setVisible(true);
                 boostButton.setVisible(false);
-            } else if(player.isBoosting()) {
+            } else if(player.isBoostCooldown()) {
                 tossButton.setVisible(false);
                 boostButton.setVisible(false);
             } else {

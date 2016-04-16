@@ -34,8 +34,6 @@ public class GameConstants {
     public static void init() {
         GameConstants.SCALE_POS = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH; //scale factor
         GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS; //calculated game height
-        GameConstants.RENDER_POS_SCALE = GameConstants.SCALE_POS/4;
-        GameConstants.RENDER_RADIUS_SCALE = GameConstants.SCALE_POS/2;
         PLAYER_POSITION[0][0] = 10; PLAYER_POSITION[0][1] = 10;
         PLAYER_POSITION[1][0] = 150; PLAYER_POSITION[1][1] = 10;
         PLAYER_POSITION[2][0] = 10; PLAYER_POSITION[2][1] = 80;

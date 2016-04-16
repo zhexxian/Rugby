@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
@@ -34,39 +33,6 @@ public class ButtonMaker {
     private static ImageButton boostButton, tossButton;
     private static ImageButton.ImageButtonStyle imageButtonStyle;
 
-    /*public static ImageButton getBoostButton(final GameWorld world) {
-
-        imageButtonStyle = new ImageButton.ImageButtonStyle();
-        imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.boostRegion);
-        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.boostRegion);
-        boostButton = new ImageButton(imageButtonStyle);
-
-        boostButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Boost");
-                if(world.getPlayer() != null)
-                    world.getPlayer().boost();
-            }
-        });
-        return boostButton;
-    }
-
-    public static ImageButton getTossButton(final GameWorld world) {
-        imageButtonStyle = new ImageButton.ImageButtonStyle();
-        imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.tossRegion);
-        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.tossRegion);
-        tossButton = new ImageButton(imageButtonStyle);
-        tossButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Toss");
-                if(world.getPlayer() != null)
-                    world.getPlayer().dropBall();
-            }
-        });
-        return tossButton;
-    }*/
 
     public static ImageButton getBoostButton(final GameClient client, final TutorialStates tutorialStates) {
 
