@@ -433,7 +433,7 @@ public class GameMap {
                     player.acquirePowerUp(powerUp.getType()); // TODO: Refactor to recognize Type of PowerUp
                     Gdx.app.log(tag, "Player" + player.getId() + " Type" + powerUp.getType());
                     serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
-                    removePowerUp(powerUp.getId());
+                    removePowerUp(powerUp.getId()); // Remove body instance of the from the world
                 }
                 else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
                     Player player = (Player) a.getUserData();

@@ -125,7 +125,7 @@ public class ClientInputHandler extends InputMultiplexer {
             return true;
         } else{
             player = client.getMap().getPlayer();
-            Gdx.app.log("InputHandler", "Controls binded to player");
+            Gdx.app.log("Client Input Handler", "Controls binded to player");
         }
 
         return false;

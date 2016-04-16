@@ -32,7 +32,7 @@ public class AssetLoader {
 
     public static Texture boostButton, tossButton;
     public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
-    public static Texture powerUp1Effect, powerUp2Effect, powerUp3Effect;
+    public static Texture powerUp1Effect, powerUp2Effect;
 
     public static TextureRegion splashScreen;
     public static TextureRegion bgMenu;
@@ -56,7 +56,7 @@ public class AssetLoader {
 
     public static TextureRegion boostRegion, tossRegion;
     public static TextureRegion powerUpRegion, powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
-    public static TextureRegion powerEffectRegion1, powerEffectRegion2, powerEffectRegion3;
+    public static TextureRegion powerUpEffectRegion1, powerUpEffectRegion2;
 
     public static void load() {
         //splash screen
@@ -181,6 +181,11 @@ public class AssetLoader {
         powerUpRegion3 = new TextureRegion(powerUp3);
         powerUp4 = new Texture(Gdx.files.internal(path+"invisible-red.png"));
         powerUpRegion4 = new TextureRegion(powerUp4);
+
+        powerUp1Effect = new Texture(Gdx.files.internal(path+"effect_water-puddle.png"));
+        powerUpEffectRegion1 = new TextureRegion(powerUp1Effect);
+        powerUp2Effect = new Texture(Gdx.files.internal(path+"effect_confused.png"));
+        powerUpEffectRegion2 = new TextureRegion(powerUp2Effect);
 
         //buttons
         boostButton = new Texture(Gdx.files.internal("sprites/buttons/Boost-activate.png"));
