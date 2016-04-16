@@ -3,6 +3,7 @@ package com.forofour.game.handlers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.forofour.game.actors.ButtonMaker;
 import com.forofour.game.actors.GameOverMaker;
 import com.forofour.game.actors.PowerUpSlotMaker;
@@ -98,9 +100,10 @@ public class MainOverlay extends Stage {
         buttonMainMenu = new Image(buttonMainMenuTexture);
 
         // TODO: debug the listening function
-        buttonPlayAgain.addListener(new ChangeListener() {
+        buttonPlayAgain.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
+            {
                 if(isHost) {
                     client.sendMessage(new Network.PacketGameEnd(true));
                     Gdx.app.log("MainOverlay", "PlayAgain(TRUE) Button Sent");
@@ -108,12 +111,14 @@ public class MainOverlay extends Stage {
                 else {
                     client.playAgain = true;
                 }
+                return true;
             }
         });
 
-        buttonMainMenu.addListener(new ChangeListener() {
+        buttonMainMenu.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
+            {
                 if (isHost) {
                     client.sendMessage(new Network.PacketGameEnd(false));
                     // No change of states here
@@ -124,6 +129,7 @@ public class MainOverlay extends Stage {
                     client.playAgain = false;
                     client.playEnd = true;
                 }
+                return true;
             }
         });
 
@@ -281,7 +287,7 @@ public class MainOverlay extends Stage {
             if(player.hasBall()) {
                 tossButton.setVisible(true);
                 boostButton.setVisible(false);
-            } else if(player.isBoosting()) {
+            } else if(player.isBoostCooldown()) {
                 tossButton.setVisible(false);
                 boostButton.setVisible(false);
             } else {

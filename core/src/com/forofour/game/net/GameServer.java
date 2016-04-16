@@ -243,10 +243,11 @@ public class GameServer {
 
     public void assignPowerUp(int type) {
         // 3 types - Water(Slow), Cloak(Invisibility) , Confusion(DisorientedControls)
-        int distanceFromWall = 5;
+        int distanceFromTopBottom = 7;
+        int distanceFromLeftRight = 5;
         Vector2 position = new Vector2(
-                distanceFromWall + random.nextInt((int) GameConstants.GAME_WIDTH - distanceFromWall),
-                distanceFromWall + random.nextInt((int) GameConstants.GAME_HEIGHT - distanceFromWall));
+                distanceFromLeftRight + random.nextInt((int) GameConstants.GAME_WIDTH - 2*distanceFromLeftRight),
+                distanceFromTopBottom + random.nextInt((int) GameConstants.GAME_HEIGHT - 2*distanceFromTopBottom));
         int powerUpId = map.addPowerUp(position, type);
         Gdx.app.log("GameServer", "Assigning PowerUp of type"+powerUpId);
         server.sendToAllTCP(new Network.PacketAddPowerUp(position, type));

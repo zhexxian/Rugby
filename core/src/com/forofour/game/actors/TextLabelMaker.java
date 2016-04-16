@@ -3,7 +3,6 @@ package com.forofour.game.actors;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.forofour.game.gameworlds.GameWorld;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 
@@ -27,15 +26,6 @@ public class TextLabelMaker {
     private static Label.LabelStyle textStyle;
     private static Label textLabel;
 
-//    public static Label getTimeLabel(final GameWorld world) {
-//        textFont = new BitmapFont(true);
-//
-//        textStyle = new Label.LabelStyle();
-//        textStyle.font = textFont;
-//
-//        textLabel = new Label("", textStyle);
-//        return textLabel;
-//    }
     public static Label getTimeLabel(GameClient client) {
         textFont = new BitmapFont(true);
 

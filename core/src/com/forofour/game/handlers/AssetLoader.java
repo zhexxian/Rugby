@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -16,7 +15,7 @@ public class AssetLoader {
 
     public static Texture splash;
 
-    public static Texture bg, menu;
+    public static Texture bg, bgTrain, menu;
 
     public static Texture ball;
 
@@ -31,14 +30,15 @@ public class AssetLoader {
 
     public static Texture powerUp;
 
-    public static Texture boostButton, tossButton;
+    public static Texture boostButtonUp, tossButtonUp, boostButtonDown, tossButtonDown;
     public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
-
+    public static Texture powerUp1Effect, powerUp2Effect;
 
     public static TextureRegion splashScreen;
     public static TextureRegion bgMenu;
-    public static TextureRegion bgRegion;
+    public static TextureRegion bgRegion, bgTrainRegion;
 
+    public static TextureRegion ballRegion;
     public static TextureRegion playerRegionAup1, playerRegionBup1;
     public static TextureRegion playerRegionAdown1, playerRegionBdown1;
     public static TextureRegion playerRegionAleft1, playerRegionBleft1;
@@ -54,8 +54,9 @@ public class AssetLoader {
     public static Animation playerAnimationDownA, playerAnimationRightA, playerAnimationUpA, playerAnimationLeftA;
     public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
 
-    public static TextureRegion boostRegion, tossRegion;
+    public static TextureRegion boostRegionUp, tossRegionUp, boostRegionDown, tossRegionDown;
     public static TextureRegion powerUpRegion, powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
+    public static TextureRegion powerUpEffectRegion1, powerUpEffectRegion2;
 
     public static Sound mainMusic;
     public static Sound fart;
@@ -69,15 +70,19 @@ public class AssetLoader {
         splashScreen = new TextureRegion(splash);
 
         //menu background
-        menu = new Texture(Gdx.files.internal("sprites/start-screen.png"));
+        menu = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/start-screen.png"));
         bgMenu = new TextureRegion(menu);
 
         //game background
-        bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2.png"));
+        bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2no.png"));
         bgRegion = new TextureRegion(bg);
+        bgTrain = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/train-border-(1200x640).png"));
+        bgTrainRegion = new TextureRegion(bgTrain);
+        bgTrainRegion.flip(false, true);
 
         //ball (milk bottle)
         ball = new Texture(Gdx.files.internal("sprites/bottle-black-outline-upside-down.png"));
+        ballRegion = new TextureRegion(ball);
 
         //player A (blue baby) four directions
         playerAup1 = new Texture(Gdx.files.internal("sprites/individual babies/blue-back-1.png"));
@@ -186,11 +191,20 @@ public class AssetLoader {
         powerUp4 = new Texture(Gdx.files.internal(path+"invisible-red.png"));
         powerUpRegion4 = new TextureRegion(powerUp4);
 
+        powerUp1Effect = new Texture(Gdx.files.internal(path+"effect_water-puddle.png"));
+        powerUpEffectRegion1 = new TextureRegion(powerUp1Effect);
+        powerUp2Effect = new Texture(Gdx.files.internal(path+"effect_confused.png"));
+        powerUpEffectRegion2 = new TextureRegion(powerUp2Effect);
+
         //buttons
-        boostButton = new Texture(Gdx.files.internal("sprites/buttons/Boost-activate.png"));
-        boostRegion = new TextureRegion(boostButton);
-        tossButton = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
-        tossRegion = new TextureRegion(tossButton);
+        boostButtonUp = new Texture(Gdx.files.internal("sprites/buttons/Boost-activate.png"));
+        boostRegionUp = new TextureRegion(boostButtonUp);
+        boostButtonDown = new Texture(Gdx.files.internal("sprites/buttons/Boost-activate.png"));
+        boostRegionDown = new TextureRegion(boostButtonDown);
+        tossButtonUp = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
+        tossRegionUp = new TextureRegion(tossButtonUp);
+        tossButtonDown = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
+        tossRegionDown = new TextureRegion(tossButtonDown);
 
         //sound
         mainMusic = Gdx.audio.newSound(Gdx.files.internal("data/mainmenu.wav"));
@@ -205,6 +219,7 @@ public class AssetLoader {
     public static void dispose() {
         // We must dispose of the texture when we are finished.
         bg.dispose();
+        bgTrain.dispose();
         menu.dispose();
         ball.dispose();
 
@@ -228,8 +243,10 @@ public class AssetLoader {
 
         powerUp.dispose();
 
-        boostButton.dispose();
-        tossButton.dispose();
+        boostButtonUp.dispose();
+        tossButtonUp.dispose();
+        boostButtonDown.dispose();
+        tossButtonDown.dispose();
 
         powerSlot1.dispose();
         powerUp1.dispose();

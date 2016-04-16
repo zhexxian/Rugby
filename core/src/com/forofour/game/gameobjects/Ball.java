@@ -17,6 +17,8 @@ public class Ball extends BodyDef{
     private Body body;
     private BodyDef bodyDef;
 
+    private static final float BALL_RADIUS = 2f;
+
     private CircleShape boundingCircle ;
     private Fixture fixture;
 
@@ -29,7 +31,7 @@ public class Ball extends BodyDef{
     private boolean playerCollided;
 
     public Ball(Vector2 pos, World box2d) {
-        this(pos.x, pos.y, 2, box2d);
+        this(pos.x, pos.y, BALL_RADIUS, box2d);
     }
 
     public Ball(float x, float y, float radius, World box2d) {
