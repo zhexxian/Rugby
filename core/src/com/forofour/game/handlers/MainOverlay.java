@@ -279,7 +279,7 @@ public class MainOverlay extends Stage {
 
         // PowerUp Slot
         if(player.hasPowerUp())
-            PowerUpSlotMaker.setPowerUpStyle1();
+            PowerUpSlotMaker.setPowerUpStyle(player.getPowerUpType(), player.getTeamId());
         else
             PowerUpSlotMaker.setEmptySlotStyle();
     }

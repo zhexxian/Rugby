@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.forofour.game.MyGdxGame;
 import com.forofour.game.handlers.GameConstants;
-import com.forofour.game.screens.GameScreen;
 import com.forofour.game.screens.LobbyScreen;
 
 /**

@@ -237,6 +237,10 @@ public class Player {
         return hasPowerUp;
     }
 
+    public int getPowerUpType() {
+        return powerUpType;
+    }
+
     // ACTIVATE EFFECTS CALLED BY THE SERVER
     // Set movement speed scalar, and duration of effect
     public void activateSlowEffect(){

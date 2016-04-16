@@ -136,12 +136,12 @@ public class GameWorld{
                 teamLabel.setText("No team score");
         }
 
-        //add power up
-        if(player.hasPowerUp()) {
-            PowerUpSlotMaker.setPowerUpStyle1();
-        } else {
-            PowerUpSlotMaker.setEmptySlotStyle();
-        }
+//        //add power up
+//        if(player.hasPowerUp()) {
+//            PowerUpSlotMaker.s();
+//        } else {
+//            PowerUpSlotMaker.setEmptySlotStyle();
+//        }
 
         //define player movement
         if(player != null) { // Player controls

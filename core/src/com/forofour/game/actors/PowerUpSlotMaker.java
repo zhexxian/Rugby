@@ -23,7 +23,7 @@ public class PowerUpSlotMaker {
     private static float SIZE_SCALE = (float) 1;
 
     private static ImageButton powerSlot;
-    private static ImageButton.ImageButtonStyle emptySlotStyle, powerUpStyle1;
+    private static ImageButton.ImageButtonStyle emptySlotStyle, powerUpStyle1, powerUpStyle2, powerUpStyle3blue, powerUpStyle3red;
 
 //    public static ImageButton getPowerSlot(final GameWorld world) {
 //
@@ -66,6 +66,18 @@ public class PowerUpSlotMaker {
         powerUpStyle1.up = new TextureRegionDrawable(AssetLoader.powerUpRegion1);
         powerUpStyle1.down = new TextureRegionDrawable(AssetLoader.powerUpRegion1);
 
+        powerUpStyle2 = new ImageButton.ImageButtonStyle();
+        powerUpStyle2.up = new TextureRegionDrawable(AssetLoader.powerUpRegion2);
+        powerUpStyle2.down = new TextureRegionDrawable(AssetLoader.powerUpRegion2);
+
+        powerUpStyle3blue = new ImageButton.ImageButtonStyle();
+        powerUpStyle3blue.up = new TextureRegionDrawable(AssetLoader.powerUpRegion3);
+        powerUpStyle3blue.down = new TextureRegionDrawable(AssetLoader.powerUpRegion3);
+
+        powerUpStyle3red = new ImageButton.ImageButtonStyle();
+        powerUpStyle3red.up = new TextureRegionDrawable(AssetLoader.powerUpRegion4);
+        powerUpStyle3red.down = new TextureRegionDrawable(AssetLoader.powerUpRegion4);
+
         powerSlot = new ImageButton(emptySlotStyle);
         powerSlot.addListener(new ChangeListener() {
             @Override
@@ -73,8 +85,8 @@ public class PowerUpSlotMaker {
                 if(powerSlot.getStyle().equals(emptySlotStyle)) {
                     System.out.println("Pressed on Empty Slot");
                 }
-                else if(powerSlot.getStyle().equals(powerUpStyle1)) {
-                    System.out.println("Pressed on Power Up 1 Slot");
+                else {
+                    System.out.println("Pressed on Power Up Slot");
                     setEmptySlotStyle();
                     client.getMap().getPlayer().powerUp();
                 }
@@ -93,10 +105,26 @@ public class PowerUpSlotMaker {
         return wrapper;
     }
 
-    public static void setPowerUpStyle1(){
-        powerSlot.setStyle(powerUpStyle1);
-    }
     public static void setEmptySlotStyle(){
         powerSlot.setStyle(emptySlotStyle);
+    }
+
+    public static void setPowerUpStyle(int powerUpType, int teamId) {
+        switch(powerUpType) {
+            case 1:
+                powerSlot.setStyle(powerUpStyle1);
+                break;
+            case 2:
+                powerSlot.setStyle(powerUpStyle2);
+                break;
+            case 3:
+                if(teamId == 1)
+                    powerSlot.setStyle(powerUpStyle3blue);
+                else
+                    powerSlot.setStyle(powerUpStyle3red);
+                break;
+            default:
+                powerSlot.setStyle(emptySlotStyle);
+        }
     }
 }

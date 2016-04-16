@@ -54,7 +54,7 @@ public class AssetLoader {
     public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
 
     public static TextureRegion boostRegion, tossRegion;
-    public static TextureRegion powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
+    public static TextureRegion powerUpRegion, powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
 
     public static void load() {
         //splash screen
@@ -161,18 +161,22 @@ public class AssetLoader {
         playerAnimationRightB.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
 
         //power ups
-        powerUp = new Texture(Gdx.files.internal("data/powerUp.png"));
+        // Slow - 1, Confusion - 2, Invisibility - 3
+        String path = "sprites/Design 2/Game Screen/powerup/";
+        powerUp = new Texture(Gdx.files.internal(path+"object_power-up-box.png"));
+        powerUpRegion = new TextureRegion(powerUp);
+        powerUpRegion.flip(false, true);
 
-        powerSlot1 = new Texture(Gdx.files.internal("data/power_slot.png"));
+        powerSlot1 = new Texture(Gdx.files.internal(path+"power-up-slot.png"));
         powerSlotRegion1 = new TextureRegion(powerSlot1);
 
-        powerUp1 = new Texture(Gdx.files.internal("data/power_slot_filled1.png"));
+        powerUp1 = new Texture(Gdx.files.internal(path+"slow.png"));
         powerUpRegion1 = new TextureRegion(powerUp1);
-        powerUp2 = new Texture(Gdx.files.internal("data/power2.png"));
+        powerUp2 = new Texture(Gdx.files.internal(path+"confused.png"));
         powerUpRegion2 = new TextureRegion(powerUp2);
-        powerUp3 = new Texture(Gdx.files.internal("data/power3.png"));
+        powerUp3 = new Texture(Gdx.files.internal(path+"invisible-blue.png"));
         powerUpRegion3 = new TextureRegion(powerUp3);
-        powerUp4 = new Texture(Gdx.files.internal("data/power4.png"));
+        powerUp4 = new Texture(Gdx.files.internal(path+"invisible-red.png"));
         powerUpRegion4 = new TextureRegion(powerUp4);
 
         //buttons
