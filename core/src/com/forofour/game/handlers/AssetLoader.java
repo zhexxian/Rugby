@@ -32,12 +32,13 @@ public class AssetLoader {
 
     public static Texture boostButton, tossButton;
     public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
-
+    public static Texture powerUp1Effect, powerUp2Effect, powerUp3Effect;
 
     public static TextureRegion splashScreen;
     public static TextureRegion bgMenu;
     public static TextureRegion bgRegion;
 
+    public static TextureRegion ballRegion;
     public static TextureRegion playerRegionAup1, playerRegionBup1;
     public static TextureRegion playerRegionAdown1, playerRegionBdown1;
     public static TextureRegion playerRegionAleft1, playerRegionBleft1;
@@ -55,6 +56,7 @@ public class AssetLoader {
 
     public static TextureRegion boostRegion, tossRegion;
     public static TextureRegion powerUpRegion, powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
+    public static TextureRegion powerEffectRegion1, powerEffectRegion2, powerEffectRegion3;
 
     public static void load() {
         //splash screen
@@ -71,6 +73,7 @@ public class AssetLoader {
 
         //ball (milk bottle)
         ball = new Texture(Gdx.files.internal("sprites/bottle-black-outline-upside-down.png"));
+        ballRegion = new TextureRegion(ball);
 
         //player A (blue baby) four directions
         playerAup1 = new Texture(Gdx.files.internal("sprites/individual babies/blue-back-1.png"));
