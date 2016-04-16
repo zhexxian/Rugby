@@ -180,16 +180,33 @@ public class MainOverlay extends Stage {
         youWinImage.setVisible(false);
     }
 
-    // TODO: show lose and win background differently
-    // TODO: Include EndGame Actors Show/Hide logic here.
-    // TODO: Scores can be acquired from TeamA/TeamB within map
     private void showEndgameOverlay(boolean isHost, boolean hostReady) {
         if(isHost) {
             // Host will see both choices upon game end
             buttonPlayAgain.setVisible(true);
             buttonMainMenu.setVisible(true);
+            // EndGame Actors Show/Hide logic
+            //teamA = new Team(24); teamB = new Team(369);
+            if(player.getTeamId()==24){
+                if(teamA.getScore()>teamB.getScore()){
+                    youWinImage.setVisible(true);
+                }
+                else{
+                    youLoseImage.setVisible(true);
+                }
+            }
+            else if(player.getTeamId()==369){
+                if(teamB.getScore()>teamA.getScore()){
+                    youWinImage.setVisible(true);
+                }
+                else{
+                    youLoseImage.setVisible(true);
+                }
+            }
+            else {
+                youLoseImage.setVisible(true);
+            }
 
-            youWinImage.setVisible(true);
 
 //            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
         }
