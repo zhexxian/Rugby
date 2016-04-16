@@ -53,6 +53,7 @@ public class ButtonMaker {
                     Gdx.app.log("BoostButton", "Button Pressed");
                     tutorialStates.usedBoost();
                 }
+                AssetLoader.fart.play();
             }
         });
         return boostButton;

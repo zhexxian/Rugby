@@ -3,6 +3,7 @@
 package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -56,6 +57,12 @@ public class AssetLoader {
     public static TextureRegion boostRegionUp, tossRegionUp, boostRegionDown, tossRegionDown;
     public static TextureRegion powerUpRegion, powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
     public static TextureRegion powerUpEffectRegion1, powerUpEffectRegion2;
+
+    public static Sound mainMusic;
+    public static Sound fart;
+    public static Sound ingameMusic;
+    public static Sound powerUpMusic;
+
 
     public static void load() {
         //splash screen
@@ -198,6 +205,14 @@ public class AssetLoader {
         tossRegionUp = new TextureRegion(tossButtonUp);
         tossButtonDown = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
         tossRegionDown = new TextureRegion(tossButtonDown);
+
+        //sound
+        mainMusic = Gdx.audio.newSound(Gdx.files.internal("data/mainmenu.wav"));
+        fart = Gdx.audio.newSound(Gdx.files.internal("data/fart1.wav"));
+        ingameMusic = Gdx.audio.newSound(Gdx.files.internal("data/ingame.wav"));
+        powerUpMusic = Gdx.audio.newSound(Gdx.files.internal("data/powerup.wav"));
+
+
 
     }
 
