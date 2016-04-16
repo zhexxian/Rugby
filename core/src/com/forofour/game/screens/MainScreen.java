@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.forofour.game.MyGdxGame;
 import com.forofour.game.gameworlds.MainRenderer;
+import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.ClientInputHandler;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.handlers.MainOverlay;
@@ -49,6 +50,10 @@ public class MainScreen implements Screen {
         else
             overlay = new MainOverlay(isHost, client);
         Gdx.input.setInputProcessor(new ClientInputHandler(overlay)); // Stage itself is an inputAdapter
+
+        long id = AssetLoader.ingameMusic.loop();
+        AssetLoader.ingameMusic.setLooping(id, true);
+        AssetLoader.ingameMusic.play();
 
     }
 
@@ -136,7 +141,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resume() {
-
+        AssetLoader.mainMusic.resume();
     }
 
     @Override
@@ -144,6 +149,8 @@ public class MainScreen implements Screen {
         client.shutdown();
         if (server != null)
             server.shutdown(false);
+        AssetLoader.ingameMusic.stop();
+
     }
 
     @Override
@@ -153,5 +160,6 @@ public class MainScreen implements Screen {
             server.dispose();
         if(client != null)
             client.dispose();
+        AssetLoader.ingameMusic.dispose();
     }
 }

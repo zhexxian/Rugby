@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.forofour.game.actors.MenuActorMaker;
 import com.forofour.game.handlers.AssetLoader;
@@ -20,6 +21,7 @@ public class MenuScreen implements Screen {
     private MenuActorMaker actorMaker;
     private SpriteBatch batch;
 
+
     public MenuScreen(){
         stage = new Stage(new ExtendViewport(
                 GameConstants.GAME_WIDTH,
@@ -27,6 +29,11 @@ public class MenuScreen implements Screen {
         actorMaker = new MenuActorMaker(stage); //menu button actions are initialized
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
+
+        // music initialized
+        long id = AssetLoader.mainMusic.loop();
+        AssetLoader.mainMusic.setLooping(id,true);
+        AssetLoader.mainMusic.play();
     }
 
     @Override
@@ -60,16 +67,16 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resume() {
-
+        AssetLoader.mainMusic.resume();
     }
 
     @Override
     public void hide() {
-
+        AssetLoader.mainMusic.stop();
     }
 
     @Override
     public void dispose() {
-
+        AssetLoader.mainMusic.dispose();
     }
 }
