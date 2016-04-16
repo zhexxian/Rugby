@@ -1,8 +1,10 @@
 package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,6 +23,8 @@ import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
 import com.forofour.game.tutorialMode.TutorialStates;
 
+import java.util.ArrayList;
+
 /**
  * Created by seanlim on 4/4/2016.
  */
@@ -36,13 +40,20 @@ public class MainOverlay extends Stage {
     private Label globalLabel, teamLabel;
 
     // GameEnd Components
-    private TextButton buttonPlayAgain, buttonMainMenu;
+    private static Texture youLose;
+    private static Texture youWin;
+    private static Image youLoseImage;
+    private static Image youWinImage;
+    private Texture buttonPlayAgainTexture, buttonMainMenuTexture;
+    private Image buttonPlayAgain, buttonMainMenu;
 
     private boolean isInitialized;
     private Player player;
     private Ball ball;
     private Team teamA, teamB;
     private Timer globalTime;
+
+
 
     // Tutorial States
     private TutorialStates tutorialStates;
@@ -76,9 +87,17 @@ public class MainOverlay extends Stage {
         addActor(PowerUpSlotMaker.wrap1(powerSlot));
 
         // make & add End Game components to the stage
-        GameOverMaker gameOver = new GameOverMaker(this);
-        buttonPlayAgain = gameOver.getButtonPlayAgain();
-        buttonMainMenu = gameOver.getButtonMainMenu();
+        youLose = new Texture("sprites/Design 2/Game Screen/end game/blue-lose.png");
+        youWin = new Texture("sprites/Design 2/Game Screen/end game/red-win.png");
+        youLoseImage = new Image(youLose);
+        youWinImage = new Image(youWin);
+
+        buttonPlayAgainTexture = new Texture("sprites/Design 2/Game Screen/end game/rematch-button.png");
+        buttonMainMenuTexture = new Texture("sprites/Design 2/Game Screen/end game/menu-button.png");
+        buttonPlayAgain = new Image(buttonPlayAgainTexture);
+        buttonMainMenu = new Image(buttonMainMenuTexture);
+
+        // TODO: debug the listening function
         buttonPlayAgain.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -91,26 +110,28 @@ public class MainOverlay extends Stage {
                 }
             }
         });
+
         buttonMainMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(isHost) {
+                if (isHost) {
                     client.sendMessage(new Network.PacketGameEnd(false));
                     // No change of states here
                     // Allow server to register change and announce to server.
                     Gdx.app.log("MainOverlay", "PlayEnd Button Sent");
-                }
-                else {
+                } else {
 //                    client.sendMessage(new Network.PacketGameEnd(false));
                     client.playAgain = false;
                     client.playEnd = true;
                 }
             }
         });
-        addActor(GameOverMaker.wrap1(buttonPlayAgain));
-        addActor(GameOverMaker.wrap2(buttonMainMenu));
-        hideEndgameOverlay();
 
+        addActor(GameOverMaker.wrapBlackLayer(youLoseImage));
+        addActor(GameOverMaker.wrapBlackLayer(youWinImage));
+        addActor(GameOverMaker.wrapRematchButton(buttonPlayAgain));
+        addActor(GameOverMaker.wrapMenuButton(buttonMainMenu));
+        hideEndgameOverlay();
         isInitialized = false;
     }
 
@@ -141,14 +162,9 @@ public class MainOverlay extends Stage {
             }
         } else {
             hideActors();
-            // TODO: Include EndGame Actors Show/Hide logic here.
-            // TODO: Scores can be acquired from TeamA/TeamB within map
             hideEndgameOverlay();
             if (client.getMap().gameEnd) {
                 showEndgameOverlay(isHost, client.serverReady);
-
-                // Only if Server intends to "PlayAgain", would Client see button to "PlayAgain".
-                // Intentions to "PlayAgain" will launch LobbyScreen again
             }
         }
 
@@ -160,13 +176,21 @@ public class MainOverlay extends Stage {
     private void hideEndgameOverlay() {
         buttonPlayAgain.setVisible(false);
         buttonMainMenu.setVisible(false);
+        youLoseImage.setVisible(false);
+        youWinImage.setVisible(false);
     }
 
+    // TODO: show lose and win background differently
+    // TODO: Include EndGame Actors Show/Hide logic here.
+    // TODO: Scores can be acquired from TeamA/TeamB within map
     private void showEndgameOverlay(boolean isHost, boolean hostReady) {
         if(isHost) {
             // Host will see both choices upon game end
             buttonPlayAgain.setVisible(true);
             buttonMainMenu.setVisible(true);
+
+            youWinImage.setVisible(true);
+
 //            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
         }
         else {
@@ -176,6 +200,7 @@ public class MainOverlay extends Stage {
                 buttonPlayAgain.setVisible(true);
             }
             buttonMainMenu.setVisible(true);
+            youWinImage.setVisible(true);
         }
     }
 
