@@ -18,7 +18,6 @@ import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -434,7 +433,7 @@ public class GameMap {
                     serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
 
                     removePowerUp(powerUp.getId()); // Remove body instance of the from the world
-                    AssetLoader.powerUpMusic.play();
+                    AssetLoader.powerUpSound.play();
                 }
                 else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
                     Player player = (Player) a.getUserData();
@@ -443,7 +442,7 @@ public class GameMap {
                     Gdx.app.log(tag, "Player" + player.getId() + " Type" + powerUp.getType());
                     serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
                     removePowerUp(powerUp.getId());
-                    AssetLoader.powerUpMusic.play();
+                    AssetLoader.powerUpSound.play();
                 }
             }
         }

@@ -51,8 +51,9 @@ public class MainScreen implements Screen {
             overlay = new MainOverlay(isHost, client);
         Gdx.input.setInputProcessor(new ClientInputHandler(overlay)); // Stage itself is an inputAdapter
 
-        long id = AssetLoader.ingameMusic.loop();
-        AssetLoader.ingameMusic.setLooping(id, true);
+
+        AssetLoader.ingameMusic.setLooping(true);
+        AssetLoader.ingameMusic.setVolume(0.5f);
         AssetLoader.ingameMusic.play();
 
     }
@@ -141,7 +142,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resume() {
-        AssetLoader.mainMusic.resume();
+        AssetLoader.mainMusic.play();
     }
 
     @Override
