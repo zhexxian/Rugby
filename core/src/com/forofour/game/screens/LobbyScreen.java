@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -35,9 +37,11 @@ public class LobbyScreen implements Screen {
     private String playerName; // Not implemented
     private String hostname;
 
-    private TextButton buttonStartGame;
-    private TextButton buttonNudgeHost;
+    private ImageButton buttonStartGame;
+    private ImageButton buttonNudgeHost;
     boolean showStartNudgeButton;
+
+    private Image player1, player2, player3, player4;
 
     public LobbyScreen(String hostname) {
         this(false, false);
@@ -87,6 +91,11 @@ public class LobbyScreen implements Screen {
         buttonStartGame.setVisible(false);
         buttonNudgeHost.setVisible(false);
 
+        player1 = lobbyActorMaker.getPlayerBlue1();
+        player2 = lobbyActorMaker.getPlayerRed1();
+        player3 = lobbyActorMaker.getPlayerBlue2();
+        player4 = lobbyActorMaker.getPlayerRed2();
+
         batch = new SpriteBatch();
 
         Gdx.input.setInputProcessor(stage);
@@ -127,10 +136,13 @@ public class LobbyScreen implements Screen {
 
         // TODO: Drawing does not scale accordingly to the phone
         batch.begin();
-        for(int i=0; i<client.getMap().getNumberOfBabyFaces(); i++){
-            batch.draw(AssetLoader.powerUp,
-                    50+i*100, 50, 50, 50);
-        }
+//        batch.draw();
+        showBabyFaces(client.getMap().getNumberOfBabyFaces());
+
+//        for(int i=0; i<client.getMap().getNumberOfBabyFaces(); i++){
+//            batch.draw(AssetLoader.powerUp,
+//                    50+i*100, 50, 50, 50);
+//        }
         batch.end();
 
         // Only if Desired number of Players are connection would the buttons be Active/Visible
@@ -153,6 +165,37 @@ public class LobbyScreen implements Screen {
                     client.shutdown();
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
+        }
+    }
+
+    private void showBabyFaces(int numberOfBabyFaces) {
+        switch (numberOfBabyFaces) {
+            case 1:
+                player1.setVisible(true);
+                player2.setVisible(false);
+                player3.setVisible(false);
+                player4.setVisible(false);
+                break;
+            case 2:
+                player1.setVisible(true);
+                player2.setVisible(true);
+                player3.setVisible(false);
+                player4.setVisible(false);
+                break;
+            case 3:
+                player1.setVisible(true);
+                player2.setVisible(true);
+                player3.setVisible(true);
+                player4.setVisible(false);
+                break;
+            case 4:
+                player1.setVisible(true);
+                player2.setVisible(true);
+                player3.setVisible(true);
+                player4.setVisible(true);
+                break;
+            default:
+                break;
         }
     }
 

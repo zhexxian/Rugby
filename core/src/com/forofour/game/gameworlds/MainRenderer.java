@@ -89,13 +89,16 @@ public class MainRenderer {
 
         // Background Floor mat
         batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
-        batcher.draw(AssetLoader.bgTrainRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
 
         renderTeamA();
         renderTeamB();
 
         renderBall();
         renderPowerUps();
+
+        batcher.draw(AssetLoader.bgTrainRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
+
+        batcher.end();
     }
 
     public void initialize(){
@@ -339,6 +342,5 @@ public class MainRenderer {
         else {
             powerUpList = map.getPowerUpList();
         }
-        batcher.end();
     }
 }

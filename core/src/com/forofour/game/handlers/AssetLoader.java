@@ -67,7 +67,7 @@ public class AssetLoader {
         bgMenu = new TextureRegion(menu);
 
         //game background
-        bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2no.png"));
+        bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2.png"));
         bgRegion = new TextureRegion(bg);
         bgTrain = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/train-border-(1200x640).png"));
         bgTrainRegion = new TextureRegion(bgTrain);
