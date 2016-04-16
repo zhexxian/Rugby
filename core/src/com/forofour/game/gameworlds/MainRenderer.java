@@ -88,7 +88,8 @@ public class MainRenderer {
         batcher.begin();
 
         // Background Floor mat
-//        batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
+        batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
+        batcher.draw(AssetLoader.bgTrainRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
 
         renderTeamA();
         renderTeamB();
@@ -190,7 +191,7 @@ public class MainRenderer {
                     p.getRadius(), // scale
                     0);
 
-            System.out.println(GameConstants.SCALE_POS + " " + GameConstants.RENDER_RADIUS_SCALE + " " + p.getRadius());
+//            System.out.println(GameConstants.SCALE_POS + " " + GameConstants.RENDER_RADIUS_SCALE + " " + p.getRadius());
 
             // Confused Effect
             if(p.isConfused()) {

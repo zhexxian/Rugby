@@ -121,11 +121,10 @@ public class GameMap {
 
     public void addWallBoundaries() {
         //define the physics world boundaries
-        float wallThickness = 1;
-        wallTop = new Wall(0, 0, GameConstants.GAME_WIDTH, wallThickness, box2d);
-        wallBottom = new Wall(0, GameConstants.GAME_HEIGHT-wallThickness, GameConstants.GAME_WIDTH, wallThickness, box2d);
-        wallLeft = new Wall(0, 0, wallThickness, GameConstants.GAME_HEIGHT, box2d);
-        wallRight = new Wall(GameConstants.GAME_WIDTH-wallThickness, 0, wallThickness, GameConstants.GAME_HEIGHT, box2d);
+        wallTop = new Wall(0, 0, GameConstants.GAME_WIDTH, 5f, box2d);
+        wallBottom = new Wall(0, GameConstants.GAME_HEIGHT, GameConstants.GAME_WIDTH, 5f, box2d);
+        wallLeft = new Wall(0, 0, 3.5f, GameConstants.GAME_HEIGHT, box2d);
+        wallRight = new Wall(GameConstants.GAME_WIDTH, 0, 3.5f, GameConstants.GAME_HEIGHT, box2d);
     }
 
     // Client updates itself and sends updates to server
