@@ -13,12 +13,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class AssetLoader {
 
+    // Pre-game Textures
     public static Texture splash;
+    public static Texture menu;
+    public static Texture tutorialUp, tutorialDown, hostGameUp, joinGameUp, hostGameDown, joinGameDown;
 
-    public static Texture bg, bgTrain, menu;
-
+    // In-game Textures
+    public static Texture bg, bgTrain;
     public static Texture ball;
-
     public static Texture playerAup1, playerBup1;
     public static Texture playerAdown1, playerBdown1;
     public static Texture playerAleft1, playerBleft1;
@@ -27,17 +29,20 @@ public class AssetLoader {
     public static Texture playerAdown2, playerBdown2;
     public static Texture playerAleft2, playerBleft2;
     public static Texture playerAright2, playerBright2;
-
     public static Texture powerUp;
-
     public static Texture boostButtonUp, tossButtonUp, boostButtonDown, tossButtonDown;
     public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
     public static Texture powerUp1Effect, powerUp2Effect;
 
+    // Pre-game TextureRegion
     public static TextureRegion splashScreen;
     public static TextureRegion bgMenu;
-    public static TextureRegion bgRegion, bgTrainRegion;
+    public static TextureRegion tutorialRegionUp, tutorialRegionDown;
+    public static TextureRegion hostGameRegionUp, joinGameRegionUp;
+    public static TextureRegion hostGameRegionDown, joinGameRegionDown;
 
+    // In-game TextureRegion
+    public static TextureRegion bgRegion, bgTrainRegion;
     public static TextureRegion ballRegion;
     public static TextureRegion playerRegionAup1, playerRegionBup1;
     public static TextureRegion playerRegionAdown1, playerRegionBdown1;
@@ -48,16 +53,17 @@ public class AssetLoader {
     public static TextureRegion playerRegionAleft2, playerRegionBleft2;
     public static TextureRegion playerRegionAright2, playerRegionBright2;
 
-    public static Animation[] TeamAnimationA;
-    public static Animation[] TeamAnimationB;
-
-    public static Animation playerAnimationDownA, playerAnimationRightA, playerAnimationUpA, playerAnimationLeftA;
-    public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
-
     public static TextureRegion boostRegionUp, tossRegionUp, boostRegionDown, tossRegionDown;
     public static TextureRegion powerUpRegion, powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
     public static TextureRegion powerUpEffectRegion1, powerUpEffectRegion2;
 
+    // In-game Animations
+    public static Animation[] TeamAnimationA;
+    public static Animation[] TeamAnimationB;
+    public static Animation playerAnimationDownA, playerAnimationRightA, playerAnimationUpA, playerAnimationLeftA;
+    public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
+
+    // Sounds/Music
     public static Sound mainMusic;
     public static Sound fart;
     public static Sound ingameMusic;
@@ -72,6 +78,20 @@ public class AssetLoader {
         //menu background
         menu = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/start-screen.png"));
         bgMenu = new TextureRegion(menu);
+
+        tutorialUp = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/tutorial-button.png"));
+        tutorialDown = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/tutorial-button-pressed.png"));
+        hostGameUp = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/host-game-button.png"));
+        hostGameDown = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/host-game-button-pressed.png"));
+        joinGameUp= new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/join-game-button.png"));
+        joinGameDown = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/join-game-button-pressed.png"));
+
+        tutorialRegionUp = new TextureRegion(tutorialUp);
+        tutorialRegionDown = new TextureRegion(tutorialDown);
+        hostGameRegionUp = new TextureRegion(hostGameUp);
+        hostGameRegionDown = new TextureRegion(hostGameDown);
+        joinGameRegionUp = new TextureRegion(joinGameUp);
+        joinGameRegionDown = new TextureRegion(joinGameDown);
 
         //game background
         bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2.png"));
