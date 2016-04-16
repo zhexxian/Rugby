@@ -33,7 +33,7 @@ public class LobbyActorMaker {
 
     private static final float PLAYER_ICON_SCALE = 1.15f;
     private int BUTTON_WIDTH = 40;
-    private int BUTTON_HEIGHT = 10;
+    private int BUTTON_HEIGHT = 15;
     private int BUTTON_GAP = 5;
 
     public LobbyActorMaker(Stage stage){
