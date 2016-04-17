@@ -88,6 +88,14 @@ public class LobbyScreen implements Screen {
                 }
             }
         });
+        buttonNudgeHost.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.log("NudgeButton", "Clicked!");
+                client.sendMessage(new Network.PacketNudge());
+                AssetLoader.nudgeSound.play(GameConstants.SOUND_VOLUME);
+            }
+        });
         buttonStartGame.setVisible(false);
         buttonNudgeHost.setVisible(false);
 
