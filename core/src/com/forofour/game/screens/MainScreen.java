@@ -15,7 +15,11 @@ import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
 
 /**
- * Sequence of events :
+ * MainScreen
+ *  Holds the reference of GameClient and GameServer(if Host), both of which contains GameMap
+ *  Creates instance of Overlay - for player controls
+ *
+ * Sequence of events as MainScreen changes from LobbyScreen :
  * 1. When desired # of players are connected "StartGame" button appears on Host
  * 2. Click on "StartGame" by host, get Clients to launch MainScreen
  * 3. When all Clients have launched MainScreen, Server will launch MainScreen(Server is last to launch the screen)
@@ -34,7 +38,7 @@ public class MainScreen implements Screen {
     private boolean isHost;
     private String name;
 
-    private FPSLogger fpsLogger = new FPSLogger();
+//    private FPSLogger fpsLogger = new FPSLogger();
 
     public MainScreen(boolean tutorialMode, boolean isHost, String playerName, GameServer server, GameClient client) {
         this.tutorialMode = tutorialMode;
@@ -44,18 +48,20 @@ public class MainScreen implements Screen {
         this.client = client;
 
         map = client.getMap();
-        renderer = new MainRenderer(map);
+        renderer = new MainRenderer(map); // Overlay to have ref to client objects
+
+        // Tutorial mode, have additional object reference
         if(tutorialMode)
             overlay = new MainOverlay(isHost, client, server.getTutorialStates());
         else
             overlay = new MainOverlay(isHost, client);
+
         Gdx.input.setInputProcessor(new InputHandler(overlay)); // Stage itself is an inputAdapter
 
-
+        // Starts the sound
         AssetLoader.ingameMusic.setLooping(true);
         AssetLoader.ingameMusic.setVolume(GameConstants.MUSIC_VOLUME);
         AssetLoader.ingameMusic.play();
-
     }
 
     @Override
@@ -74,10 +80,9 @@ public class MainScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        // Client-sided
-        // TODO: Player to send server its movement values, Server to reply with update position
+        // Client-sided condition
         if(!map.gamePaused) {
-
+            // Client-sided update
             map.update(delta);
             map.getGlobalTime().start();
 
@@ -88,10 +93,11 @@ public class MainScreen implements Screen {
 //                Gdx.app.log("ClientTime", map.getGlobalTime().getElapsed());
 //                Gdx.app.log("HostTime", server.getMap().getGlobalTime().getElapsed());
 
-                if(server.getMap().getGlobalTime().isDone()) { // Triggers End of game when i)TIME IS UP
+                // Triggers End of game when i)TIME IS UP
+                if(server.getMap().getGlobalTime().isDone()) {
                     server.getMap().gamePaused = true;
                     server.getMap().gameEnd = true;
-                    server.sendMessage(new Network.PacketGameEnd());
+                    server.sendMessage(new Network.PacketGameEnd()); // Announcement to clients
                 }
             }
         }
@@ -101,19 +107,22 @@ public class MainScreen implements Screen {
 
         renderer.render(delta);
         overlay.update(delta);
-//        fpsLogger.log();
+        //fpsLogger.log();
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // Logic to the change of Screens
         if(isHost) { // Server-sided
             if (server.playRestart) {
                 // Restarts host into lobbyScreen at instant
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, true));
             }
             if(server.playEnd) {
+                // Back to MainMenu screen
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
             if(tutorialMode) {
                 if(server.getTutorialStates().isDone()) {
-                    // Returns to TutorialScreen upon Done with Tutorial
+                    // Returns to MainMenu upon Done with Tutorial
                     ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                 }
             }
@@ -121,10 +130,11 @@ public class MainScreen implements Screen {
         else { // Client-sided
             if (client.playAgain) {
                 // Restart client into LobbyScreen and reconnect to sameHost
-//                ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, false));
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(client.getHostAddress()));
+                //((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new LobbyScreen(false, false));
             }
             if (client.playEnd) {
+                // Returns to the Main Menu
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
         }

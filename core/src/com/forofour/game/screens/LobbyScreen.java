@@ -21,13 +21,20 @@ import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
 
 /**
- * Created by seanlim on 1/4/2016.
+ * Lobby Screen - called by MenuScreen
+ *  if Tutorial mode, MainScreen will immediately be called
+ *
+ * Buttons are made with the helper class LobbyActorMaker. Button allows :
+ *  Transition into Game(if host), Nudging the host(if Game has min. 2 players connected)
+ *
+ * All lobby screen will have an instance of GameClient
+ * Only host will have an instance of GameServer
+ *
  */
 public class LobbyScreen implements Screen {
 
     private Stage stage;
     private LobbyActorMaker lobbyActorMaker;
-    private SpriteBatch batch;
 
     private GameServer server;
     private GameClient client;
@@ -43,6 +50,7 @@ public class LobbyScreen implements Screen {
 
     private Image player1, player2, player3, player4;
 
+    // Constructed in this manner if PlayAgain by Client is choosen at the EndGame
     public LobbyScreen(String hostname) {
         this(false, false);
         this.hostname = hostname;
@@ -52,12 +60,14 @@ public class LobbyScreen implements Screen {
         this.server = server;
     }
 
+    // Default constructor on first run
     public LobbyScreen(boolean tutorialMode, final boolean isHost) {
         this.isHost = isHost;
         this.tutorialMode = tutorialMode;
         this.playerName = "";
         this.hostname = "";
 
+        // Stage is used to contain the Buttons
         stage = new Stage(new ExtendViewport(
                 GameConstants.GAME_WIDTH,
                 GameConstants.GAME_HEIGHT)) {
@@ -78,6 +88,16 @@ public class LobbyScreen implements Screen {
         lobbyActorMaker = new LobbyActorMaker(stage);
         buttonStartGame = lobbyActorMaker.getButtonStartGame();
         buttonNudgeHost = lobbyActorMaker.getButtonNudgeHost();
+
+        defineButtonsFunction();
+        hideButtons();
+        tieConnectedPlayerToImage();
+
+        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setCatchBackKey(true);
+    }
+
+    private void defineButtonsFunction(){
         buttonStartGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -96,19 +116,18 @@ public class LobbyScreen implements Screen {
                 AssetLoader.nudgeSound.play(GameConstants.SOUND_VOLUME);
             }
         });
+    }
+
+    private void hideButtons(){
         buttonStartGame.setVisible(false);
         buttonNudgeHost.setVisible(false);
+    }
 
+    private void tieConnectedPlayerToImage() {
         player1 = lobbyActorMaker.getPlayerBlue1();
         player2 = lobbyActorMaker.getPlayerRed1();
         player3 = lobbyActorMaker.getPlayerBlue2();
         player4 = lobbyActorMaker.getPlayerRed2();
-
-        batch = new SpriteBatch();
-
-        Gdx.input.setInputProcessor(stage);
-        Gdx.input.setCatchBackKey(true);
-
     }
 
     @Override
@@ -142,32 +161,31 @@ public class LobbyScreen implements Screen {
         stage.act();
         stage.draw();
 
-        // TODO: Drawing does not scale accordingly to the phone
-        batch.begin();
-//        batch.draw();
         showBabyFaces(client.getMap().getNumberOfBabyFaces());
-
-//        for(int i=0; i<client.getMap().getNumberOfBabyFaces(); i++){
-//            batch.draw(AssetLoader.powerUp,
-//                    50+i*100, 50, 50, 50);
-//        }
-        batch.end();
 
         // Only if Desired number of Players are connection would the buttons be Active/Visible
         showStartNudgeButton = client.getMap().getNumberOfBabyFaces() >= GameConstants.MIN_MULTIPLAYER_NUMBER; // Should it be 2 or more?
+
         if(isHost) {
-            // Shows
+            // HOST allowed to StartGame
             buttonStartGame.setVisible(showStartNudgeButton);
             buttonNudgeHost.setVisible(false);
+
+            // Starts instantly when Clients are have been initiated
             if(server.getMap().gameInitiated || tutorialMode) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(tutorialMode, true, playerName, server, client));
             }
         } else {
+            // CLIENT allowed to Nudge
             buttonStartGame.setVisible(false);
             buttonNudgeHost.setVisible(showStartNudgeButton);
+
+            // Changes screen when game is initiated(aft. assignment of objects by server)
             if(client.getMap().gameInitiated) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MainScreen(false, false, playerName, null, client));
             }
+
+            // Changes screen when server leaves the lobby
             if(client.getMap().shutdown) {
                 if(client != null)
                     client.shutdown();
@@ -176,6 +194,7 @@ public class LobbyScreen implements Screen {
         }
     }
 
+    // Trigger visibility of BabyImages depending on the numberplayers connected
     private void showBabyFaces(int numberOfBabyFaces) {
         switch (numberOfBabyFaces) {
             case 1:
@@ -229,7 +248,6 @@ public class LobbyScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        batch.dispose();
         if(client != null)
             client.dispose();
         if(server != null)

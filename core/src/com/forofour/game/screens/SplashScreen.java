@@ -18,7 +18,10 @@ import com.forofour.game.TweenAccessors.SpriteAccessor;
 import com.forofour.game.handlers.AssetLoader;
 
 /**
- * Created by zhexian on 08-Apr-16.
+ * Splash screen that adopts the use of TweenEngine, which
+ *  allows transition of values(e.g. opacity)
+ *
+ * Proceeds to MenuScreen when done
  */
 public class SplashScreen implements Screen {
 
@@ -52,6 +55,7 @@ public class SplashScreen implements Screen {
         Tween.registerAccessor(Sprite.class, new SpriteAccessor());
         manager = new TweenManager();
 
+        // Callback function when tween is completed
         TweenCallback cb = new TweenCallback() {
             @Override
             public void onEvent(int type, BaseTween<?> source) {

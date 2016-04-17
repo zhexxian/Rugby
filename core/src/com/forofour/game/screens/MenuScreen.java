@@ -14,13 +14,17 @@ import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 
 /**
- * Created by seanlim on 8/3/2016.
+ * MainMenu Screen - called by SplashScreen
+ *  Contains buttons that allows transition into:
+ *      Tutorial Mode, Lobby Screen(by Hosting or Joining)
+ *  Allows ON/OFF of sounds and music
+ *
+ * Buttons are made with the helper class MenuActorMaker
  */
 public class MenuScreen implements Screen {
     private Stage stage;
     private MenuActorMaker actorMaker;
     private SpriteBatch batch;
-
 
     public MenuScreen(){
         stage = new Stage(new ExtendViewport(
