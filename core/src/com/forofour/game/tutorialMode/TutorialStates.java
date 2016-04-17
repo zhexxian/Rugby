@@ -7,7 +7,11 @@ import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
 
 /**
- * Created by seanlim on 10/4/2016.
+ * Tutorial States
+ *  Instantiated only in tutorial mode.
+ * Keeps track of the states of the player progress in learning the game
+ *  e.g. Ball picked, Ball thrown count, PowerUp used
+ * MainOverlay makes use of the states here to show the relavent instructions
  */
 public class TutorialStates {
 
