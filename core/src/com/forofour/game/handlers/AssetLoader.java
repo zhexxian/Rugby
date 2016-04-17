@@ -35,7 +35,8 @@ public class AssetLoader {
     public static Texture powerUp;
     public static Texture boostButtonUp, tossButtonUp, boostButtonDown, tossButtonDown;
     public static Texture powerSlot1, powerUp1, powerUp2, powerUp3, powerUp4;
-    public static Texture powerUp1Effect, powerUp2Effect;
+    public static Texture slowEffectTexture1, confusionEffectTexture1;
+
 
     // Pre-game TextureRegion
     public static TextureRegion splashScreen;
@@ -59,13 +60,17 @@ public class AssetLoader {
 
     public static TextureRegion boostRegionUp, tossRegionUp, boostRegionDown, tossRegionDown;
     public static TextureRegion powerUpRegion, powerSlotRegion1, powerUpRegion1, powerUpRegion2, powerUpRegion3, powerUpRegion4;
-    public static TextureRegion powerUpEffectRegion1, powerUpEffectRegion2;
+    public static TextureRegion slowEffectRegion1, slowEffectRegion2;
+    public static TextureRegion confusionEffectRegion1, confusionEffectRegion2;
 
     // In-game Animations
     public static Animation[] TeamAnimationA;
     public static Animation[] TeamAnimationB;
     public static Animation playerAnimationDownA, playerAnimationRightA, playerAnimationUpA, playerAnimationLeftA;
     public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
+
+    public static Animation confusionAnimation;
+    public static Animation slowAnimation;
 
     // Overlay Textures
     public static Texture scoreLine;
@@ -232,10 +237,24 @@ public class AssetLoader {
         powerUp4 = new Texture(Gdx.files.internal(path+"invisible-red.png"));
         powerUpRegion4 = new TextureRegion(powerUp4);
 
-        powerUp1Effect = new Texture(Gdx.files.internal(path+"effect_water-puddle.png"));
-        powerUpEffectRegion1 = new TextureRegion(powerUp1Effect);
-        powerUp2Effect = new Texture(Gdx.files.internal(path+"effect_confused.png"));
-        powerUpEffectRegion2 = new TextureRegion(powerUp2Effect);
+
+        slowEffectTexture1 = new Texture(Gdx.files.internal(path+"effect_water-puddle.png"));
+        slowEffectRegion1 = new TextureRegion(slowEffectTexture1);
+        slowEffectRegion2 = new TextureRegion(slowEffectTexture1);
+        slowEffectRegion2.flip(true, false);
+        confusionEffectTexture1 = new Texture(Gdx.files.internal(path+"effect_confused.png"));
+        confusionEffectRegion1 = new TextureRegion(confusionEffectTexture1);
+        confusionEffectRegion2 = new TextureRegion(confusionEffectTexture1);
+        confusionEffectRegion2.flip(true, false);
+
+        TextureRegion[] slowEffectRegions = {slowEffectRegion1, slowEffectRegion2};
+        TextureRegion[] confusionEffectRegions = {confusionEffectRegion1, confusionEffectRegion2};
+
+        slowAnimation = new Animation(0.25f, slowEffectRegions);
+        confusionAnimation = new Animation(0.25f, confusionEffectRegions);
+
+        slowAnimation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
+        confusionAnimation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
 
         //buttons
         boostButtonUp = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/boost-button2.png"));
@@ -290,6 +309,8 @@ public class AssetLoader {
         playerBright2.dispose();
 
         powerUp.dispose();
+        slowEffectTexture1.dispose();
+        confusionEffectTexture1.dispose();
 
         boostButtonUp.dispose();
         tossButtonUp.dispose();

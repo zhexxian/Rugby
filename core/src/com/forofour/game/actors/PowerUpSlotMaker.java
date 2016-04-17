@@ -18,9 +18,12 @@ public class PowerUpSlotMaker {
     private static float POS_X1 = 160 - 35;
     private static float POS_Y1 = 15;
 
+    private static float POS_X2 = 160 - 15;
+    private static float POS_Y2 = 15;
+
     private static float SIZE_SCALE = (float) 2;
 
-    private static ImageButton powerSlot;
+    private static ImageButton powerSlot, buttonSlot;
     private static ImageButton.ImageButtonStyle emptySlotStyle, powerUpStyle1, powerUpStyle2, powerUpStyle3blue, powerUpStyle3red;
 
     public static ImageButton getPowerSlot(final GameClient client) {
@@ -58,7 +61,15 @@ public class PowerUpSlotMaker {
                 }
             }
         });
+
         return powerSlot;
+    }
+
+    public static ImageButton getButtonSlot() {
+        emptySlotStyle = new ImageButton.ImageButtonStyle();
+        emptySlotStyle.up = new TextureRegionDrawable(AssetLoader.powerSlotRegion1);
+        buttonSlot = new ImageButton(emptySlotStyle);
+        return buttonSlot;
     }
 
     // Necessary wrapper to scale and position the Actor in different screen sizes
@@ -67,6 +78,16 @@ public class PowerUpSlotMaker {
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X1 * GameConstants.SCALE_POS, POS_Y1 * GameConstants.SCALE_POS);
+        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS / 6, SIZE_SCALE * GameConstants.SCALE_POS / 6);
+
+        return wrapper;
+    }
+
+    public static Container wrap2(ImageButton ib) {
+
+        Container wrapper = new Container(ib);
+        wrapper.setTransform(true);
+        wrapper.setPosition(POS_X2 * GameConstants.SCALE_POS, POS_Y2 * GameConstants.SCALE_POS);
         wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS / 6, SIZE_SCALE * GameConstants.SCALE_POS / 6);
 
         return wrapper;

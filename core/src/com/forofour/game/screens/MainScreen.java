@@ -152,7 +152,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resume() {
-        AssetLoader.mainMusic.play();
+//        AssetLoader.mainMusic.play();
     }
 
     @Override

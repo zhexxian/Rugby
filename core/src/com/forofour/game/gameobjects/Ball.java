@@ -20,11 +20,13 @@ public class Ball{
     private BodyDef bodyDef;
 
     private static final float BALL_RADIUS = 2f; // Defined size of the ball
+    private static final float MAX_HELD_TIME =4f;
 
     // Properties of the Body
     private CircleShape boundingCircle ;
     private Fixture fixture;
 
+    private float heldTime = 0;
     private float immunityTime = 0;
     private float radius;
 
@@ -77,6 +79,9 @@ public class Ball{
                 loseHoldingPlayer(); // LOSE BALL Sequence
             }
 
+            // Ball cannot be held for more than MAX_BALL_DURATION time
+            if(!heldTooLong())
+                heldTime -= delta;
         }
 
         // Ball cannot be held for the given period
@@ -84,6 +89,13 @@ public class Ball{
             immunityTime -= delta;
             Gdx.app.log("Ball" , "is invisible " + immunityTime);
         }
+    }
+
+    // Check if player is holding ball for more than a MAX_HOLDING_DURATION
+    public boolean heldTooLong() {
+        if(heldTime < 0)
+            return true;
+        return false;
     }
 
     public boolean isHeld(){
@@ -98,6 +110,7 @@ public class Ball{
     public synchronized void setHoldingPlayer(Player player){
         if(immunityTime <= 0) {
             holdingPlayer = player;
+            heldTime = MAX_HELD_TIME;
         }
     }
     public Player getHoldingPlayer(){

@@ -119,12 +119,16 @@ public class Player {
         }
 
         // Sets last moved direction as player's Orientation
-        if(!body.getLinearVelocity().isZero()) {
+        if(!body.getLinearVelocity().epsilonEquals(Vector2.Zero, 5)) { // Prevents flipping of direction at corners
             lastDirection = body.getLinearVelocity();
             body.setTransform(body.getPosition(), body.getLinearVelocity().angleRad());
         }
 
         updateEffects(delta); // Reduction of time for Effects and disables when over
+
+        // Checks if holding ball for too long
+        if(ball.heldTooLong())
+            dropBall();
     }
 
     // Periodically called to reduce duration left for special effects
@@ -164,6 +168,14 @@ public class Player {
         if(boostTime > 0 || noBoostTime > 0)
             return true;
         return false;
+    }
+    public float boostCooldownPercentage(){
+        float percentage = 1f - (noBoostTime/NO_BOOST_DURATION);
+        if(percentage<0)
+            return 0;
+        if(percentage>1)
+            return 1;
+        return percentage;
     }
 
     // called by TouchPad periodically to update player movement
@@ -206,7 +218,7 @@ public class Player {
     }
 
     public void dropBall(){ // Client Sided command(NOTE: Server has no instance of client)
-        if(hasBall()) {
+        if(hasBall() && client != null) {
             ball.loseHoldingPlayer();
             client.sendMessage(new Network.PacketDropBall(id)); // Updates server of the dropping of ball
             Gdx.app.log("Player-dropBall", "id " + id);
