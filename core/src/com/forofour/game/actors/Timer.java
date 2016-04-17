@@ -3,7 +3,8 @@ package com.forofour.game.actors;
 import com.badlogic.gdx.Gdx;
 
 /**
- * Created by zhexian on 3/9/2016.
+ * Stopwatch to help keep track of in game time
+ *  as well as for use in addtion of scores
  */
 public class Timer {
 

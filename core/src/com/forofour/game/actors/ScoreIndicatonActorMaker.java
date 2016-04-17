@@ -6,7 +6,7 @@ import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 
 /**
- * Created by seanlim on 17/4/2016.
+ * Helper class to generate and manipulate Score Indication System
  */
 public class ScoreIndicatonActorMaker {
 
@@ -61,6 +61,7 @@ public class ScoreIndicatonActorMaker {
         return scoreB;
     }
 
+    // Necessary wrapper to scale and position the Actor in different screen sizes
     public static Container wrapScoreLine(Image image) {
 
         Container wrapper = new Container(image);
@@ -72,6 +73,7 @@ public class ScoreIndicatonActorMaker {
         return wrapper;
     }
 
+    // Necessary wrapper to scale and position the Actor in different screen sizes
     public static Container wrapIndicatorA(Image image) {
 
         Container wrapper = new Container(image);
@@ -82,6 +84,8 @@ public class ScoreIndicatonActorMaker {
 
         return wrapper;
     }
+
+    // Necessary wrapper to scale and position the Actor in different screen sizes
     public static Container wrapIndicatorB(Image image) {
 
         Container wrapper = new Container(image);
@@ -93,6 +97,7 @@ public class ScoreIndicatonActorMaker {
         return wrapper;
     }
 
+    // Helper to update the position of TeamIndicator
     public static void updateIndicatorPosition(Image indicatorTeam, float percentage) {
         if(percentage >= 0 && percentage <= 1) {
             float x = START_LINE + SCORE_LENGTH * percentage;

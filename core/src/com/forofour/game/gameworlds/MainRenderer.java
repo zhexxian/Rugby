@@ -160,13 +160,13 @@ public class MainRenderer {
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
 
                 // Animation speed is tied to player's Velocity
-                for(Animation animation : AssetLoader.TeamAnimationA){
-                    animation.setFrameDuration(1f/p.getBody().getLinearVelocity().len()*5); // Faster animation when boosting
-
-//                    System.out.println("Player velocity: " + p.getBody().getLinearVelocity().len());
-//                    System.out.println("Frame duration: " + 1f/p.getBody().getLinearVelocity().len()*5);
-                }
-                /*if(p.isBoosting()) {
+//                for(Animation animation : AssetLoader.TeamAnimationA){
+//                    animation.setFrameDuration(1f/p.getBody().getLinearVelocity().len()*5); // Faster animation when boosting
+//
+////                    System.out.println("Player velocity: " + p.getBody().getLinearVelocity().len());
+////                    System.out.println("Frame duration: " + 1f/p.getBody().getLinearVelocity().len()*5);
+//                }
+                if(p.isBoosting()) {
                     for(Animation animation : AssetLoader.TeamAnimationA){
                         animation.setFrameDuration(0.08f); // Faster animation when boosting
                     }
@@ -175,7 +175,7 @@ public class MainRenderer {
                     for(Animation animation : AssetLoader.TeamAnimationA){
                         animation.setFrameDuration(0.16f); // Slow animation when boosting
                     }
-                }*/
+                }
 
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerAnimationDownA.getKeyFrame(runTime);
@@ -255,10 +255,10 @@ public class MainRenderer {
 
             TextureRegion playerDirection;
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
-                for(Animation animation : AssetLoader.TeamAnimationB) {
-                    animation.setFrameDuration(1f / p.getBody().getLinearVelocity().len() * 5); // Faster animation when boosting
-                }
-                /*if(p.isBoosting()) {
+//                for(Animation animation : AssetLoader.TeamAnimationB) {
+//                    animation.setFrameDuration(1f / p.getBody().getLinearVelocity().len() * 5); // Faster animation when boosting
+//                }
+                if(p.isBoosting()) {
                     for(Animation animation : AssetLoader.TeamAnimationB){
                         animation.setFrameDuration(0.1f);
                     }
@@ -267,7 +267,7 @@ public class MainRenderer {
                     for(Animation animation : AssetLoader.TeamAnimationB){
                         animation.setFrameDuration(0.2f);
                     }
-                }*/
+                }
 
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerAnimationDownB.getKeyFrame(runTime);

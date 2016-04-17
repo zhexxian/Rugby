@@ -10,7 +10,7 @@ import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 
 /**
- * Created by seanlim on 18/3/2016.
+ * Helper class to generate and manipulate PowerUpSlot as a ImageButton
  */
 public class PowerUpSlotMaker {
 
@@ -49,10 +49,9 @@ public class PowerUpSlotMaker {
         powerSlot.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(powerSlot.getStyle().equals(emptySlotStyle)) {
+                if (powerSlot.getStyle().equals(emptySlotStyle)) {
                     System.out.println("Pressed on Empty Slot");
-                }
-                else {
+                } else {
                     System.out.println("Pressed on Power Up Slot");
                     setEmptySlotStyle();
                     client.getMap().getPlayer().powerUp();
@@ -62,6 +61,7 @@ public class PowerUpSlotMaker {
         return powerSlot;
     }
 
+    // Necessary wrapper to scale and position the Actor in different screen sizes
     public static Container wrap1(ImageButton ib) {
 
         Container wrapper = new Container(ib);
@@ -76,6 +76,7 @@ public class PowerUpSlotMaker {
         powerSlot.setStyle(emptySlotStyle);
     }
 
+    // Helper method to update PowerUpSlot to shot acquired PowerUp
     public static void setPowerUpStyle(int powerUpType, int teamId) {
         switch(powerUpType) {
             case 1:

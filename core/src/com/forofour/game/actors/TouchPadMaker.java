@@ -9,7 +9,7 @@ import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 
 /**
- * Created by seanlim on 28/2/2016.
+ * Helper class to generate and manipulate TouchPad
  */
 public class TouchPadMaker {
 
@@ -46,6 +46,7 @@ public class TouchPadMaker {
         return touchpad;
     }
 
+    // Necessary wrapper to scale and position the Actor in different screen sizes
     public static Container wrap(Touchpad tp) {
 
         /* Required wrapper to allow item to scale

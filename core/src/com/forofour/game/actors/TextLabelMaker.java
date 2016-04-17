@@ -7,7 +7,7 @@ import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 
 /**
- * Created by seanlim on 9/3/2016.
+ * Helper class to generate and manipulate Text Labels
  */
 public class TextLabelMaker {
     // X,Y origin is at bottom left of the screen.
@@ -36,6 +36,7 @@ public class TextLabelMaker {
         return textLabel;
     }
 
+    // Necessary wrapper to scale and position the Actor in different screen sizes
     public static Container wrapGlobalTime(Label label) {
 
         Container wrapper = new Container(label);
@@ -46,6 +47,7 @@ public class TextLabelMaker {
         return wrapper;
     }
 
+    // Necessary wrapper to scale and position the Actor in different screen sizes
     public static Container wrapTeamScore(Label label) {
 
         Container wrapper = new Container(label);
