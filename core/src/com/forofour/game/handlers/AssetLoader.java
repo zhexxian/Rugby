@@ -81,6 +81,11 @@ public class AssetLoader {
     public static Sound fartBoostSound;
     public static Music ingameMusic;
     public static Sound powerUpSound;
+<<<<<<< HEAD
+=======
+    public static Sound slowSound;
+    public static Sound tossSound;
+>>>>>>> d9d57522bf149486860152dc55a57921f1f84b5c
 
     public static Sound menuButtonSound;
 
@@ -284,9 +289,8 @@ public class AssetLoader {
         ingameMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ingame.wav"));
         powerUpSound = Gdx.audio.newSound(Gdx.files.internal("sound/powerup.wav"));
         nudgeSound = fartBoostSound; // TODO: Replace with another sound
-
         menuButtonSound = Gdx.audio.newSound(Gdx.files.internal("sound/button.mp3"));
-
+        tossSound = Gdx.audio.newSound(Gdx.files.internal("sound/toss.wav"));
         // TODO: Include music for lobbyScreen
         // TODO: Include sounds for the powerUp effects
         confuseSound = Gdx.audio.newSound(Gdx.files.internal("sound/confuse.wav"));
