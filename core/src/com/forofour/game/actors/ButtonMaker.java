@@ -13,7 +13,7 @@ import com.forofour.game.tutorialMode.TutorialStates;
 
 /**
  * Make necessary buttons for game play, toss/boost.
- *
+ *  Called by the MainOverlay
  */
 public class ButtonMaker {
 

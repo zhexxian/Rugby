@@ -1,4 +1,4 @@
-/*This defines button actions of the menu screen*/
+
 
 package com.forofour.game.actors;
 
@@ -19,7 +19,8 @@ import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.screens.LobbyScreen;
 
 /**
- * Created by seanlim on 8/3/2016.
+ * Helper class to generate and manipulate buttons for the MenuScreen
+ *  Upon initialization of the actors, it automatically add them to the stage
  */
 public class MenuActorMaker {
     private Stage menuStage;

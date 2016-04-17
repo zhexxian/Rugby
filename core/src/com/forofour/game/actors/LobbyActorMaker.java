@@ -15,7 +15,8 @@ import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 
 /**
- * Created by seanlim on 1/4/2016.
+ * Helper class to Generate the interface of the Lobby
+ *  creates the buttons and adds them into the Stage
  */
 public class LobbyActorMaker {
     private Stage lobbyStage;
@@ -100,6 +101,7 @@ public class LobbyActorMaker {
         buttonNudgeHost.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
                 GameConstants.GAME_HEIGHT / 2 - BUTTON_HEIGHT / 2);
 
+        // Addition of actors into Stage
 //        stage.addActor(lobbyBg);
         stage.addActor(playerRed1);
         stage.addActor(playerRed2);
@@ -108,6 +110,7 @@ public class LobbyActorMaker {
         stage.addActor(buttonStartGame);
         stage.addActor(buttonNudgeHost);
 
+        // Default visibility of the actors
         playerRed1.setVisible(false);
         playerRed2.setVisible(false);
         playerBlue1.setVisible(false);

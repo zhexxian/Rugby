@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.forofour.game.handlers.GameConstants;
 
 /**
- * Created by zhexian on 08-Apr-16.
+ * Helper class to Generate the Images and Buttons for GameEnd state
+ *  Required containers to position and size the actors in varying screen sizes
  */
 public class GameOverMaker {
 
