@@ -132,6 +132,7 @@ public class MainOverlay extends Stage {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
             {
+                AssetLoader.menuButtonSound.play(GameConstants.SOUND_VOLUME);
                 if(isHost) {
                     client.sendMessage(new Network.PacketGameEnd(true));
                     Gdx.app.log("MainOverlay", "PlayAgain(TRUE) Button Sent");
@@ -147,6 +148,7 @@ public class MainOverlay extends Stage {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
             {
+                AssetLoader.menuButtonSound.play(GameConstants.SOUND_VOLUME);
                 if (isHost) {
                     client.sendMessage(new Network.PacketGameEnd(false));
                     // No change of states here
@@ -199,6 +201,7 @@ public class MainOverlay extends Stage {
         buttonNextImage.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+                AssetLoader.menuButtonSound.play(GameConstants.SOUND_VOLUME);
                 tutorialCount += 1;
                 client.sendMessage(new Network.PacketGamePause());
                 return true;
