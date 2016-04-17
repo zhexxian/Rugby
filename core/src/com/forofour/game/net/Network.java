@@ -19,6 +19,7 @@ public class Network {
         kryo.register(PacketDebugAnnouncement.class);
         kryo.register(PacketPlayerJoinLeave.class);
         kryo.register(PacketShutdown.class);
+        kryo.register(PacketNudge.class);
 
         kryo.register(PacketInitRound.class);
         kryo.register(PacketGamePause.class);
@@ -42,6 +43,7 @@ public class Network {
         kryo.register(PacketPickPowerUp.class);
     }
 
+    // General debug messages used in the preliminary design
     public static class PacketDebugAnnouncement {
         private String msg;
         public PacketDebugAnnouncement(){}
@@ -54,11 +56,23 @@ public class Network {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Universal triggers from server to connected clients
+    // Governs state when clients are in LOBBY & GAME
+
+    // Trigger closure of LobbyScreen
+    public static class PacketNudge{
+        public PacketNudge() {
+        }
+    }
+
+    // Trigger closure of LobbyScreen
     public static class PacketShutdown {
         public PacketShutdown() {
         }
     }
 
+    // Trigger gamePause state to/from client
     public static class PacketGamePause {
         public boolean gamePaused;
         public PacketGamePause() {
@@ -68,7 +82,8 @@ public class Network {
         }
     }
 
-    public static class PacketGameEnd { // Server to trigger GameEnd state, Client to reply PlayAgain Intentions
+    // Server to trigger GameEnd state, Client to reply PlayAgain Intentions
+    public static class PacketGameEnd {
         public boolean playAgain;
         public PacketGameEnd() {
         }
@@ -77,6 +92,7 @@ public class Network {
         }
     }
 
+    // Server's state on readiness to StartGame(e.g. 2 players connected)
     public static class PacketReinitLobby {
         public boolean serverReady;
         public PacketReinitLobby() {
@@ -86,6 +102,7 @@ public class Network {
         }
     }
 
+    // Update of players connected
     public static class PacketPlayerJoinLeave {
         public int id;
         public int connectedClients;
@@ -96,6 +113,23 @@ public class Network {
         }
     }
 
+    // Trigger to procced to Game from lobby screen
+    public static class PacketInitRound {
+        public boolean initiate;
+        public PacketInitRound(){}
+        public PacketInitRound(boolean initiate){
+            this.initiate = initiate;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // IN-GAME PACKETS
+    // TYPES:
+    // Assignments - Server sided logic that dictates clients states
+    // Updates/Trigger - May come from client(e.g. drop ball, player location),
+    //  and the server serves as a relay to all clients
+
+    // Assignment of connection id to player
     public static class PacketAddPlayer {
         public int id;
         public int teamNumber;
@@ -108,6 +142,7 @@ public class Network {
         }
     }
 
+    // Slow update of player states
     public static class PacketPlayerState {
         public int id;
         public Vector2 position;
@@ -120,6 +155,7 @@ public class Network {
         }
     }
 
+    // Fast update of player states
     public static class PacketPlayerUpdateFast {
         public int id;
         public Vector2 movement;
@@ -130,6 +166,7 @@ public class Network {
         }
     }
 
+    // Assignment of ball into game
     public static class PacketAddBall {
         public Vector2 position;
         public PacketAddBall() {}
@@ -138,6 +175,7 @@ public class Network {
         }
     }
 
+    // Slow update of ball state
     public static class PacketBallState {
         public Vector2 position;
         public Float angle;
@@ -150,6 +188,7 @@ public class Network {
         }
     }
 
+    // Fast update of ball state
     public static class PacketBallUpdateFast {
         public Vector2 movement;
         public PacketBallUpdateFast(){};
@@ -158,14 +197,7 @@ public class Network {
         }
     }
 
-    public static class PacketInitRound {
-        public boolean initiate;
-        public PacketInitRound(){}
-        public PacketInitRound(boolean initiate){
-            this.initiate = initiate;
-        }
-    }
-
+    // Trigger to client that ball has dropped
     public static class PacketDropBall {
         public int id;
         public Vector2 lastDirection; // For the server
@@ -179,6 +211,7 @@ public class Network {
         }
     }
 
+    // Assignment of power up into game
     public static class PacketAddPowerUp {
         public int type;
         public Vector2 position;
@@ -191,6 +224,8 @@ public class Network {
             this.type = type;
         }
     }
+
+    // Assignment of power up to player
     public static class PacketPickPowerUp {
         public int playerId;
         public int type;
@@ -206,6 +241,8 @@ public class Network {
             this.powerUpId = powerUpId;
         }
     }
+
+    // Trigger use of power up
     public static class PacketUsePowerUp {
         public int id;
         public int generatedChoice;
@@ -216,7 +253,7 @@ public class Network {
         }
     }
 
-
+    // Update holder of ball
     public static class PacketSetHoldingPlayer {
         public int id;
         public PacketSetHoldingPlayer() {}
@@ -225,6 +262,7 @@ public class Network {
         }
     }
 
+    // Update of team scores
     public static class PacketTeamScores {
         public int scoreA;
         public int scoreB;

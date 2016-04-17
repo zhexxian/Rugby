@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.forofour.game.gameobjects.Player;
+import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.tutorialMode.TutorialStates;
@@ -63,6 +64,8 @@ public class GameServer {
                     }
                     server.sendToAllTCP(new Network.PacketPlayerJoinLeave(-1, map.getPlayersConnected().size()));
 
+                } else if(o instanceof Network.PacketNudge) {
+                    AssetLoader.nudgeSound.play(GameConstants.SOUND_VOLUME);
                 } else if (o instanceof Network.PacketInitRound) {
                     Network.PacketInitRound packet = (Network.PacketInitRound) o;
                     Gdx.app.log("GameServer", " initiated player" + c.getID());

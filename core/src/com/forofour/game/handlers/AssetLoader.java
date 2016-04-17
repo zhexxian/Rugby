@@ -72,6 +72,8 @@ public class AssetLoader {
     public static Music ingameMusic;
     public static Sound powerUpSound;
 
+    public static Sound nudgeSound;
+
     public static void load() {
         //splash screen
         splash = new Texture("Team 404.png");
@@ -241,6 +243,8 @@ public class AssetLoader {
         fartBoostSound = Gdx.audio.newSound(Gdx.files.internal("data/fart1.wav"));
         ingameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/ingame.wav"));
         powerUpSound = Gdx.audio.newSound(Gdx.files.internal("data/powerup.wav"));
+
+        nudgeSound = fartBoostSound; // TODO: Replace with anoter sound
 
     }
 

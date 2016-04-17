@@ -11,7 +11,7 @@ import com.badlogic.gdx.Gdx;
 public class GameConstants {
     //game screen size
     public static float GAME_WIDTH = 160;
-    public static float GAME_HEIGHT;
+    public static float GAME_HEIGHT = 90;
 
     public static float SCALE_POS, RENDER_POS_SCALE, RENDER_RADIUS_SCALE;
 
@@ -37,7 +37,7 @@ public class GameConstants {
 
     public static void init() {
         GameConstants.SCALE_POS = Gdx.graphics.getWidth() / GameConstants.GAME_WIDTH; //scale factor
-        GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS; //calculated game height
+//        GameConstants.GAME_HEIGHT = Gdx.graphics.getHeight() / GameConstants.SCALE_POS; //calculated game height
         PLAYER_POSITION[0][0] = 10; PLAYER_POSITION[0][1] = 10;
         PLAYER_POSITION[1][0] = 150; PLAYER_POSITION[1][1] = 10;
         PLAYER_POSITION[2][0] = 10; PLAYER_POSITION[2][1] = 80;
