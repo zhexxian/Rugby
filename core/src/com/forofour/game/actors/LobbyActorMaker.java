@@ -100,7 +100,7 @@ public class LobbyActorMaker {
         buttonNudgeHost.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
                 GameConstants.GAME_HEIGHT / 2 - BUTTON_HEIGHT / 2);
 
-        stage.addActor(lobbyBg);
+//        stage.addActor(lobbyBg);
         stage.addActor(playerRed1);
         stage.addActor(playerRed2);
         stage.addActor(playerBlue1);

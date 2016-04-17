@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AssetLoader {
 
     // Pre-game Textures
-    public static Texture splash;
+    public static Texture splash, lobbyBg;
     public static Texture menu;
     public static Texture tutorialUp, tutorialDown, hostGameUp, joinGameUp, hostGameDown, joinGameDown;
     public static Texture volumeOn, volumeOff;
@@ -103,6 +103,9 @@ public class AssetLoader {
         volumeOff = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/Sound-off.png"));
         volumeRegionOn = new TextureRegion(volumeOn);
         volumeRegionOff = new TextureRegion(volumeOff);
+
+        //lobby background
+        lobbyBg = new Texture(Gdx.files.internal("sprites/Design 2/Waiting screen/waiting-screen-2.png"));
 
         //game background
         bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2.png"));
