@@ -82,6 +82,8 @@ public class AssetLoader {
     public static Music ingameMusic;
     public static Sound powerUpSound;
 
+    public static Sound confuseSound;
+
     public static Sound nudgeSound;
 
     // Function that loads all the assets
@@ -281,6 +283,7 @@ public class AssetLoader {
         nudgeSound = fartBoostSound; // TODO: Replace with another sound
         // TODO: Include music for lobbyScreen
         // TODO: Include sounds for the powerUp effects
+        confuseSound = Gdx.audio.newSound(Gdx.files.internal("sound/confuse.wav"));
         // TODO: Include music for endGame screen(Winner/Loser)
 
     }

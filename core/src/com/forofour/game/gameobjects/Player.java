@@ -254,6 +254,7 @@ public class Player {
                     p.activateSlowEffect();
             } else if (powerUpType == 2) { // CONFUSION - Only to opposing team members
                 // TODO: Add confused effect sound
+                AssetLoader.confuseSound.play();
                 for(Player p : otherTeam.getTeamList())
                     p.activateConfusionEffect(generatedChoice);
             } else if (powerUpType == 3) { // Invisibility - To self
