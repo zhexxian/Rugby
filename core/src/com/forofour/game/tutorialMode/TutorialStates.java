@@ -34,6 +34,8 @@ public class TutorialStates {
     private boolean pickedPowerUp = false;
     private boolean usedPowerUp = false;
 
+    private boolean showBall = false;
+
     private boolean spawnedPowerUp = false;
     private boolean quit = false;
 
@@ -115,6 +117,8 @@ public class TutorialStates {
     public boolean movedPlayer() {
         return movedPlayer;
     }
+
+    public boolean getShowBall(){ return showBall;}
 
     public boolean isComplete() {
 //        if(movedPlayer && boostedPlayer && pickedBall && tossedBall && pickedPowerUp && usedPowerUp) {
