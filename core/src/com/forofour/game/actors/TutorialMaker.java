@@ -47,7 +47,7 @@ public class TutorialMaker {
         wrapper.setSize(0.07f*GameConstants.GAME_WIDTH, 0.07f*GameConstants.GAME_WIDTH);
 
         // set button position (centralized horizontally)
-        wrapper.setPosition(0.90f*scalePosX*(0.75f*GameConstants.GAME_WIDTH), scalePosY*0.08f*GameConstants.GAME_HEIGHT);
+        wrapper.setPosition(0.95f*scalePosX*(0.75f*GameConstants.GAME_WIDTH), scalePosY*0.08f*GameConstants.GAME_HEIGHT);
         wrapper.setScale(scalePosX, scalePosY);
 
         return wrapper;
