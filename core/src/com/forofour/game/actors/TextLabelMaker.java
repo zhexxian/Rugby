@@ -2,7 +2,9 @@ package com.forofour.game.actors;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 
@@ -26,6 +28,8 @@ public class TextLabelMaker {
     private static Label.LabelStyle textStyle;
     private static Label textLabel;
 
+    private static Image infinityImage;
+
     public static Label getTimeLabel(GameClient client) {
         textFont = new BitmapFont(true);
 
@@ -34,6 +38,15 @@ public class TextLabelMaker {
 
         textLabel = new Label("", textStyle);
         return textLabel;
+    }
+
+    public static Image getInfinityImage(){
+        infinityImage = new Image(AssetLoader.infinity);
+        infinityImage.setSize(6 , 3);
+        infinityImage.setPosition((POS_X1-3) * GameConstants.SCALE_POS, POS_Y1 * GameConstants.SCALE_POS);
+        infinityImage.setScale(1 * GameConstants.SCALE_POS);
+        infinityImage.setVisible(false);
+        return infinityImage;
     }
 
     // Necessary wrapper to scale and position the Actor in different screen sizes
@@ -54,6 +67,15 @@ public class TextLabelMaker {
         wrapper.setTransform(true);
         wrapper.setPosition(POS_X2 * GameConstants.SCALE_POS, POS_Y2 * GameConstants.SCALE_POS);
         wrapper.setScale(SIZE_SCALE2 * GameConstants.SCALE_POS, -SIZE_SCALE2 * GameConstants.SCALE_POS); // To flip along the horizontal axis
+
+        return wrapper;
+    }
+
+    public static Container wrapInfinityTime(Image img) {
+        Container wrapper = new Container(img);
+        wrapper.setTransform(true);
+        wrapper.setPosition(POS_X1 * GameConstants.SCALE_POS, POS_Y1 * GameConstants.SCALE_POS);
+        wrapper.setScale(SIZE_SCALE1 * GameConstants.SCALE_POS, -SIZE_SCALE1 * GameConstants.SCALE_POS); // To flip along the horizontal axis
 
         return wrapper;
     }

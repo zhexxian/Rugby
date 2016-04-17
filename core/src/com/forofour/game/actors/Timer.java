@@ -20,6 +20,8 @@ public class Timer {
     private boolean paused = false;
     private long startPause = 0;
 
+    private static boolean infinityMode = false;
+
     long elapsed;
 
     public Timer(){
@@ -27,6 +29,11 @@ public class Timer {
     public Timer(int gameDuration){
         this.gameDuration = gameDuration;
         this.endTime = gameDuration * 1000;
+        infinityMode = false;
+    }
+
+    public boolean getInfinityMode() {
+        return infinityMode;
     }
 
     public void setGameDuration(int duration) {
@@ -79,6 +86,7 @@ public class Timer {
         this.paused = false;
 
         this.done = false;
+        this.infinityMode = false;
     }
 
     public void update() {
@@ -92,12 +100,19 @@ public class Timer {
             elapsed = (stopTime - startTime);
         }
 
+        if(infinityMode)
+            elapsed = 0;
+
 //        Gdx.app.log("Timer",elapsed + " " + endTime*nanosPerMilli);
 
         if(elapsed >= endTime * nanosPerMilli){
             stop();
             Gdx.app.log("Done", "True");
         }
+    }
+
+    public void setInfinityMode(){
+        infinityMode = true;
     }
 
     // Get elapsed milliseconds
@@ -128,6 +143,7 @@ public class Timer {
 
     // Helper method splits time into minutes, seconds, hundredths, and formats
     public static String formatTime(final long millis) {
+
         int minutesComponent = (int)(millis / (1000 * 60));
         int secondsComponent = (int)((millis / 1000) % 60);
         int hundredthsComponent = (int)((millis / 10) % 100);

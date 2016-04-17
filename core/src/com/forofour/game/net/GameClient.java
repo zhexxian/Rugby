@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.forofour.game.handlers.AssetLoader;
-import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.tutorialMode.TutorialStates;
 
@@ -119,6 +117,9 @@ public class GameClient {
                     if(!packet.isHeld) {
                         map.updateBallState(packet.position, packet.angle);
                         map.updateDropBall();
+                    }
+                    else if(map.getBall().getHoldingPlayer() != null){ // If ball is held, set it to position of holding player
+                        map.updateBallState(map.getBall().getHoldingPlayer().getBody().getPosition(), packet.angle);
                     }
                 }
                 // Fast update of ball movement

@@ -46,12 +46,12 @@ public class MainOverlay extends Stage {
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton, buttonSlot, powerSlot;
     private Label globalLabel, teamLabel;
-    private Image scoreLine, scoreA, scoreB;
+    private Image scoreLine, scoreA, scoreB, infinity;
     private Container boostContainer;
 
     // GameEnd Components
-    private static Texture youLose, youWin;
-    private static Image youLoseImage,youWinImage;
+    private static Texture youLoseRed,youLoseBlue, youWinRed,youWinBlue;
+    private static Image youLoseRedImage,youLoseBlueImage,youWinRedImage,youWinBlueImage;
     private Texture buttonPlayAgainTexture, buttonMainMenuTexture;
     private Image buttonPlayAgain, buttonMainMenu;
 
@@ -89,6 +89,7 @@ public class MainOverlay extends Stage {
         boostButton = ButtonMaker.getBoostButton(client, tutorialStates);
         tossButton = ButtonMaker.getTossButton(client);
         globalLabel = TextLabelMaker.getTimeLabel(client);
+        infinity = TextLabelMaker.getInfinityImage();
         teamLabel = TextLabelMaker.getTimeLabel(client);
         buttonSlot = PowerUpSlotMaker.getButtonSlot();
         powerSlot = PowerUpSlotMaker.getPowerSlot(client);
@@ -102,6 +103,7 @@ public class MainOverlay extends Stage {
         addActor(PowerUpSlotMaker.wrap2(buttonSlot));
         addActor(boostContainer);
         addActor(ButtonMaker.wrap2(tossButton));
+        addActor(infinity);
         addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
         addActor(PowerUpSlotMaker.wrap1(powerSlot));
@@ -111,10 +113,14 @@ public class MainOverlay extends Stage {
         addActor(scoreB);
 
         // make & add End Game components to the stage
-        youLose = new Texture("sprites/Design 2/Game Screen/end game/blue-lose.png");
-        youWin = new Texture("sprites/Design 2/Game Screen/end game/red-win.png");
-        youLoseImage = new Image(youLose);
-        youWinImage = new Image(youWin);
+        youLoseRed = new Texture("sprites/Design 2/Game Screen/end game/red-lose.png");
+        youLoseBlue = new Texture("sprites/Design 2/Game Screen/end game/blue-lose.png");
+        youWinRed = new Texture("sprites/Design 2/Game Screen/end game/red-win.png");
+        youWinBlue = new Texture("sprites/Design 2/Game Screen/end game/blue-win.png");
+        youLoseRedImage = new Image(youLoseRed);
+        youLoseBlueImage = new Image(youLoseBlue);
+        youWinRedImage = new Image(youWinRed);
+        youWinBlueImage = new Image(youWinBlue);
 
         buttonPlayAgainTexture = new Texture("sprites/Design 2/Game Screen/end game/rematch-button.png");
         buttonMainMenuTexture = new Texture("sprites/Design 2/Game Screen/end game/menu-button.png");
@@ -155,8 +161,10 @@ public class MainOverlay extends Stage {
             }
         });
 
-        addActor(GameOverMaker.wrapBlackLayer(youLoseImage));
-        addActor(GameOverMaker.wrapBlackLayer(youWinImage));
+        addActor(GameOverMaker.wrapBlackLayer(youLoseRedImage));
+        addActor(GameOverMaker.wrapBlackLayer(youLoseBlueImage));
+        addActor(GameOverMaker.wrapBlackLayer(youWinRedImage));
+        addActor(GameOverMaker.wrapBlackLayer(youWinBlueImage));
         addActor(GameOverMaker.wrapRematchButton(buttonPlayAgain));
         addActor(GameOverMaker.wrapMenuButton(buttonMainMenu));
 
@@ -208,9 +216,6 @@ public class MainOverlay extends Stage {
 
         // hide tutorial overlays
         hideTutorialOverlay();
-
-
-
     }
 
     public GameClient getClient(){
@@ -304,8 +309,10 @@ public class MainOverlay extends Stage {
     private void hideEndgameOverlay() {
         buttonPlayAgain.setVisible(false);
         buttonMainMenu.setVisible(false);
-        youLoseImage.setVisible(false);
-        youWinImage.setVisible(false);
+        youLoseRedImage.setVisible(false);
+        youLoseBlueImage.setVisible(false);
+        youWinRedImage.setVisible(false);
+        youWinBlueImage.setVisible(false);
     }
 
     // Only shown during gameEnd.
@@ -331,22 +338,22 @@ public class MainOverlay extends Stage {
         // EndGame Actors Show/Hide logic
         if(player.getTeamId()==1){
             if(teamA.getScore()>teamB.getScore()){
-                youWinImage.setVisible(true);
+                youWinBlueImage.setVisible(true);
             }
             else{
-                youLoseImage.setVisible(true);
+                youLoseBlueImage.setVisible(true);
             }
         }
         else if(player.getTeamId()==2){
             if(teamB.getScore()>teamA.getScore()){
-                youWinImage.setVisible(true);
+                youWinRedImage.setVisible(true);
             }
             else{
-                youLoseImage.setVisible(true);
+                youLoseRedImage.setVisible(true);
             }
         }
         else {
-            youLoseImage.setVisible(true);
+            youLoseBlueImage.setVisible(true);
         }
     }
 
@@ -410,6 +417,7 @@ public class MainOverlay extends Stage {
         boostButton.setVisible(false);
         tossButton.setVisible(false);
         powerSlot.setVisible(false);
+        infinity.setVisible(false);
         globalLabel.setVisible(false);
         teamLabel.setVisible(false);
 
@@ -421,9 +429,19 @@ public class MainOverlay extends Stage {
         touchpad.setVisible(true);
         buttonSlot.setVisible(true);
         powerSlot.setVisible(true);
-        globalLabel.setVisible(true);
-        teamLabel.setVisible(false);
+//        globalLabel.setVisible(true);
+        if(globalTime != null) {
+            if(globalTime.getInfinityMode()) {
+                globalLabel.setVisible(false);
+                infinity.setVisible(true);
+            }
+            else {
+                globalLabel.setVisible(true);
+                infinity.setVisible(false);
+            }
+        }
 
+        teamLabel.setVisible(false);
         scoreLine.setVisible(true);
         scoreA.setVisible(true);
         scoreB.setVisible(true);
@@ -488,6 +506,7 @@ public class MainOverlay extends Stage {
             } else {
                 tossButton.setVisible(false);
                 boostButton.setVisible(true);
+                ButtonMaker.relativeScale(boostContainer, 1);
             }
         }
         else {
