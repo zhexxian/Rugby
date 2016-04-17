@@ -193,32 +193,13 @@ public class MainOverlay extends Stage {
 
     // Only shown during gameEnd.
     private void showEndgameOverlay(boolean isHost, boolean hostReady) {
+        Gdx.app.log("P"+player.getId(), "Teamid"+ player.getTeamId()
+                + " TeamAid" + teamA.getId() + " TeamAScore" + teamA.getScore()
+                + " TeamBid" + teamB.getId() + " TeamBScore" + teamB.getScore());
         if(isHost) {
             // Host will see both choices upon game end
             buttonPlayAgain.setVisible(true);
             buttonMainMenu.setVisible(true);
-            // EndGame Actors Show/Hide logic
-            //teamA = new Team(24); teamB = new Team(369);
-            if(player.getTeamId()==24){
-                if(teamA.getScore()>teamB.getScore()){
-                    youWinImage.setVisible(true);
-                }
-                else{
-                    youLoseImage.setVisible(true);
-                }
-            }
-            else if(player.getTeamId()==369){
-                if(teamB.getScore()>teamA.getScore()){
-                    youWinImage.setVisible(true);
-                }
-                else{
-                    youLoseImage.setVisible(true);
-                }
-            }
-            else {
-                youLoseImage.setVisible(true);
-            }
-
 //            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
         }
         else {
@@ -228,7 +209,27 @@ public class MainOverlay extends Stage {
                 buttonPlayAgain.setVisible(true);
             }
             buttonMainMenu.setVisible(true);
-            youWinImage.setVisible(true);
+        }
+
+        // EndGame Actors Show/Hide logic
+        if(player.getTeamId()==1){
+            if(teamA.getScore()>teamB.getScore()){
+                youWinImage.setVisible(true);
+            }
+            else{
+                youLoseImage.setVisible(true);
+            }
+        }
+        else if(player.getTeamId()==2){
+            if(teamB.getScore()>teamA.getScore()){
+                youWinImage.setVisible(true);
+            }
+            else{
+                youLoseImage.setVisible(true);
+            }
+        }
+        else {
+            youLoseImage.setVisible(true);
         }
     }
 

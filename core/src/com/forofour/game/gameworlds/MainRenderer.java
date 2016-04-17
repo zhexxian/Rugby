@@ -163,8 +163,8 @@ public class MainRenderer {
                 for(Animation animation : AssetLoader.TeamAnimationA){
                     animation.setFrameDuration(1f/p.getBody().getLinearVelocity().len()*5); // Faster animation when boosting
 
-                    System.out.println("Player velocity: " + p.getBody().getLinearVelocity().len());
-                    System.out.println("Frame duration: " + 1f/p.getBody().getLinearVelocity().len()*5);
+//                    System.out.println("Player velocity: " + p.getBody().getLinearVelocity().len());
+//                    System.out.println("Frame duration: " + 1f/p.getBody().getLinearVelocity().len()*5);
                 }
                 /*if(p.isBoosting()) {
                     for(Animation animation : AssetLoader.TeamAnimationA){
@@ -255,7 +255,10 @@ public class MainRenderer {
 
             TextureRegion playerDirection;
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
-                if(p.isBoosting()) {
+                for(Animation animation : AssetLoader.TeamAnimationB) {
+                    animation.setFrameDuration(1f / p.getBody().getLinearVelocity().len() * 5); // Faster animation when boosting
+                }
+                /*if(p.isBoosting()) {
                     for(Animation animation : AssetLoader.TeamAnimationB){
                         animation.setFrameDuration(0.1f);
                     }
@@ -264,7 +267,7 @@ public class MainRenderer {
                     for(Animation animation : AssetLoader.TeamAnimationB){
                         animation.setFrameDuration(0.2f);
                     }
-                }
+                }*/
 
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerAnimationDownB.getKeyFrame(runTime);
@@ -303,8 +306,8 @@ public class MainRenderer {
                 batcher.draw(AssetLoader.powerUpEffectRegion2, // Texture
                         p.getBody().getPosition().x,
                         p.getBody().getPosition().y,
-                        p.getRadius()-0.5f, // Offset would be the difference of radius from 2
-                        p.getRadius()*2-0.5f,
+                        p.getRadius() - 0.5f, // Offset would be the difference of radius from 2
+                        p.getRadius() * 2 - 0.5f,
                         p.getRadius(), // width
                         p.getRadius(), // height
                         p.getRadius(), // scale
