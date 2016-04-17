@@ -81,11 +81,8 @@ public class AssetLoader {
     public static Sound fartBoostSound;
     public static Music ingameMusic;
     public static Sound powerUpSound;
-<<<<<<< HEAD
-=======
-    public static Sound slowSound;
+
     public static Sound tossSound;
->>>>>>> d9d57522bf149486860152dc55a57921f1f84b5c
 
     public static Sound menuButtonSound;
 
