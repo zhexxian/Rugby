@@ -131,7 +131,7 @@ public class GameServer {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
 //                    Gdx.app.log("GameServer", "Movement Updates for player" + "-" + packet.id + "-" + packet.movement);
                     map.updatePlayerMovement(packet.id, packet.movement);
-                    server.sendToAllTCP(new Network.PacketPlayerUpdateFast(packet.id, packet.movement));
+//                    server.sendToAllTCP(new Network.PacketPlayerUpdateFast(packet.id, packet.movement));
                 }
                 // Trigger update : Player toss of ball
                 else if (o instanceof Network.PacketDropBall) {

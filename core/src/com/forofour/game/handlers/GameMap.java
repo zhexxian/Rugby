@@ -161,7 +161,7 @@ public class GameMap {
             ball.update(delta);
 
 
-//            if(runTime - lastMoveTime > 0.05) {
+//            if(runTime - lastMoveTime > 0.03) {
 //                client.sendMessageUDP(new Network.PacketPlayerUpdateFast(player.getId(), player.getBody().getLinearVelocity()));
 //                lastMoveTime = runTime;
 //            }
@@ -203,16 +203,14 @@ public class GameMap {
 
                 addTeamScores(delta); // Add score to ball holder
 
-                if(runTime - lastMoveTime > 0.08) {
-                    // FREQUENT UPDATE TO CLIENTS
-//                    for (Player p : playerHash.values()) {
-//                        serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity())); // Every player's linear velocity
-//                    }
+                // FREQUENT UPDATE TO CLIENTS
+                for(Player p : playerHash.values()) {
+                    serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity())); // Every player's linear velocity
+                }
 //                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
 //                if(!ball.isHeld())
-                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity())); // Ball's linear velocity
-                    lastMoveTime = runTime;
-                }
+                serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity())); // Ball's linear velocity
+
                 // PERIODIC UPDATE TO CLIENTS(100ms)
                 if(runTime - lastSentTime > 0.1) {
 //                    if(!ball.isHeld())
