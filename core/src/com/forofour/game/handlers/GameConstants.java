@@ -7,7 +7,6 @@ package com.forofour.game.handlers;
 
 import com.badlogic.gdx.Gdx;
 
-
 public class GameConstants {
     //game screen size
     public static float GAME_WIDTH = 160;

@@ -10,14 +10,18 @@ import com.forofour.game.net.Network;
 import com.forofour.game.screens.MenuScreen;
 
 /**
- * Created by seanlim on 4/4/2016.
+ * Secondary input capture to change the states of the game
+ *
+ * Host - Primary input capture to debug and sending/receiving of packets
+ * Non-Host - Defines back key to return to the Main Menu screen
+ *
  */
-public class ClientInputHandler extends InputMultiplexer {
+public class InputHandler extends InputMultiplexer {
     private MainOverlay overlay;
     private GameClient client;
     private Player player;
 
-    public ClientInputHandler(MainOverlay overlay){
+    public InputHandler(MainOverlay overlay){
         super(overlay); // Assign Stage adapter as the base input adapter
         this.overlay = overlay;
         this.client = overlay.getClient();
@@ -79,6 +83,8 @@ public class ClientInputHandler extends InputMultiplexer {
             Gdx.app.log("Keypressed S", "UsePowerUp Sent");
         }
 
+        // RETURN TO MAINMENU
+        // Only key that is captured by the client
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.BACKSPACE) {
 //            if(server != null) {
 //                server.shutdown(true);
@@ -89,6 +95,7 @@ public class ClientInputHandler extends InputMultiplexer {
             ((MyGdxGame) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
         }
 
+        // PLAYER BOOST/TOSS Button press
         if(player != null) {
             if(keycode == Input.Keys.T){
                 player.dropBall();

@@ -10,7 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
- * Created by seanlim on 27/2/2016.
+ * Master container of the game Assets:
+ * Images and Sounds of the various Screens(Splash, Menu, Lobby, Game)
  */
 public class AssetLoader {
 
@@ -74,6 +75,7 @@ public class AssetLoader {
 
     public static Sound nudgeSound;
 
+    // Function that loads all the assets
     public static void load() {
         //splash screen
         splash = new Texture("Team 404.png");
@@ -243,8 +245,10 @@ public class AssetLoader {
         fartBoostSound = Gdx.audio.newSound(Gdx.files.internal("data/fart1.wav"));
         ingameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/ingame.wav"));
         powerUpSound = Gdx.audio.newSound(Gdx.files.internal("data/powerup.wav"));
-
-        nudgeSound = fartBoostSound; // TODO: Replace with anoter sound
+        nudgeSound = fartBoostSound; // TODO: Replace with another sound
+        // TODO: Include music for lobbyScreen
+        // TODO: Include sounds for the powerUp effects
+        // TODO: Include music for endGame screen(Winner/Loser)
 
     }
 

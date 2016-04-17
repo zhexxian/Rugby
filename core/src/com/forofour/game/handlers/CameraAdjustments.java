@@ -12,9 +12,10 @@ import com.forofour.game.gameobjects.Player;
 public class CameraAdjustments {
     private OrthographicCamera cam;
     private Player myPlayer; // player to tie the view to
+    private Vector2 playerPos; // pos of player
 
-    private Vector2 playerPos;
-
+    // Limits of the camera view
+    // Bottom to extend beyond the game field
     private float mapLeft = 0;
     private float mapRight = GameConstants.GAME_WIDTH;
     private float mapTop = 0;

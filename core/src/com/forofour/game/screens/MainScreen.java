@@ -6,14 +6,13 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.forofour.game.MyGdxGame;
 import com.forofour.game.gameworlds.MainRenderer;
 import com.forofour.game.handlers.AssetLoader;
-import com.forofour.game.handlers.ClientInputHandler;
+import com.forofour.game.handlers.InputHandler;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.handlers.MainOverlay;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.GameServer;
 import com.forofour.game.net.Network;
-import com.forofour.game.tutorialMode.TutorialStates;
 
 /**
  * Sequence of events :
@@ -50,7 +49,7 @@ public class MainScreen implements Screen {
             overlay = new MainOverlay(isHost, client, server.getTutorialStates());
         else
             overlay = new MainOverlay(isHost, client);
-        Gdx.input.setInputProcessor(new ClientInputHandler(overlay)); // Stage itself is an inputAdapter
+        Gdx.input.setInputProcessor(new InputHandler(overlay)); // Stage itself is an inputAdapter
 
 
         AssetLoader.ingameMusic.setLooping(true);

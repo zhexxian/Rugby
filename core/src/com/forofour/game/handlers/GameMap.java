@@ -23,37 +23,46 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created by seanlim on 4/4/2016.
+ * Mapping of all game states/objects required for game play.
+ * Includes states that signify server is ready, closed, paused
  */
 public class GameMap {
 
     private GameServer server;
     private GameClient client;
     private boolean isHost;
-    private String tag;
-    private float runTime;
+    private String tag; // for debug purposes
+
+    // TimeStamps that allows periodic sending of packets
+    private float runTime; // Global runTime since game has started
     private float lastSentTime;
     private float lastPlayerCollisionTime;
 
+    // LobbyScreen objects
     private Map<Integer,Boolean> playersConnected = new HashMap<Integer, Boolean>();
-    private boolean lobbyFilled = false;
+    private boolean lobbyFilled = false; // Server triggered
     private int numberOfBabyFaces;
 
-    private World box2d;
-    private Wall wallTop, wallBottom, wallLeft, wallRight;
-    private Player player;
-    private Ball ball;
-    private CopyOnWriteArrayList<PowerUp> powerUpList;
-    private CopyOnWriteArrayList<PowerUp> powerUpRemoveList;
-    private int powerUpCount;
+    // In-Game Object/States
+    private World box2d; // Physics world that exists in every gameInstance(Resync'd by the the server periodically)
+    private Wall wallTop, wallBottom, wallLeft, wallRight; // Borders
+    private Player player;  // Reference to specific PlayerObject that the Client will control
+    private Ball ball; // Reference to the MilkBottle
 
-    private HashMap<Integer, Player> playerHash;
-    private Team teamA, teamB;
+    // PowerUp
+    private CopyOnWriteArrayList<PowerUp> powerUpList; // List of PowerUp packages that's has yet to be picked
+    private CopyOnWriteArrayList<PowerUp> powerUpRemoveList; // REQUIRED list that is emptied OUTSIDE of the Box2d World loop
+    private int powerUpCount;  // Count of total PowerUp packages spawned
 
-    private Timer globalTime;
+    private HashMap<Integer, Player> playerHash; // Global listing of players
+    private Team teamA, teamB; // Team listing of players
+
+    private Timer globalTime; // Global time
+
+    // States
     private boolean gameInitialized;
     public boolean shutdown, gameInitiated, gamePaused, gameEnd;
-    public int gameDuration = 120;
+    public int gameDuration = 120; // SETTING FOR GAME DURATION, OVERWRITTEN by Server
 
     public GameMap(GameServer server){
         this(true);
@@ -76,11 +85,15 @@ public class GameMap {
         lastPlayerCollisionTime = 0; // Used for periodic collision checks;
         this.isHost = isHost;
 
+        // Instantiating of World(w/ gravity to Zero, and no simulation for inactive bodies)
         box2d = new World(new Vector2(0f, 0f), true);
+        addWallBoundaries(); // adding of Wall boundaries
+
+        // SERVER-SIDED Collision Detection
         if(isHost)
             box2d.setContactListener(new ListenerClass(this));
-        addWallBoundaries();
 
+        // Instantiating of the lists/hash
         playerHash = new HashMap<Integer, Player>();
         powerUpList = new CopyOnWriteArrayList<PowerUp>();
         powerUpRemoveList = new CopyOnWriteArrayList<PowerUp>();
@@ -92,6 +105,7 @@ public class GameMap {
         globalTime = new Timer(gameDuration);
     }
 
+    // Triggered when players decide to PlayAgain, after reentering LobbyScreen
     public void restart() {
         gameInitialized = false;
         gamePaused = false;
@@ -170,16 +184,18 @@ public class GameMap {
                 globalTime.start();
             }
             else {
-                addTeamScores(delta);
+                addTeamScores(delta); // Add score to ball holder
 
+                // FREQUENT UPDATE TO CLIENTS
                 for(Player p : playerHash.values()) {
-                    serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity()));
+                    serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity())); // Every player's linear velocity
                 }
 //                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
 //                if(!ball.isHeld())
-                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity()));
+                serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity())); // Ball's linear velocity
 
-                if(runTime - lastSentTime > 0.1) { // Resync every 100ms
+                // PERIODIC UPDATE TO CLIENTS(100ms)
+                if(runTime - lastSentTime > 0.1) {
 //                    if(!ball.isHeld())
                         serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0, ball.isHeld())); // Always send ball location
                     if(!playersConnected.containsKey(false)) {
@@ -191,6 +207,7 @@ public class GameMap {
         }
     }
 
+    // called OUTSIDE of Box2d world loop, to remove dead bodies
     public void sweepDeadBodies() {
         if(!powerUpRemoveList.isEmpty()) {
             for(PowerUp powerUp : powerUpRemoveList) {
@@ -202,6 +219,7 @@ public class GameMap {
         }
     }
 
+    // Updates the connection list and count when a new player connects to the lobby
     public boolean addConnection(int id){
         if(!lobbyFilled) {
             Gdx.app.log(tag, "Player " + id +  " joined the game");
@@ -216,6 +234,7 @@ public class GameMap {
         updatePlayersConnected();
     }
 
+    // Getting for the LobbyScreen to display connectedBabys count
     public void setNumberOfBabyFaces(int numberOfBabyFaces){
         this.numberOfBabyFaces = numberOfBabyFaces;
     }
@@ -228,6 +247,7 @@ public class GameMap {
         Gdx.app.log(tag, "playersConnected List" + playersConnected.toString());
         return playersConnected;
     }
+    // To update LobbyFilled state based on the connection count
     public void updatePlayersConnected() {
         if(playersConnected.size() == 4) {
             lobbyFilled = true;
@@ -242,6 +262,8 @@ public class GameMap {
         return box2d;
     }
 
+    // Assignment of players from server
+    // Control only if the rightful player
     public void addPlayer(boolean control, int id, int teamNo, Vector2 position, World box2d) {
         Player newPlayer = new Player(id, position, box2d, client);
         playerHash.put(id, newPlayer);
@@ -268,6 +290,7 @@ public class GameMap {
         return playerHash;
     }
 
+    // Assignment of ball by the Server
     public void addBall(Vector2 position, World box2d){
         ball = new Ball(position, box2d);
 
@@ -276,11 +299,14 @@ public class GameMap {
         return ball;
     }
 
+    // Assignment of powerUp package by the Server
     public synchronized int addPowerUp(Vector2 position, int type) {
         PowerUp powerUp = new PowerUp(position, type, ++powerUpCount, box2d);
         powerUpList.add(powerUp);
         return powerUp.getId();
     }
+    // Removal of PowerUp package by the server
+    // Triggered when server detects powerUp is picked
     public synchronized void removePowerUp(int id){
         for(PowerUp powerUp : powerUpList) {
             if(powerUp.getId() == id) {
@@ -309,6 +335,7 @@ public class GameMap {
         }
     }
 
+    // Logic to increment relevant team's score based on duration of holding ball
     public void addTeamScores(float delta) {
         //add scores
         if(teamA.getTeamList().contains(ball.getHoldingPlayer()))
@@ -323,34 +350,38 @@ public class GameMap {
     public synchronized void clientSendMessageUDP(Object msg) {
         client.sendMessageUDP(msg);
     }
-
     public synchronized void clientSendMessage(Object msg){
         client.sendMessage(msg);
     }
-
     public synchronized void serverSendMessage(Object msg){
         server.sendMessage(msg);
     }
 
+    // Periodic Updates from server to resync player locality and orientation
     public synchronized void updatePlayerState(int id, Vector2 position, float angle) {
         Player specificPlayer = playerHash.get(id);
         specificPlayer.getBody().setTransform(position, angle);
     }
 
+    // Quick updates from server to sync player movement velocity within each PhysicsWorld
     public synchronized void updatePlayerMovement(int id, Vector2 movement) {
         Player specificPlayer = playerHash.get(id);
         specificPlayer.getBody().setLinearVelocity(movement);
     }
+    // Trigger update from server when player Toss/Drops the ball
     public synchronized void updateDropBall(){
         ball.loseHoldingPlayer();
     }
+    // Trigger update from server when player Pick/Toss/Drops the ball
     public synchronized void updateHoldingPlayer(int id) {
         ball.setHoldingPlayer(playerHash.get(id));
     }
 
+    // Periodic Updates from server to resync ball locality and orientation
     public synchronized void updateBallState(Vector2 position, Float angle) {
         ball.getBody().setTransform(position, angle);
     }
+    // Quick updates from server to sync ball movement velocity within each PhysicsWorld
     public synchronized void updateBallMovement(Vector2 movement) {
         ball.getBody().setLinearVelocity(movement);
     }
@@ -386,7 +417,10 @@ public class GameMap {
             Body b = contact.getFixtureB().getBody();
             Gdx.app.log(tag, "Collision detected");
 
+            // Safety to ensure reference is present
             if(map.getBall() != null && map.getPlayerHash() != null) {
+
+                // BETWEEN PLAYER & BALL
                 if(!map.getBall().isHeld()) {
                     Gdx.app.log("Collision", "Ball is not held");
 
@@ -405,8 +439,10 @@ public class GameMap {
                     }
 
                 }
+
+                // Periodic check to ensure server does not overload with requests
                 else if(runTime - lastPlayerCollisionTime > 0.1){
-                    // TODO: Player collision should be between opposing team members only
+                    // BETWEEN PLAYER & PLAYER, iff either is Ball Holder
                     if (a.getUserData() instanceof Player && b.getUserData() instanceof Player) {
                         Player playerA = (Player) a.getUserData();
                         Player playerB = (Player) b.getUserData();
@@ -422,13 +458,16 @@ public class GameMap {
 //                    lastPlayerCollisionTime = runTime;
                 }
             }
-            if(map.getPlayer() != null && map.getPowerUpList() != null){
-                //Checks if player is in contact with powerup, if so, make powerup vanish and add power up to power up slot below
 
+            // Safety to ensure reference is present
+            if(map.getPlayer() != null && map.getPowerUpList() != null){
+
+                // BETWEEN PLAYER & POWERUP
                 if(a.getUserData() instanceof Player && b.getUserData() instanceof PowerUp){
+                    //if so, powerup gets destroyed and add power up to power up slot below
                     Player player = (Player) a.getUserData();
                     PowerUp powerUp = (PowerUp) b.getUserData();
-                    player.acquirePowerUp(powerUp.getType()); // TODO: Refactor to recognize Type of PowerUp
+                    player.acquirePowerUp(powerUp.getType());
                     Gdx.app.log(tag, "Player" + player.getId() + " Type" + powerUp.getType());
                     serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
 

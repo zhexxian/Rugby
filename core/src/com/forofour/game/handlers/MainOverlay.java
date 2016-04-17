@@ -28,12 +28,15 @@ import com.forofour.game.tutorialMode.TutorialStates;
 import java.util.ArrayList;
 
 /**
- * Created by seanlim on 4/4/2016.
+ * A subclass of Libgdx's scene2d Stage which in itself has a render
+ * Sole overlay that exist only when the GAME is in play(inc. end game state)
+ * All actors are included within the stage upon intialization. However only
+ *  relevant actors(Buttons, TimeLabels, Image, EndGameOverlay) are shown at
+ *  any time.
  */
 public class MainOverlay extends Stage {
 
     private boolean isHost;
-//    private GameServer server;
     private GameClient client;
 
     // HUD Components
@@ -49,15 +52,14 @@ public class MainOverlay extends Stage {
     private Texture buttonPlayAgainTexture, buttonMainMenuTexture;
     private Image buttonPlayAgain, buttonMainMenu;
 
+    // In-Game Components
     private boolean isInitialized;
     private Player player;
     private Ball ball;
     private Team teamA, teamB;
     private Timer globalTime;
 
-
-
-    // Tutorial States
+    // Tutorial States - only in tutorial mode is it instantiated
     private TutorialStates tutorialStates;
 
     public MainOverlay(final boolean isHost, final GameClient client){
@@ -137,8 +139,10 @@ public class MainOverlay extends Stage {
         addActor(GameOverMaker.wrapBlackLayer(youWinImage));
         addActor(GameOverMaker.wrapRematchButton(buttonPlayAgain));
         addActor(GameOverMaker.wrapMenuButton(buttonMainMenu));
+
+        // At start of game, endGame Overlays are not shown
         hideEndgameOverlay();
-        isInitialized = false;
+        isInitialized = false; // Triggered when server has assigned all required objects
     }
 
     public GameClient getClient(){
@@ -179,6 +183,7 @@ public class MainOverlay extends Stage {
         draw();
     }
 
+    // Not shown during game play
     private void hideEndgameOverlay() {
         buttonPlayAgain.setVisible(false);
         buttonMainMenu.setVisible(false);
@@ -186,6 +191,7 @@ public class MainOverlay extends Stage {
         youWinImage.setVisible(false);
     }
 
+    // Only shown during gameEnd.
     private void showEndgameOverlay(boolean isHost, boolean hostReady) {
         if(isHost) {
             // Host will see both choices upon game end
@@ -213,7 +219,6 @@ public class MainOverlay extends Stage {
                 youLoseImage.setVisible(true);
             }
 
-
 //            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
         }
         else {
@@ -227,6 +232,7 @@ public class MainOverlay extends Stage {
         }
     }
 
+    // Safety check to ensure all objects are assigned before Overlay is shown
     private void initialized() {
         player = client.getMap().getPlayer();
         teamA = client.getMap().getTeamA();
@@ -253,6 +259,8 @@ public class MainOverlay extends Stage {
         teamLabel.setVisible(true);
     }
 
+    // Touchpad is an actor in stage
+    // Requires capture to relay the inputs into the Player's movement
     private void captureTouchpad() {
         if (player.getConfusionEffectTime() > 0) {
             player.knobMove(-touchpad.getKnobPercentX(), touchpad.getKnobPercentY());
@@ -281,9 +289,10 @@ public class MainOverlay extends Stage {
             teamLabel.setText("No team score");
     }
 
+    // Check the states and show client control buttons(Toss/Boost/PowerUp)
     private void updateButtons() {
-        // Boost, Toss Buttons
         if(player != null) {
+            // Logic to show/hide toss/boost button
             if(player.hasBall()) {
                 tossButton.setVisible(true);
                 boostButton.setVisible(false);
