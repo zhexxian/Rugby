@@ -35,7 +35,7 @@ public class GameMap {
 
     // TimeStamps that allows periodic sending of packets
     private float runTime; // Global runTime since game has started
-    private float lastSentTime, lastMoveTime;
+    private float lastSentTime;
     private float lastPlayerCollisionTime;
 
     // LobbyScreen objects
@@ -83,7 +83,6 @@ public class GameMap {
         gameEnd =false;
         runTime = 0;
         lastSentTime = 0; // Used for periodic updates to/from server.
-        lastMoveTime = 0;
         lastPlayerCollisionTime = 0; // Used for periodic collision checks;
         this.isHost = isHost;
 
@@ -113,7 +112,6 @@ public class GameMap {
         gamePaused = false;
         runTime = 0;
         lastSentTime = 0;
-        lastMoveTime = 0;
         lastPlayerCollisionTime = 0;
 
         box2d.dispose();
@@ -160,16 +158,10 @@ public class GameMap {
             }
             ball.update(delta);
 
-
-//            if(runTime - lastMoveTime > 0.03) {
-//                client.sendMessageUDP(new Network.PacketPlayerUpdateFast(player.getId(), player.getBody().getLinearVelocity()));
-//                lastMoveTime = runTime;
-//            }
-
             // Client-sided logic
             if(!isHost) {
 //                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
-                if(runTime - lastSentTime > 0.5) { // Resync every 500ms
+                if(runTime - lastSentTime > 0.5) { // Resync every 100ms
                     // Client will receive updated location on PlayerLocations after sending his own
                     clientSendMessage(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
 //                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
