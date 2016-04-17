@@ -67,6 +67,10 @@ public class AssetLoader {
     public static Animation playerAnimationDownA, playerAnimationRightA, playerAnimationUpA, playerAnimationLeftA;
     public static Animation playerAnimationDownB, playerAnimationRightB, playerAnimationUpB, playerAnimationLeftB;
 
+    // Overlay Textures
+    public static Texture scoreLine;
+    public static Texture scoreIndicatorA, scoreIndicatorB;
+
     // Sounds/Music
     public static Music mainMusic;
     public static Sound fartBoostSound;
@@ -242,6 +246,11 @@ public class AssetLoader {
         tossRegionUp = new TextureRegion(tossButtonUp);
         tossButtonDown = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
         tossRegionDown = new TextureRegion(tossButtonDown);
+
+        //overlays
+        scoreLine = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/timeline/Line.png"));
+        scoreIndicatorA = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/timeline/blue-mark.png"));
+        scoreIndicatorB = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/timeline/red-mark.png"));
 
         //sound
         mainMusic = Gdx.audio.newMusic(Gdx.files.internal("data/mainmenu.wav"));

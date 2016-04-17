@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.forofour.game.actors.ButtonMaker;
 import com.forofour.game.actors.GameOverMaker;
 import com.forofour.game.actors.PowerUpSlotMaker;
+import com.forofour.game.actors.ScoreIndicatonActorMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.actors.Timer;
 import com.forofour.game.actors.TouchPadMaker;
@@ -43,12 +44,11 @@ public class MainOverlay extends Stage {
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton, powerSlot;
     private Label globalLabel, teamLabel;
+    private Image scoreLine, scoreA, scoreB;
 
     // GameEnd Components
-    private static Texture youLose;
-    private static Texture youWin;
-    private static Image youLoseImage;
-    private static Image youWinImage;
+    private static Texture youLose, youWin;
+    private static Image youLoseImage,youWinImage;
     private Texture buttonPlayAgainTexture, buttonMainMenuTexture;
     private Image buttonPlayAgain, buttonMainMenu;
 
@@ -83,12 +83,20 @@ public class MainOverlay extends Stage {
         teamLabel = TextLabelMaker.getTimeLabel(client);
         powerSlot = PowerUpSlotMaker.getPowerSlot(client);
 
+        scoreLine = ScoreIndicatonActorMaker.getScoreLine();
+        scoreA = ScoreIndicatonActorMaker.getIndicatorA();
+        scoreB = ScoreIndicatonActorMaker.getIndicatorB();
+
         addActor(TouchPadMaker.wrap(touchpad));
         addActor(ButtonMaker.wrap1(boostButton));
         addActor(ButtonMaker.wrap2(tossButton));
         addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
         addActor(PowerUpSlotMaker.wrap1(powerSlot));
+
+        addActor(scoreLine);
+        addActor(scoreA);
+        addActor(scoreB);
 
         // make & add End Game components to the stage
         youLose = new Texture("sprites/Design 2/Game Screen/end game/blue-lose.png");
@@ -193,9 +201,9 @@ public class MainOverlay extends Stage {
 
     // Only shown during gameEnd.
     private void showEndgameOverlay(boolean isHost, boolean hostReady) {
-        Gdx.app.log("P"+player.getId(), "Teamid"+ player.getTeamId()
-                + " TeamAid" + teamA.getId() + " TeamAScore" + teamA.getScore()
-                + " TeamBid" + teamB.getId() + " TeamBScore" + teamB.getScore());
+//        Gdx.app.log("P"+player.getId(), "Teamid"+ player.getTeamId()
+//                + " TeamAid" + teamA.getId() + " TeamAScore" + teamA.getScore()
+//                + " TeamBid" + teamB.getId() + " TeamBScore" + teamB.getScore());
         if(isHost) {
             // Host will see both choices upon game end
             buttonPlayAgain.setVisible(true);
@@ -252,12 +260,20 @@ public class MainOverlay extends Stage {
         powerSlot.setVisible(false);
         globalLabel.setVisible(false);
         teamLabel.setVisible(false);
+
+        scoreLine.setVisible(false);
+        scoreA.setVisible(false);
+        scoreB.setVisible(false);
     }
     public void showActors() {
         touchpad.setVisible(true);
         powerSlot.setVisible(true);
         globalLabel.setVisible(true);
-        teamLabel.setVisible(true);
+        teamLabel.setVisible(false);
+
+        scoreLine.setVisible(true);
+        scoreA.setVisible(true);
+        scoreB.setVisible(true);
     }
 
     // Touchpad is an actor in stage
@@ -280,14 +296,28 @@ public class MainOverlay extends Stage {
     }
 
     private void updateScore(float delta) {
+        float aScore = teamA.getScore();
+        float bScore = teamB.getScore();
 
-        // Team time/score display
-        if(teamA.getTeamList().contains(player))
-            teamLabel.setText("A Score: " + teamA.getScore());
-        else if(teamB.getTeamList().contains(player))
-            teamLabel.setText("B Score: " + teamB.getScore());
+//        // Team time/score display
+//        if(teamA.getTeamList().contains(player))
+//            teamLabel.setText("A Score: " + (int) teamA.getScore());
+//        else if(teamB.getTeamList().contains(player))
+//            teamLabel.setText("B Score: " + (int) teamB.getScore());
+//        else
+//            teamLabel.setText("No team score");
+
+        if(aScore > bScore)
+            scoreA.toFront();
+        else if(bScore > aScore)
+            scoreB.toFront();
+        else if(player.getTeamId() == 1)
+            scoreA.toFront();
         else
-            teamLabel.setText("No team score");
+            scoreB.toFront();
+
+        ScoreIndicatonActorMaker.updateIndicatorPosition(scoreA, aScore/client.getMap().maxScore);
+        ScoreIndicatonActorMaker.updateIndicatorPosition(scoreB, bScore/client.getMap().maxScore);
     }
 
     // Check the states and show client control buttons(Toss/Boost/PowerUp)

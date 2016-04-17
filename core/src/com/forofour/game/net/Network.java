@@ -266,12 +266,12 @@ public class Network {
 
     // Update of team scores
     public static class PacketTeamScores {
-        public int scoreA;
-        public int scoreB;
+        public float scoreA;
+        public float scoreB;
         public PacketTeamScores() {
         }
 
-        public PacketTeamScores(int scoreA, int scoreB) {
+        public PacketTeamScores(float scoreA, float scoreB) {
             this.scoreA = scoreA;
             this.scoreB = scoreB;
         }

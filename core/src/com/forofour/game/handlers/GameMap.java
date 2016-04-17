@@ -63,6 +63,7 @@ public class GameMap {
     private boolean gameInitialized;
     public boolean shutdown, gameInitiated, gamePaused, gameEnd;
     public int gameDuration = 120; // SETTING FOR GAME DURATION, OVERWRITTEN by Server
+    public float maxScore = 40;
 
     public GameMap(GameServer server){
         this(true);
@@ -345,6 +346,12 @@ public class GameMap {
     }
     public Timer getGlobalTime() {
         return globalTime;
+    }
+
+    public boolean maximumScore(){
+        if(teamA.getScore() >= maxScore || teamB.getScore() >= maxScore)
+            return true;
+        return false;
     }
 
     public synchronized void clientSendMessageUDP(Object msg) {

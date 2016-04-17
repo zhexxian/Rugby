@@ -93,8 +93,8 @@ public class MainScreen implements Screen {
 //                Gdx.app.log("ClientTime", map.getGlobalTime().getElapsed());
 //                Gdx.app.log("HostTime", server.getMap().getGlobalTime().getElapsed());
 
-                // Triggers End of game when i)TIME IS UP
-                if(server.getMap().getGlobalTime().isDone()) {
+                // Triggers End of game when i)TIME IS UP ii)MAXIMUM SCORE ATTAINED
+                if(server.getMap().getGlobalTime().isDone() || server.getMap().maximumScore()) {
                     server.getMap().gamePaused = true;
                     server.getMap().gameEnd = true;
                     server.sendMessage(new Network.PacketGameEnd()); // Announcement to clients

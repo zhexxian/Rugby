@@ -52,11 +52,11 @@ public class Team {
         score -= GameConstants.DEFAULT_SCORE_PENALTY;
     }
 
-    public int getScore() {
-        return (int) score;
+    public float getScore() {
+        return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 

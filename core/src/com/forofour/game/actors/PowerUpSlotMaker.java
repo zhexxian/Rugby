@@ -15,10 +15,10 @@ import com.forofour.game.net.GameClient;
 public class PowerUpSlotMaker {
 
     // X,Y origin is at bottom left of the screen.
-    private static float POS_X1 = 110;
-    private static float POS_Y1 = 10;
+    private static float POS_X1 = 160 - 35;
+    private static float POS_Y1 = 15;
 
-    private static float SIZE_SCALE = (float) 1;
+    private static float SIZE_SCALE = (float) 2;
 
     private static ImageButton powerSlot;
     private static ImageButton.ImageButtonStyle emptySlotStyle, powerUpStyle1, powerUpStyle2, powerUpStyle3blue, powerUpStyle3red;
