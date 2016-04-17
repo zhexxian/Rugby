@@ -18,6 +18,7 @@ public class AssetLoader {
     public static Texture splash;
     public static Texture menu;
     public static Texture tutorialUp, tutorialDown, hostGameUp, joinGameUp, hostGameDown, joinGameDown;
+    public static Texture volumeOn, volumeOff;
 
     // In-game Textures
     public static Texture bg, bgTrain;
@@ -41,6 +42,7 @@ public class AssetLoader {
     public static TextureRegion tutorialRegionUp, tutorialRegionDown;
     public static TextureRegion hostGameRegionUp, joinGameRegionUp;
     public static TextureRegion hostGameRegionDown, joinGameRegionDown;
+    public static TextureRegion volumeRegionOn, volumeRegionOff;
 
     // In-game TextureRegion
     public static TextureRegion bgRegion, bgTrainRegion;
@@ -70,8 +72,6 @@ public class AssetLoader {
     public static Music ingameMusic;
     public static Sound powerUpSound;
 
-
-
     public static void load() {
         //splash screen
         splash = new Texture("Team 404.png");
@@ -94,6 +94,11 @@ public class AssetLoader {
         hostGameRegionDown = new TextureRegion(hostGameDown);
         joinGameRegionUp = new TextureRegion(joinGameUp);
         joinGameRegionDown = new TextureRegion(joinGameDown);
+
+        volumeOn= new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/Sound-on.png"));
+        volumeOff = new Texture(Gdx.files.internal("sprites/Design 2/Starting screen/Sound-off.png"));
+        volumeRegionOn = new TextureRegion(volumeOn);
+        volumeRegionOff = new TextureRegion(volumeOff);
 
         //game background
         bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2.png"));
@@ -233,8 +238,6 @@ public class AssetLoader {
         fartBoostSound = Gdx.audio.newSound(Gdx.files.internal("data/fart1.wav"));
         ingameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/ingame.wav"));
         powerUpSound = Gdx.audio.newSound(Gdx.files.internal("data/powerup.wav"));
-
-
 
     }
 

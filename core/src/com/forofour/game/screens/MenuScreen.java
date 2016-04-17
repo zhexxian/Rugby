@@ -32,7 +32,7 @@ public class MenuScreen implements Screen {
 
         // music initialized
         AssetLoader.mainMusic.setLooping(true);
-        AssetLoader.mainMusic.setVolume(0.5f);
+        AssetLoader.mainMusic.setVolume(GameConstants.MUSIC_VOLUME);
         AssetLoader.mainMusic.play();
     }
 

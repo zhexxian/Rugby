@@ -18,6 +18,10 @@ public class GameConstants {
     public static final float VIEW2MAP_RATIO = 0.6f;
     public static final float CONTROLS_Y_OFFSET = 15f;
 
+    //music sound volume
+    public static float MUSIC_VOLUME = 0.5f;
+    public static float SOUND_VOLUME = 0.5f;
+
     //number of players
     public static final int MIN_MULTIPLAYER_NUMBER = 2;
     public static final int[][] PLAYER_POSITION = new int[4][2];
@@ -38,5 +42,20 @@ public class GameConstants {
         PLAYER_POSITION[1][0] = 150; PLAYER_POSITION[1][1] = 10;
         PLAYER_POSITION[2][0] = 10; PLAYER_POSITION[2][1] = 80;
         PLAYER_POSITION[3][0] = 150; PLAYER_POSITION[3][1] = 80;
+    }
+
+    public static boolean isVolumeOn(){
+        if(MUSIC_VOLUME > 0)
+            return true;
+        return false;
+    }
+
+    public static void volumeOn(){
+        MUSIC_VOLUME = 0.5f;
+        SOUND_VOLUME = 0.5f;
+    }
+    public static void volumeOff(){
+        MUSIC_VOLUME = 0;
+        SOUND_VOLUME = 0;
     }
 }

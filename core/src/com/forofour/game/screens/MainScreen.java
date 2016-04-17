@@ -7,6 +7,7 @@ import com.forofour.game.MyGdxGame;
 import com.forofour.game.gameworlds.MainRenderer;
 import com.forofour.game.handlers.AssetLoader;
 import com.forofour.game.handlers.ClientInputHandler;
+import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.handlers.MainOverlay;
 import com.forofour.game.net.GameClient;
@@ -53,7 +54,7 @@ public class MainScreen implements Screen {
 
 
         AssetLoader.ingameMusic.setLooping(true);
-        AssetLoader.ingameMusic.setVolume(0.5f);
+        AssetLoader.ingameMusic.setVolume(GameConstants.MUSIC_VOLUME);
         AssetLoader.ingameMusic.play();
 
     }

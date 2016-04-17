@@ -24,7 +24,8 @@ import com.forofour.game.screens.LobbyScreen;
 public class MenuActorMaker {
     private Stage menuStage;
     private BitmapFont menuFont;
-    private ImageButton.ImageButtonStyle hostButtonStyle, joinButtonStyle, tutorialButtonStyle, volumeButtonStyle;
+    private ImageButton.ImageButtonStyle hostButtonStyle, joinButtonStyle, tutorialButtonStyle;
+    private ImageButton.ImageButtonStyle volumeButtonStyleOn, volumeButtonStyleOff;
     private ImageButton buttonHost, buttonJoin, buttonTutorial, buttonVolume;
 
     private int BUTTON_WIDTH = 40;
@@ -35,7 +36,7 @@ public class MenuActorMaker {
         //set the menu stage
         menuStage = stage;
 
-        //create menu buttons
+        //Create and position main menu buttons
         tutorialButtonStyle = new ImageButton.ImageButtonStyle();
         tutorialButtonStyle.up = new TextureRegionDrawable(AssetLoader.tutorialRegionUp);
         tutorialButtonStyle.down = new TextureRegionDrawable(AssetLoader.tutorialRegionDown);
@@ -50,7 +51,6 @@ public class MenuActorMaker {
         joinButtonStyle.up = new TextureRegionDrawable(AssetLoader.joinGameRegionUp);
         joinButtonStyle.down = new TextureRegionDrawable(AssetLoader.joinGameRegionDown);
         buttonJoin = new ImageButton(joinButtonStyle);
-//        buttonSettings = new TextButton("Settings", normal);
 
         buttonTutorial.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
         buttonTutorial.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
@@ -82,20 +82,45 @@ public class MenuActorMaker {
             }
         });
 
-/*        buttonSettings.setSize(this.BUTTON_WIDTH, this.BUTTON_HEIGHT);
-        buttonSettings.setPosition(GameConstants.GAME_WIDTH / 2 - BUTTON_WIDTH / 2,
-                (BUTTON_HEIGHT + BUTTON_GAP));
-        buttonSettings.addListener(new ChangeListener() {
+        // Create and position Volume button
+        volumeButtonStyleOn = new ImageButton.ImageButtonStyle();
+        volumeButtonStyleOn.up = new TextureRegionDrawable(AssetLoader.volumeRegionOn);
+        volumeButtonStyleOff = new ImageButton.ImageButtonStyle();
+        volumeButtonStyleOff.up = new TextureRegionDrawable(AssetLoader.volumeRegionOff);
+        buttonVolume = new ImageButton(volumeButtonStyleOn);
+
+        buttonVolume.setSize(14, 14);
+        buttonVolume.setPosition(GameConstants.GAME_WIDTH - 16, // 3px from the right
+                GameConstants.GAME_HEIGHT - 16); // 3 px from the top
+        buttonVolume.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                if(buttonVolume.getStyle().equals(volumeButtonStyleOn)) {
+                    buttonVolume.setStyle(volumeButtonStyleOff);
+                    GameConstants.volumeOff();
+                }
+                else {
+                    buttonVolume.setStyle(volumeButtonStyleOn);
+                    GameConstants.volumeOn();
+                }
+                AssetLoader.mainMusic.setVolume(GameConstants.MUSIC_VOLUME);
             }
-        });*/
+        });
+        checkVolumeShowState();
 
         stage.addActor(buttonTutorial);
         stage.addActor(buttonHost);
         stage.addActor(buttonJoin);
-//        stage.addActor(buttonSettings);
+        stage.addActor(buttonVolume);
+    }
+
+    private void checkVolumeShowState() {
+        if(!GameConstants.isVolumeOn()) {
+            buttonVolume.setStyle(volumeButtonStyleOff);
+        }
+        else {
+            buttonVolume.setStyle(volumeButtonStyleOn);
+        }
     }
 
     public ImageButton getButtonJoin() {

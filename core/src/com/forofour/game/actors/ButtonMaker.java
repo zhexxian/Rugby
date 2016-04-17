@@ -53,7 +53,7 @@ public class ButtonMaker {
                     Gdx.app.log("BoostButton", "Button Pressed");
                     tutorialStates.usedBoost();
                 }
-                AssetLoader.fartBoostSound.play();
+                AssetLoader.fartBoostSound.play(GameConstants.SOUND_VOLUME);
             }
         });
         return boostButton;
