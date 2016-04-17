@@ -1,17 +1,18 @@
 package com.forofour.game.gameobjects;
-
-import com.badlogic.gdx.Gdx;
 import com.forofour.game.handlers.GameConstants;
 
 import java.util.ArrayList;
 
 /**
- * Created by seanlim on 9/3/2016.
+ * Team object
+ *  Helper to hold the listing of Players within the Team
+ *  Tracks the Team score
+ *  Score is time based. Exists scalar to define rate of scoring
  */
 public class Team {
-    private static ArrayList<Team> listOfTeams;
+    private static ArrayList<Team> listOfTeams; // Master listing of all teams within game
     private ArrayList<Player> teamList;
-    private float score;
+    private float score; // Tracks the score of the team
     private int id;
 
     public Team(int id){
@@ -29,6 +30,7 @@ public class Team {
         teamList.clear();
     }
 
+    // Addition of player into team
     public void addPlayer(Player p){
         teamList.add(p);
         p.setTeamId(id);
@@ -37,6 +39,8 @@ public class Team {
     public void removePlayer(Player p){
         teamList.remove(p);
     }
+
+    // Addition of score(time based amount)
     public void addScore(float amt){
         score += amt;
     }

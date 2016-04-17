@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created by seanlim on 4/4/2016.
+ * Render that exists during GamePlay(inc endGame state)
+ * As opposed the MainOverlay which is a stage that displays player controls components,
+ *  this renders the player/ball/powerup. In other worlds, the objects that exists within
+ *  the box2d(physics world)
  */
 public class MainRenderer {
     private GameMap map;
@@ -68,10 +71,9 @@ public class MainRenderer {
             initialize();
         }
 
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Necessary to clear to prevent potential flickering
         Gdx.gl.glClearColor(0, 0, 0, 1); // Fill the entire screen with black, to prevent potential flickering.
-        debugRenderer.render(map.getBox2d(), cam.combined);
+//        debugRenderer.render(map.getBox2d(), cam.combined); // TO disable when Deploying app
 
         if(initialized) {
             // Viewport follows player
@@ -102,6 +104,8 @@ public class MainRenderer {
         batcher.end();
     }
 
+    // Ensures the all reference are available before any rendering
+    // True only after server assigns the objects
     public void initialize(){
         ball = map.getBall();
         player = map.getPlayer();
@@ -118,6 +122,7 @@ public class MainRenderer {
         }
     }
 
+    // Render sequence of players. The logic is the same for the opposite team.
     public void renderTeamA() {
         // Team A
         // For each player the render should be in the following sequence
@@ -150,9 +155,18 @@ public class MainRenderer {
 //            Gdx.app.log("Player" + p.getId(), "Angle " + angle);
             TextureRegion playerDirection;
 
+
+            // Animation only if player is moving
             if(!p.getBody().getLinearVelocity().epsilonEquals(Vector2.Zero, 0.1f)) {
-                // TODO: Tie FrameDuration to playerVelocity
-                if(p.isBoosting()) {
+
+                // Animation speed is tied to player's Velocity
+                for(Animation animation : AssetLoader.TeamAnimationA){
+                    animation.setFrameDuration(1f/p.getBody().getLinearVelocity().len()*5); // Faster animation when boosting
+
+                    System.out.println("Player velocity: " + p.getBody().getLinearVelocity().len());
+                    System.out.println("Frame duration: " + 1f/p.getBody().getLinearVelocity().len()*5);
+                }
+                /*if(p.isBoosting()) {
                     for(Animation animation : AssetLoader.TeamAnimationA){
                         animation.setFrameDuration(0.08f); // Faster animation when boosting
                     }
@@ -161,7 +175,7 @@ public class MainRenderer {
                     for(Animation animation : AssetLoader.TeamAnimationA){
                         animation.setFrameDuration(0.16f); // Slow animation when boosting
                     }
-                }
+                }*/
 
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerAnimationDownA.getKeyFrame(runTime);
@@ -172,6 +186,8 @@ public class MainRenderer {
                 else
                     playerDirection = AssetLoader.playerAnimationLeftA.getKeyFrame(runTime);
             }
+
+            // Static image if player is not moving
             else {
                 if (angle <= 135 && angle > 45)
                     playerDirection = AssetLoader.playerRegionAdown1;
@@ -324,6 +340,7 @@ public class MainRenderer {
 //            System.out.println(ball.getRadius() * GameConstants.RENDER_RADIUS_SCALE + " " + GameConstants.RENDER_RADIUS_SCALE);
         }
     }
+
     private void renderPowerUps() {
         // PowerUps
         if(powerUpList!=null) {

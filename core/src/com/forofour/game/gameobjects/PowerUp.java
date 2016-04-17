@@ -10,14 +10,16 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Created by zhexian on 3/18/2016.
+ * Power Up object
+ *  Static body that exists within the box2d(Physics world) and disappears upon being acquired
+ *  Automatically adds itself into the physics world when created
  */
 public class PowerUp {
     private World box2d;
     private Body body;
-    private BodyDef bodyDef;
-    private CircleShape boundingCircle ;
-    private Fixture fixture;
+    private BodyDef bodyDef; // Simple properties of the physical body
+    private CircleShape boundingCircle ; // HitBox, to help with collision
+    private Fixture fixture; // Additional properties of the physical body
 
     private static final float POWER_UP_SIZE = 2f;
 
@@ -27,6 +29,7 @@ public class PowerUp {
     private float radius;
     private boolean outOfFrame;
 
+    // Constructed when called by the server to
     public PowerUp(Vector2 position, int type, int powerUpId, World box2d) {
         this(position.x, position.y, POWER_UP_SIZE, box2d);
         this.type = type;
@@ -38,44 +41,24 @@ public class PowerUp {
 
         this.box2d = box2d;
         bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.type = BodyDef.BodyType.StaticBody; // Static body processes lesser physics
         bodyDef.position.set(new Vector2(x, y));
-//        bodyDef.linearDamping = 0.1f;
-//        bodyDef.fixedRotation = true;
 
-        body = box2d.createBody(bodyDef);
+        body = box2d.createBody(bodyDef); // Adds the body into the physics world
         body.setUserData(this);
 
         boundingCircle = new CircleShape();
         boundingCircle.setRadius(radius);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = boundingCircle;
-//        fixtureDef.density = 0.5f;
-//        fixtureDef.friction = 1f;
-//        fixtureDef.restitution = 0.2f; // Make it bounce a little bit
         fixture = body.createFixture(fixtureDef);
 
         boundingCircle.dispose();
-
-        outOfFrame = false;
     }
 
-    public void update(float delta){
-        if(outOfFrame) {
-            disappear();
-        }
-    }
-
+    // Called outside of box2d loop
     public void destroy() {
         box2d.destroyBody(body);
-    }
-
-    public boolean isOutOfFrame(){
-        return outOfFrame;
-    }
-
-    private void disappear() {
-        body.setTransform(-10, -10, 0);
     }
 
     public int getId(){

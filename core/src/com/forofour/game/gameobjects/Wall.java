@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 /**
  * Created by seanlim on 26/2/2016.
  */
-public class Wall extends BodyDef {
+public class Wall {
 
     public Wall (float x, float y, float width, float height, World world) {
 // Create our body definition

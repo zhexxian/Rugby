@@ -10,24 +10,27 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * Created by seanlim on 19/2/2016.
+ * Ball Object (MILK BOTTLE)
+ *  helper that adds itself into the Box2d world upon creation
+ *  it holds reference to the ballHolder and methods that manipulates the ball velocity and held state by player
  */
-public class Ball extends BodyDef{
+public class Ball{
     private World box2d;
     private Body body;
     private BodyDef bodyDef;
 
-    private static final float BALL_RADIUS = 2f;
+    private static final float BALL_RADIUS = 2f; // Defined size of the ball
 
+    // Properties of the Body
     private CircleShape boundingCircle ;
     private Fixture fixture;
-
-    private Player holdingPlayer = null;
 
     private float immunityTime = 0;
     private float radius;
 
-    private static float IMPULSE_SCALAR = (float) 1.5;
+    private static float IMPULSE_SCALAR = (float) 1.5; // Impulse multiplier when player drops the MilkBottle
+
+    private Player holdingPlayer = null;
     private boolean playerCollided;
 
     public Ball(Vector2 pos, World box2d) {
@@ -64,16 +67,20 @@ public class Ball extends BodyDef{
 
     public void update(float delta) {
         if(isHeld()) {
-            body.setActive(false); // Disables physics
-            body.setTransform(holdingPlayer.getBody().getPosition(), 0); // Assume holdingPlayer !=null
+            // Should ball be held. Ball moves with the player
+            body.setActive(false); // Disables physics, improves performance
+            body.setTransform(holdingPlayer.getBody().getPosition(), 0);
             body.setLinearVelocity(holdingPlayer.getBody().getLinearVelocity());
 
-            if(playerCollided) {
+            if(playerCollided) { // Trigger out of Box2d loop to make changes to the body
                 playerCollided = false;
-                loseHoldingPlayer();
+                loseHoldingPlayer(); // LOSE BALL Sequence
             }
 
-        } else if(immunityTime > 0) {
+        }
+
+        // Ball cannot be held for the given period
+        else if(immunityTime > 0) {
             immunityTime -= delta;
             Gdx.app.log("Ball" , "is invisible " + immunityTime);
         }
@@ -87,6 +94,7 @@ public class Ball extends BodyDef{
         playerCollided = true; // SENSITIVE : Triggers collided state, ball to lose player upon update
     }
 
+    // Update from server as collision between ball and player happens
     public synchronized void setHoldingPlayer(Player player){
         if(immunityTime <= 0) {
             holdingPlayer = player;
@@ -101,6 +109,8 @@ public class Ball extends BodyDef{
         return holdingPlayer.getId();
     }
 
+    // Triggers the ball being dropped or tossed by the player
+    // Ball physics that occur when the player loses the ball
     public void loseHoldingPlayer(){
         if(holdingPlayer != null) {
             body.setActive(true); // Enable Physics

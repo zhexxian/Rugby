@@ -1,6 +1,7 @@
 package com.forofour.game.gameobjects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -16,46 +17,49 @@ import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
 
 /**
- * Created by seanlim on 19/2/2016.
+ * Player Object that adds itself into the box2d world upon creation
+ *  Will hold reference to the ball for manipulation of it
+ *  Also, to belong to a team as assigned by the server
  */
 public class Player {
 
     private int id;
     private GameClient client;
 
-    private World box2d;
+    private World box2d; // Physics world that will contain bodies of the object
     private Body body;
-    private BodyDef bodyDef;
-    private CircleShape boundingCircle ;
-    private Fixture fixture;
+    private BodyDef bodyDef; // Allows with definition of the body
+    private CircleShape boundingCircle ; // Defines the hitbox of the body
+    private Fixture fixture; // Allows with further definition of the body
 
-    private Ball ball;
+    private Ball ball; // Ref to ball instance
     private int teamId;
     private Team ownTeam, otherTeam;
 
     private float radius;
 
-    private Vector2 lastDirection;
+    private Vector2 lastDirection; // Orientation of the player
     private Vector2 lastPosition;
 
-    //TODO: move the constants to handlers/GameConstants
     private static final float PLAYER_SIZE = 2.5f;
 
-    private static final int MAX_VELOCITY = 30;
-    private static final float BOOST_SCALAR = 1.5f;
+    private static final int MAX_VELOCITY = 30; // Default MaxVelocity of the player
+    private static final float BOOST_SCALAR = 1.5f; // Scales velocity when boost is triggered
 
+    // Durations for player effects
     private static final float BOOST_DURATION = 1;
-    private static final float NO_BOOST_DURATION = 2;
-
+    private static final float NO_BOOST_DURATION = 2; // Boost cool down period
     private static final float SLOW_DURATION = 5;
     private static final float CONFUSION_DURATION = 5;
     private static final float INVISIBLE_DURATION = 5;
 
+    // Default Scalar when the effects are not in play
     private float slow_scale = 1;
     private float confuse_x = 1;
     private float confuse_y = 1;
     private float invisibility_scale = 1;
 
+    // Default duration when effects are not in play
     private float boostTime = 0;
     private float noBoostTime = 0;
 
@@ -63,7 +67,7 @@ public class Player {
     private float confusionEffectTime = 0;
     private float invisibleEffectTime = 0;
 
-    private int powerUpType;
+    private int powerUpType; // Indicates type of power up 1/2/3 (Slow/Confusion/Invisibility)
     private boolean hasPowerUp;
 
     public Player(int id, Vector2 pos, World box2d, GameClient client) {
@@ -76,23 +80,25 @@ public class Player {
         this.ball = ball;
         this.radius = radius;
 
+        // Properties of the body within the physics world
         this.box2d = box2d;
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(x, y));
         bodyDef.linearDamping = 0.1f;
-        bodyDef.fixedRotation = true;
+        bodyDef.fixedRotation = true; // Disables rotation by linear velocity. Overwritten by custom rotation methods
 
-        body = box2d.createBody(bodyDef);
-        body.setUserData(this);
+        body = box2d.createBody(bodyDef); // Add body into physics world
+        body.setUserData(this); // Links body to object
 
+        // Additional properties of the body within physics world
         boundingCircle = new CircleShape();
         boundingCircle.setRadius(radius);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = boundingCircle;
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 1f;
-        fixtureDef.restitution = 0f; // Make it bounce a little bit
+        fixtureDef.restitution = 0f; // Disable bounce of the player. Prevents bouncing off walls
         fixture = body.createFixture(fixtureDef);
 
         boundingCircle.dispose();
@@ -112,18 +118,17 @@ public class Player {
             }
         }
 
-//        // Acquire and set angular direction
-//        float radInitial = (float) Math.abs(body.getAngle()%(2*Math.PI));
-//        float radGoal = (float) ((Math.PI/180)*(getLastDirection().angle()));
-//        float deltaRad = (radGoal - radInitial);
-//        if(deltaRad < -Math.PI)
-//            deltaRad = (float) (2*Math.PI + deltaRad);
-//        body.setAngularVelocity((deltaRad * getRadius()) * 5);
+        // Sets last moved direction as player's Orientation
         if(!body.getLinearVelocity().isZero()) {
             lastDirection = body.getLinearVelocity();
             body.setTransform(body.getPosition(), body.getLinearVelocity().angleRad());
         }
 
+        updateEffects(delta); // Reduction of time for Effects and disables when over
+    }
+
+    // Periodically called to reduce duration left for special effects
+    private void updateEffects(float delta) {
         if(boostTime > 0)
             boostTime -= delta;
         if(noBoostTime > 0)
@@ -140,25 +145,29 @@ public class Player {
             deactivateConfusionEffect();
 
         if(invisibleEffectTime > 0) {
-            invisibility_scale *= 0.95; // Rate^ at which player turns
+            invisibility_scale *= 0.95; // Rate^ at which player turns invisible
             invisibleEffectTime -= delta;
         }
         else
             deactivateInvisibleEffect();
     }
 
+    // State of boosting
     public boolean isBoosting(){
-//        Gdx.app.log("isBoosting4", "Vel: " + body.getLinearVelocity().len());
         if(boostTime > 0)
             return true;
         return false;
     }
+
+    // State of boost cooling down
     public boolean isBoostCooldown(){
         if(boostTime > 0 || noBoostTime > 0)
             return true;
         return false;
     }
 
+    // called by TouchPad periodically to update player movement
+    // x,y values as a percentage
     public void knobMove(float x, float y) {
         // Apply boost multiplier(if required)
         if(boostTime > 0) {
@@ -177,10 +186,12 @@ public class Player {
         client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
     }
 
+    // Use of powerUp will update Server
     public void powerUp() {
         client.sendMessage(new Network.PacketUsePowerUp());
     }
 
+    // Triggered by the BoostButton press in MainOverlay
     public void boost() {
         // Returns if not allowed to boost
         if(noBoostTime > 0) {
@@ -197,7 +208,7 @@ public class Player {
     public void dropBall(){ // Client Sided command(NOTE: Server has no instance of client)
         if(hasBall()) {
             ball.loseHoldingPlayer();
-            client.sendMessage(new Network.PacketDropBall(id));
+            client.sendMessage(new Network.PacketDropBall(id)); // Updates server of the dropping of ball
             Gdx.app.log("Player-dropBall", "id " + id);
         }
     }
@@ -207,15 +218,11 @@ public class Player {
             if(ball.getHoldingPlayerId() == id) {
                 return true;
             }
-            // NOTE: Below method keeps crashing.
-//            if (ball.isHeld()) {
-//                System.out.println("hasBall " + ball.getHoldingPlayer().equals(this));
-//                return ball.getHoldingPlayer().equals(this);
-//            }
         }
         return false;
     }
 
+    // Call from server to assign powerUp upon picking up(Server-sided logic)
     public void acquirePowerUp(int type){
         hasPowerUp = true;
         powerUpType = type;
