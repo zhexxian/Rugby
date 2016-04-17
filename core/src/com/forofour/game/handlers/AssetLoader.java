@@ -91,6 +91,10 @@ public class AssetLoader {
     public static Sound invisibleSound;
     public static Sound nudgeSound;
 
+    public static Music victoryMusic;
+    public static Music defeatMusic;
+
+
     // Function that loads all the assets
     public static void load() {
         //splash screen
@@ -294,6 +298,8 @@ public class AssetLoader {
         slowSound = Gdx.audio.newSound(Gdx.files.internal("sound/slow.wav"));
         invisibleSound = Gdx.audio.newSound(Gdx.files.internal("sound/invisible.mp3"));
         // TODO: Include music for endGame screen(Winner/Loser)
+        victoryMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/victory.wav"));
+        defeatMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/defeat.mp3"));
 
     }
 

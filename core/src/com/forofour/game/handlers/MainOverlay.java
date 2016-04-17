@@ -290,9 +290,6 @@ public class MainOverlay extends Stage {
                         updateButtons();
                     }
 
-                    // TODO: Include Tutorial Actors Show/Hide logic
-
-                    // TODO: TutorialStates contain the triggers e.g. PlayerMoved, BallPicked, BallTossed
                 }
 
             } else {
@@ -323,6 +320,7 @@ public class MainOverlay extends Stage {
 
     // Only shown during gameEnd.
     private void showEndgameOverlay(boolean isHost, boolean hostReady) {
+        AssetLoader.ingameMusic.stop();
 //        Gdx.app.log("P"+player.getId(), "Teamid"+ player.getTeamId()
 //                + " TeamAid" + teamA.getId() + " TeamAScore" + teamA.getScore()
 //                + " TeamBid" + teamB.getId() + " TeamBScore" + teamB.getScore());
@@ -345,21 +343,31 @@ public class MainOverlay extends Stage {
         if(player.getTeamId()==1){
             if(teamA.getScore()>teamB.getScore()){
                 youWinBlueImage.setVisible(true);
+                AssetLoader.victoryMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.victoryMusic.play();
             }
             else{
                 youLoseBlueImage.setVisible(true);
+                AssetLoader.defeatMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.defeatMusic.play();
             }
         }
         else if(player.getTeamId()==2){
             if(teamB.getScore()>teamA.getScore()){
                 youWinRedImage.setVisible(true);
+                AssetLoader.victoryMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.victoryMusic.play();
             }
             else{
                 youLoseRedImage.setVisible(true);
+                AssetLoader.defeatMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.defeatMusic.play();
             }
         }
         else {
             youLoseBlueImage.setVisible(true);
+            AssetLoader.defeatMusic.setVolume(GameConstants.MUSIC_VOLUME);
+            AssetLoader.defeatMusic.play();
         }
     }
 
