@@ -38,7 +38,7 @@ public class ButtonMaker {
 
         imageButtonStyle = new ImageButton.ImageButtonStyle();
         imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.boostRegionUp);
-        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.boostRegionUp);
+//        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.boostRegionUp);
         boostButton = new ImageButton(imageButtonStyle);
 
         boostButton.addListener(new ChangeListener() {
@@ -62,7 +62,7 @@ public class ButtonMaker {
     public static ImageButton getTossButton(final GameClient client) {
         imageButtonStyle = new ImageButton.ImageButtonStyle();
         imageButtonStyle.up = new TextureRegionDrawable(AssetLoader.tossRegionUp);
-        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.tossRegionUp);
+//        imageButtonStyle.down = new TextureRegionDrawable(AssetLoader.tossRegionUp);
         tossButton = new ImageButton(imageButtonStyle);
         tossButton.addListener(new ChangeListener() {
             @Override

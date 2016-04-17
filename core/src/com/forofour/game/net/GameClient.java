@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.forofour.game.handlers.AssetLoader;
+import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.tutorialMode.TutorialStates;
 

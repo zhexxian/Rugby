@@ -21,7 +21,7 @@ public class AssetLoader {
     public static Texture volumeOn, volumeOff;
 
     // In-game Textures
-    public static Texture bg, bgTrain;
+    public static Texture bg, bg2, bgTrain;
     public static Texture ball;
     public static Texture playerAup1, playerBup1;
     public static Texture playerAdown1, playerBdown1;
@@ -45,7 +45,7 @@ public class AssetLoader {
     public static TextureRegion volumeRegionOn, volumeRegionOff;
 
     // In-game TextureRegion
-    public static TextureRegion bgRegion, bgTrainRegion;
+    public static TextureRegion bgRegion, bgRegion2, bgTrainRegion;
     public static TextureRegion ballRegion;
     public static TextureRegion playerRegionAup1, playerRegionBup1;
     public static TextureRegion playerRegionAdown1, playerRegionBdown1;
@@ -103,6 +103,9 @@ public class AssetLoader {
         //game background
         bg = new Texture(Gdx.files.internal("sprites/background test/random-nursery-background-2.png"));
         bgRegion = new TextureRegion(bg);
+        bg2 = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/background-(1200x640).png"));
+        bgRegion2 = new TextureRegion(bg2);
+
         bgTrain = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/train-border-(1200x640).png"));
         bgTrainRegion = new TextureRegion(bgTrain);
         bgTrainRegion.flip(false, true);
@@ -224,11 +227,11 @@ public class AssetLoader {
         powerUpEffectRegion2 = new TextureRegion(powerUp2Effect);
 
         //buttons
-        boostButtonUp = new Texture(Gdx.files.internal("sprites/buttons/Boost-activate.png"));
+        boostButtonUp = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/boost-button2.png"));
         boostRegionUp = new TextureRegion(boostButtonUp);
         boostButtonDown = new Texture(Gdx.files.internal("sprites/buttons/Boost-activate.png"));
         boostRegionDown = new TextureRegion(boostButtonDown);
-        tossButtonUp = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
+        tossButtonUp = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/toss-button-orange2.png"));
         tossRegionUp = new TextureRegion(tossButtonUp);
         tossButtonDown = new Texture(Gdx.files.internal("sprites/buttons/Toss-activate.png"));
         tossRegionDown = new TextureRegion(tossButtonDown);

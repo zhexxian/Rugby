@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.forofour.game.handlers.AssetLoader;
+import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.net.GameClient;
 import com.forofour.game.net.Network;
 
@@ -218,6 +220,7 @@ public class Player {
         hasPowerUp = true;
         powerUpType = type;
         Gdx.app.log("Player"+id, "Acquired" +type);
+        AssetLoader.powerUpSound.play(GameConstants.SOUND_VOLUME); // Acquired power up sound
     }
 
     // Call from server that powerUp usage is being called.
@@ -226,12 +229,15 @@ public class Player {
         if(hasPowerUp()) {
             hasPowerUp = false;
             if (powerUpType == 1) { // SLOW - Only to opposing team members
+                // TODO: Add slow effect sound
                 for(Player p : otherTeam.getTeamList())
                     p.activateSlowEffect();
             } else if (powerUpType == 2) { // CONFUSION - Only to opposing team members
+                // TODO: Add confused effect sound
                 for(Player p : otherTeam.getTeamList())
                     p.activateConfusionEffect(generatedChoice);
             } else if (powerUpType == 3) { // Invisibility - To self
+                // TODO: Add invisible effect sound
                 activateInvisibleEffect();
             }
             Gdx.app.log("Player" + id, "Used" + powerUpType);

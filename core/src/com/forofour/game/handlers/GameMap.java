@@ -433,7 +433,7 @@ public class GameMap {
                     serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
 
                     removePowerUp(powerUp.getId()); // Remove body instance of the from the world
-                    AssetLoader.powerUpSound.play(GameConstants.SOUND_VOLUME);
+//                    AssetLoader.powerUpSound.play(GameConstants.SOUND_VOLUME);
                 }
                 else if(b.getUserData() instanceof Player && a.getUserData() instanceof PowerUp){
                     Player player = (Player) a.getUserData();
@@ -442,7 +442,7 @@ public class GameMap {
                     Gdx.app.log(tag, "Player" + player.getId() + " Type" + powerUp.getType());
                     serverSendMessage(new Network.PacketPickPowerUp(player.getId(), powerUp.getType(), powerUp.getId()));
                     removePowerUp(powerUp.getId());
-                    AssetLoader.powerUpSound.play(GameConstants.SOUND_VOLUME);
+//                    AssetLoader.powerUpSound.play(GameConstants.SOUND_VOLUME);
                 }
             }
         }
