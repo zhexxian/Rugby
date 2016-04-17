@@ -324,10 +324,15 @@ public class MainOverlay extends Stage {
 //        Gdx.app.log("P"+player.getId(), "Teamid"+ player.getTeamId()
 //                + " TeamAid" + teamA.getId() + " TeamAScore" + teamA.getScore()
 //                + " TeamBid" + teamB.getId() + " TeamBScore" + teamB.getScore());
+
         if(isHost) {
-            // Host will see both choices upon game end
-            buttonPlayAgain.setVisible(true);
-            buttonMainMenu.setVisible(true);
+            if(tutorialStates != null) {
+                buttonMainMenu.setVisible(true);
+            } else {
+                // Host will see both choices upon game end
+                buttonPlayAgain.setVisible(true);
+                buttonMainMenu.setVisible(true);
+            }
 //            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
         }
         else {
