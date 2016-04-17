@@ -63,9 +63,10 @@ public class MainOverlay extends Stage {
     // Tutorial States - only in tutorial mode is it instantiated
     private TutorialStates tutorialStates;
     private static Texture welcomeTexture, boostTexture, holdbottleTexture, tossTexture, powerupTexture, winconditionTexture, endtutorialTexture;
-    private static Image welcomeImage, boostImage, holdbottleImage, tossImage, powerupImage, winconditionImage, endtutorialImage;
+    private static Image welcomeImage, boostImage, holdBottleImage, tossImage, powerUpImage, winConditionImage, endTutorialImage;
     private Texture buttonNextTexture;
     private Image buttonNextImage;
+    private int tutorialCount = 0;
 
 
     public MainOverlay(final boolean isHost, final GameClient client){
@@ -167,24 +168,36 @@ public class MainOverlay extends Stage {
         winconditionTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/wincondition.png");
         endtutorialTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/endtutorial.png");
 
+
+
         welcomeImage = new Image(welcomeTexture);
         boostImage = new Image(boostTexture);
-        holdbottleImage = new Image(holdbottleTexture);
+        holdBottleImage = new Image(holdbottleTexture);
         tossImage = new Image(tossTexture);
-        powerupImage = new Image(powerupTexture);
-        winconditionImage = new Image(winconditionTexture);
-        endtutorialImage = new Image(endtutorialTexture);
+        powerUpImage = new Image(powerupTexture);
+        winConditionImage = new Image(winconditionTexture);
+        endTutorialImage = new Image(endtutorialTexture);
 
         buttonNextTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/nextbutton.png");
         buttonNextImage = new Image(buttonNextTexture);
 
+        buttonNextImage.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+                tutorialCount += 1;
+                client.sendMessage(new Network.PacketGamePause());
+                return true;
+            }
+        });
+
         addActor(TutorialMaker.wrapBlackLayer(welcomeImage));
         addActor(TutorialMaker.wrapBlackLayer(boostImage));
-        addActor(TutorialMaker.wrapBlackLayer(holdbottleImage));
+        addActor(TutorialMaker.wrapBlackLayer(holdBottleImage));
         addActor(TutorialMaker.wrapBlackLayer(tossImage));
-        addActor(TutorialMaker.wrapBlackLayer(powerupImage));
-        addActor(TutorialMaker.wrapBlackLayer(winconditionImage));
-        addActor(TutorialMaker.wrapBlackLayer(endtutorialImage));
+        addActor(TutorialMaker.wrapBlackLayer(powerUpImage));
+        addActor(TutorialMaker.wrapBlackLayer(winConditionImage));
+        addActor(TutorialMaker.wrapBlackLayer(endTutorialImage));
+        addActor(TutorialMaker.wrapNextButton(buttonNextImage));
 
         // TODO: Overlay triggering in different conditions
 
@@ -210,10 +223,57 @@ public class MainOverlay extends Stage {
                 updateButtons();
 
                 if(tutorialStates != null) {
+                    hideActors();
                     tutorialStates.updateTutorialStates();
                     tutorialStates.printStates();
 
+                    if (tutorialCount == 0) {
+                        showTutorialOverlay(true, false, false, false, false, false, false);
+                    }
+                    if (tutorialCount == 1) {
+                        hideTutorialOverlay();
+                        showTutorialOverlay(false, true, false, false, false, false, false);
+                    }
+                    if (tutorialCount == 2 && !tutorialStates.boostedPlayer()){
+                        hideTutorialOverlay();
+                        showActors();
+                        updateButtons();
+                    }
+                    if (tutorialCount == 2 && tutorialStates.boostedPlayer()){
+                        showTutorialOverlay(false,false,true,false,false,false,false);
+                    }
+                    if (tutorialCount == 3){
+                        hideTutorialOverlay();
+                        showTutorialOverlay(false,false,false,true,false,false,false);
+                    }
+                    if (tutorialCount == 4 && !tutorialStates.tossedBall()) {
+                        hideTutorialOverlay();
+                        showActors();
+                        updateButtons();
+                    }
+                    if (tutorialCount == 4 && tutorialStates.tossedBall()) {
+                        showTutorialOverlay(false,false,false,false,true,false,false);
+                    }
+                    if (tutorialCount == 5 && !tutorialStates.usedPowerUp()) {
+                        hideTutorialOverlay();
+                        showActors();
+                        updateButtons();
+                    }
+                    if (tutorialCount == 5 && tutorialStates.usedPowerUp()){
+                        showTutorialOverlay(false,false,false,false,false,true,false);
+                    }
+                    if (tutorialCount == 6) {
+                        hideTutorialOverlay();
+                        showTutorialOverlay(false,false,false,false,false,false,true);
+                    }
+                    if (tutorialCount == 7) {
+                        hideTutorialOverlay();
+                        showActors();
+                        updateButtons();
+                    }
+
                     // TODO: Include Tutorial Actors Show/Hide logic
+
                     // TODO: TutorialStates contain the triggers e.g. PlayerMoved, BallPicked, BallTossed
                 }
 
@@ -287,12 +347,42 @@ public class MainOverlay extends Stage {
     private void hideTutorialOverlay(){
         welcomeImage.setVisible(false);
         boostImage.setVisible(false);
-        powerupImage.setVisible(false);
-        holdbottleImage.setVisible(false);
+        powerUpImage.setVisible(false);
+        holdBottleImage.setVisible(false);
         tossImage.setVisible(false);
-        winconditionImage.setVisible(false);
-        endtutorialImage.setVisible(false);
+        winConditionImage.setVisible(false);
+        endTutorialImage.setVisible(false);
         buttonNextImage.setVisible(false);
+    }
+
+    private void showTutorialOverlay(boolean isWelcome, boolean isBoost, boolean isHoldBottle, boolean isToss, boolean isPowerUp, boolean isWinCondition, boolean isEndTutorial){
+
+        client.sendMessage(new Network.PacketGamePause());
+        buttonNextImage.setVisible(true);
+
+        if (isWelcome){
+            welcomeImage.setVisible(true);
+        }
+        if (isBoost) {
+            boostImage.setVisible(true);
+        }
+        if (isHoldBottle){
+            holdBottleImage.setVisible(true);
+        }
+        if (isToss){
+            tossImage.setVisible(true);
+        }
+        if (isPowerUp){
+            powerUpImage.setVisible(true);
+        }
+        if (isWinCondition){
+            winConditionImage.setVisible(true);
+        }
+        if (isEndTutorial) {
+            endTutorialImage.setVisible(true);
+        }
+
+
     }
 
     // Safety check to ensure all objects are assigned before Overlay is shown
@@ -362,13 +452,13 @@ public class MainOverlay extends Stage {
 //            teamLabel.setText("No team score");
 
         if(aScore > bScore)
-            scoreA.toFront();
+            scoreB.toBack();
         else if(bScore > aScore)
-            scoreB.toFront();
+            scoreA.toBack();
         else if(player.getTeamId() == 1)
-            scoreA.toFront();
+            scoreB.toBack();
         else
-            scoreB.toFront();
+            scoreA.toBack();
 
         ScoreIndicatonActorMaker.updateIndicatorPosition(scoreA, aScore/client.getMap().maxScore);
         ScoreIndicatonActorMaker.updateIndicatorPosition(scoreB, bScore/client.getMap().maxScore);

@@ -117,10 +117,10 @@ public class TutorialStates {
     }
 
     public boolean isComplete() {
-        if(movedPlayer && boostedPlayer && pickedBall && tossedBall && pickedPowerUp && usedPowerUp) {
-            quit = true;
-            return true;
-        }
+//        if(movedPlayer && boostedPlayer && pickedBall && tossedBall && pickedPowerUp && usedPowerUp) {
+//            quit = true;
+//            return true;
+//        }
         return false;
     }
 
