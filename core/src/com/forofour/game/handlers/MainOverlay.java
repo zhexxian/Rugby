@@ -19,6 +19,7 @@ import com.forofour.game.actors.ScoreIndicatonActorMaker;
 import com.forofour.game.actors.TextLabelMaker;
 import com.forofour.game.actors.Timer;
 import com.forofour.game.actors.TouchPadMaker;
+import com.forofour.game.actors.TutorialMaker;
 import com.forofour.game.gameobjects.Ball;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.gameobjects.Team;
@@ -61,6 +62,11 @@ public class MainOverlay extends Stage {
 
     // Tutorial States - only in tutorial mode is it instantiated
     private TutorialStates tutorialStates;
+    private static Texture welcomeTexture, boostTexture, holdbottleTexture, tossTexture, powerupTexture, winconditionTexture, endtutorialTexture;
+    private static Image welcomeImage, boostImage, holdbottleImage, tossImage, powerupImage, winconditionImage, endtutorialImage;
+    private Texture buttonNextTexture;
+    private Image buttonNextImage;
+
 
     public MainOverlay(final boolean isHost, final GameClient client){
         this(isHost, client, null);
@@ -151,6 +157,42 @@ public class MainOverlay extends Stage {
         // At start of game, endGame Overlays are not shown
         hideEndgameOverlay();
         isInitialized = false; // Triggered when server has assigned all required objects
+
+        // make and add tutorial components to the stage
+        welcomeTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/welcome.png");
+        boostTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/boost.png");
+        holdbottleTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/holdbottle.png");
+        tossTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/toss.png");
+        powerupTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/powerup.png");
+        winconditionTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/wincondition.png");
+        endtutorialTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/endtutorial.png");
+
+        welcomeImage = new Image(welcomeTexture);
+        boostImage = new Image(boostTexture);
+        holdbottleImage = new Image(holdbottleTexture);
+        tossImage = new Image(tossTexture);
+        powerupImage = new Image(powerupTexture);
+        winconditionImage = new Image(winconditionTexture);
+        endtutorialImage = new Image(endtutorialTexture);
+
+        buttonNextTexture = new Texture("sprites/Design 2/Game Screen/tutorial overlays/nextbutton.png");
+        buttonNextImage = new Image(buttonNextTexture);
+
+        addActor(TutorialMaker.wrapBlackLayer(welcomeImage));
+        addActor(TutorialMaker.wrapBlackLayer(boostImage));
+        addActor(TutorialMaker.wrapBlackLayer(holdbottleImage));
+        addActor(TutorialMaker.wrapBlackLayer(tossImage));
+        addActor(TutorialMaker.wrapBlackLayer(powerupImage));
+        addActor(TutorialMaker.wrapBlackLayer(winconditionImage));
+        addActor(TutorialMaker.wrapBlackLayer(endtutorialImage));
+
+        // TODO: Overlay triggering in different conditions
+
+        // hide tutorial overlays
+        hideTutorialOverlay();
+
+
+
     }
 
     public GameClient getClient(){
@@ -239,6 +281,18 @@ public class MainOverlay extends Stage {
         else {
             youLoseImage.setVisible(true);
         }
+    }
+
+    // not shown in normal gameplay
+    private void hideTutorialOverlay(){
+        welcomeImage.setVisible(false);
+        boostImage.setVisible(false);
+        powerupImage.setVisible(false);
+        holdbottleImage.setVisible(false);
+        tossImage.setVisible(false);
+        winconditionImage.setVisible(false);
+        endtutorialImage.setVisible(false);
+        buttonNextImage.setVisible(false);
     }
 
     // Safety check to ensure all objects are assigned before Overlay is shown
