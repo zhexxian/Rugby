@@ -5,12 +5,14 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 /**
- * Created by seanlim on 1/4/2016.
+ * Contains the definition of all the Packets that transects between the Server & Client
+ *  + ports(UDP/TCP) used
  */
 public class Network {
     public static final int port = 27960;
     public static final int portUDP = 27962;
 
+    // Every object defined here or is within the packet have to be Registered
     public static void register(EndPoint endPoint){
         Kryo kryo = endPoint.getKryo();
         kryo.register(Float.class);

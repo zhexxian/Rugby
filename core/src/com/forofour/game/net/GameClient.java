@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 /**
- * Created by seanlim on 1/4/2016.
+ * Instance of Client (host also has an instance of client)
+ *  contains overall gameStates and also, the handling of packets received
+ *
  */
 public class GameClient {
 
@@ -35,13 +37,17 @@ public class GameClient {
         Network.register(client);
 
         // Client receives updates via Listener
+        //  As a event, it trigger certain updates as packets are received
         client.addListener(new Listener(){
             public void received(Connection c, Object o){
+
+                // Generic debug announcment from server
                 if (o instanceof Network.PacketDebugAnnouncement){
                     Network.PacketDebugAnnouncement packet = (Network.PacketDebugAnnouncement) o;
                     Gdx.app.log("GameClient", packet.getMsg());
                 }
 
+                // Trigger to exit to mainMenu when server decides not to play
                 else if(o instanceof Network.PacketShutdown) {
                     map.shutdown = true;
                     Gdx.app.log("GameClient", "Exit lobby received from server");
@@ -54,18 +60,23 @@ public class GameClient {
                     Gdx.app.log("GameClient", "InitRound Received from Server " + packet.initiate);
                 }
 
+                // Triggers pausing of game, all updates are paused, except overlay renderer
                 else if(o instanceof Network.PacketGamePause) {
                     Network.PacketGamePause packet = (Network.PacketGamePause) o;
                     map.gamePaused = packet.gamePaused;
                     Gdx.app.log("GameClient", "PauseButton Received from Server");
                 }
 
+                // Triggers the end of game(e.g. time is up)
                 else if(o instanceof Network.PacketGameEnd) {
 //                    Network.PacketGameEnd packet = (Network.PacketGameEnd) o;
                     map.gamePaused = true;
                     map.gameEnd = true;
                     Gdx.app.log("GameClient", "Game End Received from Server " + map.gameEnd);
                 }
+
+                // Decision on possibility to PlayAgain at the end of gamePlay.
+                // Allowed only if server decides to
                 else if(o instanceof Network.PacketReinitLobby) {
                     Network.PacketReinitLobby packet = (Network.PacketReinitLobby) o;
                     if(packet.serverReady) {
@@ -77,6 +88,7 @@ public class GameClient {
                     }
                 }
 
+                // Update on joining/leaving of players
                 else if(o instanceof Network.PacketPlayerJoinLeave) {
                     Network.PacketPlayerJoinLeave packet = (Network.PacketPlayerJoinLeave) o;
                     map.setNumberOfBabyFaces(packet.connectedClients);
@@ -95,13 +107,13 @@ public class GameClient {
                     map.getTeamA().setScore(packet.scoreA);
                     map.getTeamB().setScore(packet.scoreB);
                 }
-
-                // BALL
+                // Assignment of ball during game initiation
                 else if(o instanceof Network.PacketAddBall) {
                     Network.PacketAddBall packet = (Network.PacketAddBall) o;
                     Gdx.app.log("GameClient", "Adding ball");
                     map.addBall(packet.position, map.getBox2d());
                 }
+                // Periodic update of ball position being held state
                 else if(o instanceof Network.PacketBallState) {
                     Network.PacketBallState packet = (Network.PacketBallState) o;
                     if(!packet.isHeld) {
@@ -109,13 +121,14 @@ public class GameClient {
                         map.updateDropBall();
                     }
                 }
+                // Fast update of ball movement
                 else if(o instanceof Network.PacketBallUpdateFast) { // Ball velocity & Player holder ID
                     Network.PacketBallUpdateFast packet = (Network.PacketBallUpdateFast) o;
                     map.updateBallMovement(packet.movement);
 //                    Gdx.app.log("GameClient", "PacketBallUpdateFast");
                 }
 
-                // PLAYER
+                // Assignment of player during game initiation
                 else if(o instanceof Network.PacketAddPlayer) {
                     Network.PacketAddPlayer packet = (Network.PacketAddPlayer) o;
                     Gdx.app.log("GameClient", "Adding player" + c.getID() + "-" + packet.id + "-" + packet.teamNumber);
@@ -124,20 +137,25 @@ public class GameClient {
                     else
                         map.addPlayer(false, packet.id, packet.teamNumber, packet.position, map.getBox2d());
                 }
+                // Periodic update of player orientation and position
                 else if(o instanceof Network.PacketPlayerState) {
                     Network.PacketPlayerState packet = (Network.PacketPlayerState) o;
                     map.updatePlayerState(packet.id, packet.position, packet.angle);
                 }
+                // Fast update of player movement
                 else if(o instanceof Network.PacketPlayerUpdateFast) {
                     Network.PacketPlayerUpdateFast packet = (Network.PacketPlayerUpdateFast) o;
                     map.updatePlayerMovement(packet.id, packet.movement);
                 }
 
+                // Trigger that ball has been tossed/dropped
                 // NOTE: for reasons, this packet is slower than PacketSetHoldingPlayer
                 else if(o instanceof Network.PacketDropBall) {
                     Network.PacketDropBall packet = (Network.PacketDropBall) o;
                     map.updateDropBall();
                 }
+
+                // Decision by server on holder of the Ball
                 else if(o instanceof Network.PacketSetHoldingPlayer) { // Ball holder ID
                     Network.PacketSetHoldingPlayer packet = (Network.PacketSetHoldingPlayer) o;
                     if(packet.id == -1) {
@@ -148,7 +166,7 @@ public class GameClient {
                     Gdx.app.log("GameClient", "PacketSetHoldingPlayer " + packet.id);
                 }
 
-                // Addition of PowerUp to game
+                // Assignment of PowerUp package to game
                 else if(o instanceof Network.PacketAddPowerUp) {
                     Network.PacketAddPowerUp packet = (Network.PacketAddPowerUp) o;
                     Gdx.app.log("GameClient", "PacketAddPowerUp, Type:" + packet.type + " Position:" + packet.position);
@@ -163,6 +181,8 @@ public class GameClient {
                     if(packet.powerUpId != -1) // DEBUG PURPOSES(SV COMMANDS)
                         map.removePowerUp(packet.powerUpId);
                 }
+
+                // Trigger of player's use of a powerUp
                 else if(o instanceof Network.PacketUsePowerUp) {
                     Network.PacketUsePowerUp packet = (Network.PacketUsePowerUp) o;
 //                    Gdx.app.log("GameClient", "PacketUsePowerUp, ID:" + packet.id);
@@ -194,6 +214,7 @@ public class GameClient {
         });
     }
 
+    // Generic connect method
     public Integer connect(String host){
         try{
             this.hostAddress = host;
@@ -208,6 +229,7 @@ public class GameClient {
         return null;
     }
 
+    // Connect method that employs to use of the inbuilt hostDiscovery
     public boolean quickConnect(){
         Gdx.app.log("Client", "Discovering on " + Network.portUDP);
         InetAddress address = client.discoverHost(Network.portUDP, 5000);
@@ -271,6 +293,7 @@ public class GameClient {
         map.dispose();
     }
 
+    // Play again, will reuse previously used address instead of rediscovery which takes time
     public String getHostAddress(){
         String address = hostAddress;
         hostAddress = "";
