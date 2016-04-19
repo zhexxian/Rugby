@@ -361,13 +361,13 @@ public class GameMap {
         return false;
     }
 
-    public synchronized void clientSendMessageUDP(Object msg) {
+    public void clientSendMessageUDP(Object msg) {
         client.sendMessageUDP(msg);
     }
-    public synchronized void clientSendMessage(Object msg){
+    public void clientSendMessage(Object msg){
         client.sendMessage(msg);
     }
-    public synchronized void serverSendMessage(Object msg){
+    public void serverSendMessage(Object msg){
         server.sendMessage(msg);
     }
 
