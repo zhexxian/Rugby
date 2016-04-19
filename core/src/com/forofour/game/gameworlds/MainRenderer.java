@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.forofour.game.gameobjects.Ball;
@@ -18,7 +17,6 @@ import com.forofour.game.handlers.CameraAdjustments;
 import com.forofour.game.handlers.GameConstants;
 import com.forofour.game.handlers.GameMap;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -137,7 +135,7 @@ public class MainRenderer {
 
             // Slowed effect
             if(p.isSlowed()) {
-                batcher.draw(AssetLoader.powerUpEffectRegion1, // Texture
+                batcher.draw(AssetLoader.slowAnimation.getKeyFrame(runTime), // Texture
                         p.getBody().getPosition().x,
                         p.getBody().getPosition().y,
                         p.getRadius()-0.5f, // Offset would be the difference of radius from 2
@@ -215,7 +213,7 @@ public class MainRenderer {
 
             // Confused Effect
             if(p.isConfused()) {
-                batcher.draw(AssetLoader.powerUpEffectRegion2, // Texture
+                batcher.draw(AssetLoader.confusionAnimation.getKeyFrame(runTime), // Texture
                         p.getBody().getPosition().x,
                         p.getBody().getPosition().y,
                         p.getRadius()-0.5f, // Offset would be the difference of radius from 2
@@ -238,7 +236,7 @@ public class MainRenderer {
 
             // Slowed effect
             if(p.isSlowed()) {
-                batcher.draw(AssetLoader.powerUpEffectRegion1, // Texture
+                batcher.draw(AssetLoader.slowAnimation.getKeyFrame(runTime), // Texture
                         p.getBody().getPosition().x,
                         p.getBody().getPosition().y,
                         p.getRadius()-0.5f, // Offset would be the difference of radius from 2
@@ -303,7 +301,7 @@ public class MainRenderer {
 
             // Confused Effect
             if(p.isConfused()) {
-                batcher.draw(AssetLoader.powerUpEffectRegion2, // Texture
+                batcher.draw(AssetLoader.confusionAnimation.getKeyFrame(runTime), // Texture
                         p.getBody().getPosition().x,
                         p.getBody().getPosition().y,
                         p.getRadius() - 0.5f, // Offset would be the difference of radius from 2
