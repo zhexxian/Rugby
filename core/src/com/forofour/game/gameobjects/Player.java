@@ -125,6 +125,10 @@ public class Player {
         }
 
         updateEffects(delta); // Reduction of time for Effects and disables when over
+
+        // Checks if holding ball for too long
+        if(ball.heldTooLong())
+            dropBall();
     }
 
     // Periodically called to reduce duration left for special effects
@@ -206,7 +210,7 @@ public class Player {
     }
 
     public void dropBall(){ // Client Sided command(NOTE: Server has no instance of client)
-        if(hasBall()) {
+        if(hasBall() && client != null) {
             ball.loseHoldingPlayer();
             client.sendMessage(new Network.PacketDropBall(id)); // Updates server of the dropping of ball
             Gdx.app.log("Player-dropBall", "id " + id);
