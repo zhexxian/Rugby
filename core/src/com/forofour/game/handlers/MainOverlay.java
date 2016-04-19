@@ -260,6 +260,7 @@ public class MainOverlay extends Stage {
 
     public void hideActors(){
         touchpad.setVisible(false);
+        buttonSlot.setVisible(false);
         boostButton.setVisible(false);
         tossButton.setVisible(false);
         powerSlot.setVisible(false);
@@ -272,6 +273,7 @@ public class MainOverlay extends Stage {
     }
     public void showActors() {
         touchpad.setVisible(true);
+        buttonSlot.setVisible(true);
         powerSlot.setVisible(true);
         globalLabel.setVisible(true);
         teamLabel.setVisible(false);
