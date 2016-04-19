@@ -190,7 +190,8 @@ public class Player {
             System.out.println("Player - boost " + boostTime);
         }
 
-        body.setLinearVelocity(x * MAX_VELOCITY * slow_scale * confuse_x, y * MAX_VELOCITY * slow_scale * confuse_y);
+        Vector2 newLinearVelocity = new Vector2(x * MAX_VELOCITY * slow_scale * confuse_x, y * MAX_VELOCITY * slow_scale * confuse_y);
+        body.setLinearVelocity(newLinearVelocity);
 
         // Following line works as a "latency smoother"
         // Sending the linear velocity to the server, will quickly set the velocity of the body within the server physics engine
