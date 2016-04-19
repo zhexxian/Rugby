@@ -169,6 +169,14 @@ public class Player {
             return true;
         return false;
     }
+    public float boostCooldownPercentage(){
+        float percentage = 1f - (noBoostTime/NO_BOOST_DURATION);
+        if(percentage<0)
+            return 0;
+        if(percentage>1)
+            return 1;
+        return percentage;
+    }
 
     // called by TouchPad periodically to update player movement
     // x,y values as a percentage

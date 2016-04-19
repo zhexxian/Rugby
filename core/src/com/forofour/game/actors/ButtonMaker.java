@@ -76,26 +76,26 @@ public class ButtonMaker {
     }
 
     public static Container wrap1(ImageButton ib) {
-        float scalePosX = Gdx.graphics.getWidth()/ GameConstants.GAME_WIDTH;
-        float scalePosY = Gdx.graphics.getHeight()/ GameConstants.GAME_HEIGHT;
 
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
-        wrapper.setPosition(POS_X1 * scalePosX, POS_Y1 * scalePosY);
-        wrapper.setScale(SIZE_SCALE * scalePosX, SIZE_SCALE * scalePosY);
+        wrapper.setPosition(POS_X1 * GameConstants.SCALE_POS, POS_Y1 * GameConstants.SCALE_POS);
+        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS, SIZE_SCALE * GameConstants.SCALE_POS);
 
         return wrapper;
     }
 
     public static Container wrap2(ImageButton ib) {
-        float scalePosX = Gdx.graphics.getWidth()/ GameConstants.GAME_WIDTH;
-        float scalePosY = Gdx.graphics.getHeight()/ GameConstants.GAME_HEIGHT;
 
         Container wrapper = new Container(ib);
         wrapper.setTransform(true);
-        wrapper.setPosition(POS_X2 * scalePosX, POS_Y2 * scalePosY);
-        wrapper.setScale(SIZE_SCALE * scalePosX, SIZE_SCALE * scalePosY);
+        wrapper.setPosition(POS_X2 * GameConstants.SCALE_POS, POS_Y2 * GameConstants.SCALE_POS);
+        wrapper.setScale(SIZE_SCALE * GameConstants.SCALE_POS, SIZE_SCALE * GameConstants.SCALE_POS);
 
         return wrapper;
+    }
+
+    public static void relativeScale(Container wrapper, float amt) {
+        wrapper.setScale(amt * SIZE_SCALE * GameConstants.SCALE_POS);
     }
 }

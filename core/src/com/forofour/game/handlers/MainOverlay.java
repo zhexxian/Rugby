@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -45,6 +46,7 @@ public class MainOverlay extends Stage {
     private ImageButton boostButton, tossButton, powerSlot;
     private Label globalLabel, teamLabel;
     private Image scoreLine, scoreA, scoreB;
+    private Container boostContainer;
 
     // GameEnd Components
     private static Texture youLose, youWin;
@@ -82,13 +84,14 @@ public class MainOverlay extends Stage {
         globalLabel = TextLabelMaker.getTimeLabel(client);
         teamLabel = TextLabelMaker.getTimeLabel(client);
         powerSlot = PowerUpSlotMaker.getPowerSlot(client);
+        boostContainer = ButtonMaker.wrap1(boostButton);
 
         scoreLine = ScoreIndicatonActorMaker.getScoreLine();
         scoreA = ScoreIndicatonActorMaker.getIndicatorA();
         scoreB = ScoreIndicatonActorMaker.getIndicatorB();
 
         addActor(TouchPadMaker.wrap(touchpad));
-        addActor(ButtonMaker.wrap1(boostButton));
+        addActor(boostContainer);
         addActor(ButtonMaker.wrap2(tossButton));
         addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
@@ -329,7 +332,9 @@ public class MainOverlay extends Stage {
                 boostButton.setVisible(false);
             } else if(player.isBoostCooldown()) {
                 tossButton.setVisible(false);
-                boostButton.setVisible(false);
+//                boostButton.setVisible(false);
+                Gdx.app.log("Percentage ", "" + player.boostCooldownPercentage());
+                ButtonMaker.relativeScale(boostContainer, player.boostCooldownPercentage());
             } else {
                 tossButton.setVisible(false);
                 boostButton.setVisible(true);
