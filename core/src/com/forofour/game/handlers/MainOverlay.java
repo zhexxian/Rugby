@@ -486,6 +486,7 @@ public class MainOverlay extends Stage {
             } else {
                 tossButton.setVisible(false);
                 boostButton.setVisible(true);
+                ButtonMaker.relativeScale(boostContainer, 1);
             }
         }
         else {
