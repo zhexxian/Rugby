@@ -70,6 +70,7 @@ public class ButtonMaker {
                 System.out.println("Toss");
                 if(client.getMap().getPlayer() != null)
                     client.getMap().getPlayer().dropBall();
+                AssetLoader.tossSound.play(GameConstants.SOUND_VOLUME);
             }
         });
         return tossButton;
