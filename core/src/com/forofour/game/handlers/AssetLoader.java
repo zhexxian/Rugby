@@ -274,10 +274,10 @@ public class AssetLoader {
         scoreIndicatorB = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/timeline/red-mark.png"));
 
         //sound
-        mainMusic = Gdx.audio.newMusic(Gdx.files.internal("data/mainmenu.wav"));
-        fartBoostSound = Gdx.audio.newSound(Gdx.files.internal("data/fart1.wav"));
-        ingameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/ingame.wav"));
-        powerUpSound = Gdx.audio.newSound(Gdx.files.internal("data/powerup.wav"));
+        mainMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/mainmenu.wav"));
+        fartBoostSound = Gdx.audio.newSound(Gdx.files.internal("sound/fart1.wav"));
+        ingameMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ingame.wav"));
+        powerUpSound = Gdx.audio.newSound(Gdx.files.internal("sound/powerup.wav"));
         nudgeSound = fartBoostSound; // TODO: Replace with another sound
         // TODO: Include music for lobbyScreen
         // TODO: Include sounds for the powerUp effects
