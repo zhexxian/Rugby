@@ -33,6 +33,8 @@ public class Ball{
 
     private static float IMPULSE_SCALAR = (float) 1.5; // Impulse multiplier when player drops the MilkBottle
 
+    private boolean shownBall;
+
     private Player holdingPlayer = null;
     private boolean playerCollided;
 
@@ -145,10 +147,14 @@ public class Ball{
     }
 
     public void hideBall(){
+        shownBall = false;
         body.setTransform(new Vector2(-10, -10), 0);
     }
     public void showBall(){
-        body.setTransform(new Vector2(GameConstants.GAME_WIDTH/2, GameConstants.GAME_HEIGHT/2), 0);
+        if(!shownBall) {
+            shownBall = true;
+            body.setTransform(new Vector2(GameConstants.GAME_WIDTH / 2, GameConstants.GAME_HEIGHT / 2), 0);
+        }
     }
 
     public float getRadius() {
