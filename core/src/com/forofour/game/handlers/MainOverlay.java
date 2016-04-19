@@ -46,7 +46,7 @@ public class MainOverlay extends Stage {
     private Touchpad touchpad;
     private ImageButton boostButton, tossButton, buttonSlot, powerSlot;
     private Label globalLabel, teamLabel;
-    private Image scoreLine, scoreA, scoreB;
+    private Image scoreLine, scoreA, scoreB, infinity;
     private Container boostContainer;
 
     // GameEnd Components
@@ -89,6 +89,7 @@ public class MainOverlay extends Stage {
         boostButton = ButtonMaker.getBoostButton(client, tutorialStates);
         tossButton = ButtonMaker.getTossButton(client);
         globalLabel = TextLabelMaker.getTimeLabel(client);
+        infinity = TextLabelMaker.getInfinityImage();
         teamLabel = TextLabelMaker.getTimeLabel(client);
         buttonSlot = PowerUpSlotMaker.getButtonSlot();
         powerSlot = PowerUpSlotMaker.getPowerSlot(client);
@@ -102,6 +103,7 @@ public class MainOverlay extends Stage {
         addActor(PowerUpSlotMaker.wrap2(buttonSlot));
         addActor(boostContainer);
         addActor(ButtonMaker.wrap2(tossButton));
+        addActor(infinity);
         addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
         addActor(TextLabelMaker.wrapTeamScore(teamLabel));
         addActor(PowerUpSlotMaker.wrap1(powerSlot));
@@ -208,9 +210,6 @@ public class MainOverlay extends Stage {
 
         // hide tutorial overlays
         hideTutorialOverlay();
-
-
-
     }
 
     public GameClient getClient(){
@@ -408,6 +407,7 @@ public class MainOverlay extends Stage {
         boostButton.setVisible(false);
         tossButton.setVisible(false);
         powerSlot.setVisible(false);
+        infinity.setVisible(false);
         globalLabel.setVisible(false);
         teamLabel.setVisible(false);
 
@@ -419,9 +419,19 @@ public class MainOverlay extends Stage {
         touchpad.setVisible(true);
         buttonSlot.setVisible(true);
         powerSlot.setVisible(true);
-        globalLabel.setVisible(true);
-        teamLabel.setVisible(false);
+//        globalLabel.setVisible(true);
+        if(globalTime != null) {
+            if(globalTime.getInfinityMode()) {
+                globalLabel.setVisible(false);
+                infinity.setVisible(true);
+            }
+            else {
+                globalLabel.setVisible(true);
+                infinity.setVisible(false);
+            }
+        }
 
+        teamLabel.setVisible(false);
         scoreLine.setVisible(true);
         scoreA.setVisible(true);
         scoreB.setVisible(true);

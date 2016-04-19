@@ -131,6 +131,7 @@ public class GameMap {
 
     public void setGameDuration(int duration){
         globalTime.setGameDuration(duration);
+        globalTime.setInfinityMode();
     }
 
     public void addWallBoundaries() {

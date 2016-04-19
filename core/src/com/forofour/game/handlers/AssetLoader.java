@@ -22,7 +22,7 @@ public class AssetLoader {
     public static Texture volumeOn, volumeOff;
 
     // In-game Textures
-    public static Texture bg, bg2, bgTrain;
+    public static Texture bg, bg2, bgTrain, infinity;
     public static Texture ball;
     public static Texture playerAup1, playerBup1;
     public static Texture playerAdown1, playerBdown1;
@@ -125,6 +125,8 @@ public class AssetLoader {
         bgTrain = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/train-border-(1200x640).png"));
         bgTrainRegion = new TextureRegion(bgTrain);
         bgTrainRegion.flip(false, true);
+
+        infinity = new Texture(Gdx.files.internal("sprites/Design 2/Game Screen/infinity.png"));
 
         //ball (milk bottle)
         ball = new Texture(Gdx.files.internal("sprites/bottle-black-outline-upside-down.png"));

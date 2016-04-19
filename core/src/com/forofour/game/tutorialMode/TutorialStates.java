@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.forofour.game.gameobjects.Player;
 import com.forofour.game.handlers.GameMap;
 import com.forofour.game.net.GameServer;
-import com.forofour.game.net.Network;
 
 /**
  * Tutorial States
