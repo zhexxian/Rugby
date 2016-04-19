@@ -50,8 +50,8 @@ public class MainOverlay extends Stage {
     private Container boostContainer;
 
     // GameEnd Components
-    private static Texture youLose, youWin;
-    private static Image youLoseImage,youWinImage;
+    private static Texture youLoseRed,youLoseBlue, youWinRed,youWinBlue;
+    private static Image youLoseRedImage,youLoseBlueImage,youWinRedImage,youWinBlueImage;
     private Texture buttonPlayAgainTexture, buttonMainMenuTexture;
     private Image buttonPlayAgain, buttonMainMenu;
 
@@ -111,10 +111,14 @@ public class MainOverlay extends Stage {
         addActor(scoreB);
 
         // make & add End Game components to the stage
-        youLose = new Texture("sprites/Design 2/Game Screen/end game/blue-lose.png");
-        youWin = new Texture("sprites/Design 2/Game Screen/end game/red-win.png");
-        youLoseImage = new Image(youLose);
-        youWinImage = new Image(youWin);
+        youLoseRed = new Texture("sprites/Design 2/Game Screen/end game/red-lose.png");
+        youLoseBlue = new Texture("sprites/Design 2/Game Screen/end game/blue-lose.png");
+        youWinRed = new Texture("sprites/Design 2/Game Screen/end game/red-win.png");
+        youWinBlue = new Texture("sprites/Design 2/Game Screen/end game/blue-win.png");
+        youLoseRedImage = new Image(youLoseRed);
+        youLoseBlueImage = new Image(youLoseBlue);
+        youWinRedImage = new Image(youWinRed);
+        youWinBlueImage = new Image(youWinBlue);
 
         buttonPlayAgainTexture = new Texture("sprites/Design 2/Game Screen/end game/rematch-button.png");
         buttonMainMenuTexture = new Texture("sprites/Design 2/Game Screen/end game/menu-button.png");
@@ -155,8 +159,10 @@ public class MainOverlay extends Stage {
             }
         });
 
-        addActor(GameOverMaker.wrapBlackLayer(youLoseImage));
-        addActor(GameOverMaker.wrapBlackLayer(youWinImage));
+        addActor(GameOverMaker.wrapBlackLayer(youLoseRedImage));
+        addActor(GameOverMaker.wrapBlackLayer(youLoseBlueImage));
+        addActor(GameOverMaker.wrapBlackLayer(youWinRedImage));
+        addActor(GameOverMaker.wrapBlackLayer(youWinBlueImage));
         addActor(GameOverMaker.wrapRematchButton(buttonPlayAgain));
         addActor(GameOverMaker.wrapMenuButton(buttonMainMenu));
 
@@ -302,8 +308,10 @@ public class MainOverlay extends Stage {
     private void hideEndgameOverlay() {
         buttonPlayAgain.setVisible(false);
         buttonMainMenu.setVisible(false);
-        youLoseImage.setVisible(false);
-        youWinImage.setVisible(false);
+        youLoseRedImage.setVisible(false);
+        youLoseBlueImage.setVisible(false);
+        youWinRedImage.setVisible(false);
+        youWinBlueImage.setVisible(false);
     }
 
     // Only shown during gameEnd.
@@ -329,22 +337,22 @@ public class MainOverlay extends Stage {
         // EndGame Actors Show/Hide logic
         if(player.getTeamId()==1){
             if(teamA.getScore()>teamB.getScore()){
-                youWinImage.setVisible(true);
+                youWinBlueImage.setVisible(true);
             }
             else{
-                youLoseImage.setVisible(true);
+                youLoseBlueImage.setVisible(true);
             }
         }
         else if(player.getTeamId()==2){
             if(teamB.getScore()>teamA.getScore()){
-                youWinImage.setVisible(true);
+                youWinRedImage.setVisible(true);
             }
             else{
-                youLoseImage.setVisible(true);
+                youLoseRedImage.setVisible(true);
             }
         }
         else {
-            youLoseImage.setVisible(true);
+            youLoseBlueImage.setVisible(true);
         }
     }
 
