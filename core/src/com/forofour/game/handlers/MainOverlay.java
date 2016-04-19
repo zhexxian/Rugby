@@ -43,7 +43,7 @@ public class MainOverlay extends Stage {
 
     // HUD Components
     private Touchpad touchpad;
-    private ImageButton boostButton, tossButton, powerSlot;
+    private ImageButton boostButton, tossButton, buttonSlot, powerSlot;
     private Label globalLabel, teamLabel;
     private Image scoreLine, scoreA, scoreB;
     private Container boostContainer;
@@ -83,6 +83,7 @@ public class MainOverlay extends Stage {
         tossButton = ButtonMaker.getTossButton(client);
         globalLabel = TextLabelMaker.getTimeLabel(client);
         teamLabel = TextLabelMaker.getTimeLabel(client);
+        buttonSlot = PowerUpSlotMaker.getButtonSlot();
         powerSlot = PowerUpSlotMaker.getPowerSlot(client);
         boostContainer = ButtonMaker.wrap1(boostButton);
 
@@ -91,6 +92,7 @@ public class MainOverlay extends Stage {
         scoreB = ScoreIndicatonActorMaker.getIndicatorB();
 
         addActor(TouchPadMaker.wrap(touchpad));
+        addActor(PowerUpSlotMaker.wrap2(buttonSlot));
         addActor(boostContainer);
         addActor(ButtonMaker.wrap2(tossButton));
         addActor(TextLabelMaker.wrapGlobalTime(globalLabel));
