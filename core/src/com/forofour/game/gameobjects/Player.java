@@ -119,7 +119,7 @@ public class Player {
         }
 
         // Sets last moved direction as player's Orientation
-        if(!body.getLinearVelocity().isZero()) {
+        if(!body.getLinearVelocity().epsilonEquals(Vector2.Zero, 5)) { // Prevents flipping of direction at corners
             lastDirection = body.getLinearVelocity();
             body.setTransform(body.getPosition(), body.getLinearVelocity().angleRad());
         }
