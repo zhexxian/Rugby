@@ -248,8 +248,8 @@ public class Player {
     public void usePowerUp(int generatedChoice){
         if(hasPowerUp()) {
             hasPowerUp = false;
-            if (powerUpType == 1) { // SLOW - Only to opposing team members
-                // TODO: Add slow effect sound
+            if (powerUpType == 1) { // SLOW - Only to opposing team member
+                AssetLoader.slowSound.play();
                 for(Player p : otherTeam.getTeamList())
                     p.activateSlowEffect();
             } else if (powerUpType == 2) { // CONFUSION - Only to opposing team members
