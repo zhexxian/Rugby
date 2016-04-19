@@ -120,6 +120,9 @@ public class GameClient {
                         map.updateBallState(packet.position, packet.angle);
                         map.updateDropBall();
                     }
+                    else if(map.getBall().getHoldingPlayer() != null){ // If ball is held, set it to position of holding player
+                        map.updateBallState(map.getBall().getHoldingPlayer().getBody().getPosition(), packet.angle);
+                    }
                 }
                 // Fast update of ball movement
                 else if(o instanceof Network.PacketBallUpdateFast) { // Ball velocity & Player holder ID
