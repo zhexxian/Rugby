@@ -480,7 +480,7 @@ public class MainOverlay extends Stage {
                 boostButton.setVisible(false);
             } else if(player.isBoostCooldown()) {
                 tossButton.setVisible(false);
-//                boostButton.setVisible(false);
+                boostButton.setVisible(true);
                 Gdx.app.log("Percentage ", "" + player.boostCooldownPercentage());
                 ButtonMaker.relativeScale(boostContainer, player.boostCooldownPercentage());
             } else {

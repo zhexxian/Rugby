@@ -185,6 +185,13 @@ public class GameMap {
                 globalTime.start();
             }
             else {
+                if(server.getTutorialStates() != null) {
+                    if(server.getTutorialStates().getShowBall())
+                        server.getMap().ball.showBall();
+                    else
+                        server.getMap().ball.hideBall();
+                }
+
                 addTeamScores(delta); // Add score to ball holder
 
                 // FREQUENT UPDATE TO CLIENTS

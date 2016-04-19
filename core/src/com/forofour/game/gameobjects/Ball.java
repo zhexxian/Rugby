@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.forofour.game.handlers.GameConstants;
 
 /**
  * Ball Object (MILK BOTTLE)
@@ -142,6 +143,14 @@ public class Ball{
         // Remove holding player
         holdingPlayer = null;
     }
+
+    public void hideBall(){
+        body.setTransform(new Vector2(-10, -10), 0);
+    }
+    public void showBall(){
+        body.setTransform(new Vector2(GameConstants.GAME_WIDTH/2, GameConstants.GAME_HEIGHT/2), 0);
+    }
+
     public float getRadius() {
         return radius;
     }
