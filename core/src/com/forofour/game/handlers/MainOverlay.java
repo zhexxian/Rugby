@@ -248,6 +248,7 @@ public class MainOverlay extends Stage {
                         hideTutorialOverlay();
                         showActors();
                         updateButtons();
+                        tutorialStates.setShowBall(false);
                     }
                     if (tutorialCount == 2 && tutorialStates.boostedPlayer()){
                         showTutorialOverlay(false,false,true,false,false,false,false);
@@ -260,6 +261,7 @@ public class MainOverlay extends Stage {
                         hideTutorialOverlay();
                         showActors();
                         updateButtons();
+                        tutorialStates.setShowBall(true);
                     }
                     if (tutorialCount == 4 && tutorialStates.tossedBall()) {
                         showTutorialOverlay(false,false,false,false,true,false,false);
