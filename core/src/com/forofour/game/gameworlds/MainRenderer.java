@@ -88,7 +88,7 @@ public class MainRenderer {
         batcher.begin();
 
         // Background Floor mat
-        batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
+        batcher.draw(AssetLoader.bgRegion, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT + GameConstants.CONTROLS_Y_OFFSET);
 //        batcher.draw(AssetLoader.bgRegion2, 0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT); // Test WoodenPlanks
 
         renderTeamA();
