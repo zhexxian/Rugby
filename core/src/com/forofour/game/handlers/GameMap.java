@@ -196,15 +196,15 @@ public class GameMap {
                 addTeamScores(delta); // Add score to ball holder
 
                 // FREQUENT UPDATE TO CLIENTS
-                for(Player p : playerHash.values()) {
-                    serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity())); // Every player's linear velocity
-                }
+//                for(Player p : playerHash.values()) {
+//                    serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity())); // Every player's linear velocity
+//                }
 //                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
 //                if(!ball.isHeld())
                 serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity())); // Ball's linear velocity
 
                 // PERIODIC UPDATE TO CLIENTS(100ms)
-                if(runTime - lastSentTime > 0.1) {
+                if(runTime - lastSentTime > 0.3) {
 //                    if(!ball.isHeld())
                         serverSendMessage(new Network.PacketBallState(ball.getBody().getPosition(), 0, ball.isHeld())); // Always send ball location
                     if(!playersConnected.containsKey(false)) {
