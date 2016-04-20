@@ -63,7 +63,7 @@ public class GameMap {
     private boolean gameInitialized;
     public boolean shutdown, gameInitiated, gamePaused, gameEnd;
     public int gameDuration = 120; // SETTING FOR GAME DURATION, OVERWRITTEN by Server
-    public float maxScore = 40;
+    public float maxScore = 30;
 
     public GameMap(GameServer server){
         this(true);
