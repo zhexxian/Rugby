@@ -137,7 +137,8 @@ public class Timer {
     // Get formatted elapsed time
     public String getElapsed() {
         String timeFormatted = "";
-        timeFormatted = formatTime(getElapsedMilliseconds());
+        long timeLeft = endTime - getElapsedMilliseconds();
+        timeFormatted = formatTime(timeLeft);
         return timeFormatted;
     }
 
@@ -156,7 +157,7 @@ public class Timer {
 //            formattedTime = paddedMinutes+":"+paddedSeconds+":"+paddedHundredths;
         }
         else {
-            formattedTime = 59+":"+59;
+            formattedTime = String.format("%d%d:%d%d", 0, 0, 0, 0);
 //            formattedTime = 59+":"+59+":"+99;
         }
         return formattedTime;
