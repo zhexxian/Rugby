@@ -35,7 +35,7 @@ public class GameMap {
 
     // TimeStamps that allows periodic sending of packets
     private float runTime; // Global runTime since game has started
-    private float lastSentTime, lastMoveTime;
+    private float lastSentTime;
     private float lastPlayerCollisionTime;
 
     // LobbyScreen objects
@@ -83,7 +83,6 @@ public class GameMap {
         gameEnd =false;
         runTime = 0;
         lastSentTime = 0; // Used for periodic updates to/from server.
-        lastMoveTime = 0;
         lastPlayerCollisionTime = 0; // Used for periodic collision checks;
         this.isHost = isHost;
 
@@ -113,7 +112,6 @@ public class GameMap {
         gamePaused = false;
         runTime = 0;
         lastSentTime = 0;
-        lastMoveTime = 0;
         lastPlayerCollisionTime = 0;
 
         box2d.dispose();
@@ -160,16 +158,10 @@ public class GameMap {
             }
             ball.update(delta);
 
-
-//            if(runTime - lastMoveTime > 0.05) {
-//                client.sendMessageUDP(new Network.PacketPlayerUpdateFast(player.getId(), player.getBody().getLinearVelocity()));
-//                lastMoveTime = runTime;
-//            }
-
             // Client-sided logic
             if(!isHost) {
 //                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
-                if(runTime - lastSentTime > 0.5) { // Resync every 500ms
+                if(runTime - lastSentTime > 0.5) { // Resync every 100ms
                     // Client will receive updated location on PlayerLocations after sending his own
                     clientSendMessage(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
 //                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
@@ -203,16 +195,14 @@ public class GameMap {
 
                 addTeamScores(delta); // Add score to ball holder
 
-                if(runTime - lastMoveTime > 0.08) {
-                    // FREQUENT UPDATE TO CLIENTS
-//                    for (Player p : playerHash.values()) {
-//                        serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity())); // Every player's linear velocity
-//                    }
+                // FREQUENT UPDATE TO CLIENTS
+                for(Player p : playerHash.values()) {
+                    serverSendMessage(new Network.PacketPlayerUpdateFast(p.getId(), p.getBody().getLinearVelocity())); // Every player's linear velocity
+                }
 //                Gdx.app.log(tag, "Server ballHeld " + ball.isHeld());
 //                if(!ball.isHeld())
-                    serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity())); // Ball's linear velocity
-                    lastMoveTime = runTime;
-                }
+                serverSendMessage(new Network.PacketBallUpdateFast(ball.getBody().getLinearVelocity())); // Ball's linear velocity
+
                 // PERIODIC UPDATE TO CLIENTS(100ms)
                 if(runTime - lastSentTime > 0.1) {
 //                    if(!ball.isHeld())
