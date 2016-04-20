@@ -255,16 +255,16 @@ public class Player {
     public void usePowerUp(int generatedChoice){
         if(hasPowerUp()) {
             hasPowerUp = false;
-            if (powerUpType == 1) { // SLOW - Only to opposing team members
-                // TODO: Add slow effect sound
+            if (powerUpType == 1) { // SLOW - Only to opposing team member
+                AssetLoader.slowSound.play(GameConstants.SOUND_VOLUME);
                 for(Player p : otherTeam.getTeamList())
                     p.activateSlowEffect();
             } else if (powerUpType == 2) { // CONFUSION - Only to opposing team members
-                // TODO: Add confused effect sound
+                AssetLoader.confuseSound.play(GameConstants.SOUND_VOLUME);
                 for(Player p : otherTeam.getTeamList())
                     p.activateConfusionEffect(generatedChoice);
             } else if (powerUpType == 3) { // Invisibility - To self
-                // TODO: Add invisible effect sound
+                AssetLoader.invisibleSound.play(GameConstants.SOUND_VOLUME);
                 activateInvisibleEffect();
             }
             Gdx.app.log("Player" + id, "Used" + powerUpType);

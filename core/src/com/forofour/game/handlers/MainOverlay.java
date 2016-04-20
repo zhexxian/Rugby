@@ -132,6 +132,7 @@ public class MainOverlay extends Stage {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
             {
+                AssetLoader.menuButtonSound.play(GameConstants.SOUND_VOLUME);
                 if(isHost) {
                     client.sendMessage(new Network.PacketGameEnd(true));
                     Gdx.app.log("MainOverlay", "PlayAgain(TRUE) Button Sent");
@@ -147,6 +148,7 @@ public class MainOverlay extends Stage {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
             {
+                AssetLoader.menuButtonSound.play(GameConstants.SOUND_VOLUME);
                 if (isHost) {
                     client.sendMessage(new Network.PacketGameEnd(false));
                     // No change of states here
@@ -199,6 +201,7 @@ public class MainOverlay extends Stage {
         buttonNextImage.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+                AssetLoader.menuButtonSound.play(GameConstants.SOUND_VOLUME);
                 tutorialCount += 1;
                 client.sendMessage(new Network.PacketGamePause());
                 return true;
@@ -287,9 +290,6 @@ public class MainOverlay extends Stage {
                         updateButtons();
                     }
 
-                    // TODO: Include Tutorial Actors Show/Hide logic
-
-                    // TODO: TutorialStates contain the triggers e.g. PlayerMoved, BallPicked, BallTossed
                 }
 
             } else {
@@ -320,13 +320,19 @@ public class MainOverlay extends Stage {
 
     // Only shown during gameEnd.
     private void showEndgameOverlay(boolean isHost, boolean hostReady) {
+        AssetLoader.ingameMusic.stop();
 //        Gdx.app.log("P"+player.getId(), "Teamid"+ player.getTeamId()
 //                + " TeamAid" + teamA.getId() + " TeamAScore" + teamA.getScore()
 //                + " TeamBid" + teamB.getId() + " TeamBScore" + teamB.getScore());
+
         if(isHost) {
-            // Host will see both choices upon game end
-            buttonPlayAgain.setVisible(true);
-            buttonMainMenu.setVisible(true);
+            if(tutorialStates != null) {
+                buttonMainMenu.setVisible(true);
+            } else {
+                // Host will see both choices upon game end
+                buttonPlayAgain.setVisible(true);
+                buttonMainMenu.setVisible(true);
+            }
 //            Gdx.app.log("MainOverlay-showEndgameOverlay-host", "Show playRestart and mainMenu button");
         }
         else {
@@ -342,21 +348,31 @@ public class MainOverlay extends Stage {
         if(player.getTeamId()==1){
             if(teamA.getScore()>teamB.getScore()){
                 youWinBlueImage.setVisible(true);
+                AssetLoader.victoryMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.victoryMusic.play();
             }
             else{
                 youLoseBlueImage.setVisible(true);
+                AssetLoader.defeatMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.defeatMusic.play();
             }
         }
         else if(player.getTeamId()==2){
             if(teamB.getScore()>teamA.getScore()){
                 youWinRedImage.setVisible(true);
+                AssetLoader.victoryMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.victoryMusic.play();
             }
             else{
                 youLoseRedImage.setVisible(true);
+                AssetLoader.defeatMusic.setVolume(GameConstants.MUSIC_VOLUME);
+                AssetLoader.defeatMusic.play();
             }
         }
         else {
             youLoseBlueImage.setVisible(true);
+            AssetLoader.defeatMusic.setVolume(GameConstants.MUSIC_VOLUME);
+            AssetLoader.defeatMusic.play();
         }
     }
 
