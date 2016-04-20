@@ -19,7 +19,7 @@ public class GameConstants {
 
     //music sound volume
     public static float MUSIC_VOLUME = 0.5f;
-    public static float SOUND_VOLUME = 0.5f;
+    public static float SOUND_VOLUME = 0.75f;
 
     //number of players
     public static final int MIN_MULTIPLAYER_NUMBER = 2;
