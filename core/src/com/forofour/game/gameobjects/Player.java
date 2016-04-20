@@ -25,6 +25,7 @@ public class Player {
 
     private int id;
     private GameClient client;
+    private float runTime, lastMoveTime;
 
     private World box2d; // Physics world that will contain bodies of the object
     private Body body;
@@ -74,6 +75,8 @@ public class Player {
         this(pos.x, pos.y, PLAYER_SIZE, null, box2d);
         this.id = id;
         this.client = client;
+        runTime =0;
+        lastMoveTime = 0;
     }
 
     public Player(float x, float y, float radius, Ball ball, World box2d){
@@ -109,6 +112,7 @@ public class Player {
     }
 
     public void update(float delta){
+        runTime += delta;
         if(ball == null) { // Find the ball if no instance is attached to it
             Array<Body> bodyArrayList = new Array<Body>();
             box2d.getBodies(bodyArrayList);
@@ -196,7 +200,10 @@ public class Player {
         // Following line works as a "latency smoother"
         // Sending the linear velocity to the server, will quickly set the velocity of the body within the server physics engine
         // Re-sync of position is done with the slow update.
-        client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
+        if(runTime - lastMoveTime > 0.04) {
+            client.sendMessageUDP(new Network.PacketPlayerUpdateFast(id, body.getLinearVelocity()));
+            lastMoveTime = runTime;
+        }
     }
 
     // Use of powerUp will update Server
