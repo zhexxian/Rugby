@@ -2,6 +2,8 @@
 Framework: LibGdx
 Extensions: Box2d, Kryonet
 
+![Alt text](preview_gamescreen.png?raw=true "Gamescreen Preview")
+
 DEBUG Controls(Desktop only)
 - S, use powerups
 - T, toss ball(if holding ball)
