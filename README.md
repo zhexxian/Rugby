@@ -1,21 +1,22 @@
-# Rugby
+# BabyFrenzy
+Framework: LibGdx
+Extensions: Box2d, Kryonet
 
-Game Controls
-- P, add player(max. 4)
-- O, add ball(max. 1)
-- C, toss ball(if holding ball)
+DEBUG Controls(Desktop only)
+- S, use powerups
+- T, toss ball(if holding ball)
 - B, boost player(if not holding ball)
-- L, rotate between individual team player*
+- Z/X/C, add powerups
 - touchpad, control player(if available)
-
-*To remove when networking features are included.
-
 _____________________________________________________________________________________________________________
 
-The following is the list of branches in this repository. Always branch from master before you start working.
+The following is the list of branches in this repository.
 
 Master
-  - Branch from here to implement Networking Features
+  - Tutorial mode
+  - Multiplayer mode(at least 2, up to 4)
+  - Included all game screens (Splash, Main Menu, Lobby, Game, End state)
+  - Include music and sound effects
 
 Prototype 1 (discontinued)
   - Touchpad + Button interface
@@ -36,3 +37,5 @@ Team Scoring System (discontinued)
 Power Up Slot (discontinued)
   - Power slot that can be filled and is actionable
   - Different image for each type of powerup
+
+Networking Prototype(discontinued)
