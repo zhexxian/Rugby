@@ -90,7 +90,7 @@ public class Ball{
         // Ball cannot be held for the given period
         else if(immunityTime > 0) {
             immunityTime -= delta;
-            Gdx.app.log("Ball" , "is invisible " + immunityTime);
+            //Gdx.app.log("Ball" , "is invisible " + immunityTime);
         }
     }
 

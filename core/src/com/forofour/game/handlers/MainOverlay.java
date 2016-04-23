@@ -241,7 +241,7 @@ public class MainOverlay extends Stage {
                 if(tutorialStates != null) {
                     hideActors();
                     tutorialStates.updateTutorialStates();
-                    tutorialStates.printStates();
+//                    tutorialStates.printStates();
 
                     if (tutorialCount == 0) {
                         showTutorialOverlay(true, false, false, false, false, false, false, false);
@@ -524,7 +524,7 @@ public class MainOverlay extends Stage {
             } else if(player.isBoostCooldown()) {
                 tossButton.setVisible(false);
                 boostButton.setVisible(true);
-                Gdx.app.log("Percentage ", "" + player.boostCooldownPercentage());
+//                Gdx.app.log("Percentage ", "" + player.boostCooldownPercentage());
                 ButtonMaker.relativeScale(boostContainer, player.boostCooldownPercentage());
             } else {
                 tossButton.setVisible(false);

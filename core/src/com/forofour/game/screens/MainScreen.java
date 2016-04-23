@@ -68,10 +68,10 @@ public class MainScreen implements Screen {
     public void show() {
 
         if(isHost) {
-            Gdx.app.log("MainScreen", "Server ready");
+            //Gdx.app.log("MainScreen", "Server ready");
 
         } else {
-            Gdx.app.log("MainScreen", "Client ready");
+            //Gdx.app.log("MainScreen", "Client ready");
             client.sendMessage(new Network.PacketInitRound());
         }
 
@@ -90,8 +90,8 @@ public class MainScreen implements Screen {
             if (isHost) {
                 server.update(delta);
 
-//                Gdx.app.log("ClientTime", map.getGlobalTime().getElapsed());
-//                Gdx.app.log("HostTime", server.getMap().getGlobalTime().getElapsed());
+//                //Gdx.app.log("ClientTime", map.getGlobalTime().getElapsed());
+//                //Gdx.app.log("HostTime", server.getMap().getGlobalTime().getElapsed());
 
                 // Triggers End of game when i)TIME IS UP ii)MAXIMUM SCORE ATTAINED
                 if(server.getMap().getGlobalTime().isDone() || server.getMap().maximumScore()) {

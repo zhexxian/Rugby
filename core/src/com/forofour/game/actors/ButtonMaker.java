@@ -44,13 +44,13 @@ public class ButtonMaker {
         boostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("BoostButton", "Button Pressed");
+//                Gdx.app.log("BoostButton", "Button Pressed");
                 if(client.getMap().getPlayer() != null) {
-                    Gdx.app.log("BoostButton", "Button Pressed");
+//                    Gdx.app.log("BoostButton", "Button Pressed");
                     client.getMap().getPlayer().boost();
                 }
                 if(tutorialStates != null) {
-                    Gdx.app.log("BoostButton", "Button Pressed");
+//                    Gdx.app.log("BoostButton", "Button Pressed");
                     tutorialStates.usedBoost();
                 }
                 AssetLoader.fartBoostSound.play(GameConstants.SOUND_VOLUME);
@@ -67,7 +67,7 @@ public class ButtonMaker {
         tossButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Toss");
+//                System.out.println("Toss");
                 if(client.getMap().getPlayer() != null)
                     client.getMap().getPlayer().dropBall();
                 AssetLoader.tossSound.play(GameConstants.SOUND_VOLUME);

@@ -163,7 +163,7 @@ public class GameMap {
 //                Gdx.app.log(tag, "Player" + player.getId() + " ballHeld " + ball.isHeld());
                 if(runTime - lastSentTime > 0.5) { // Resync every 100ms
                     // Client will receive updated location on PlayerLocations after sending his own
-                    clientSendMessage(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
+                        clientSendMessage(new Network.PacketPlayerState(player.getId(), player.getPosition(), player.getAngle()));
 //                    Gdx.app.log(tag, "Updating player" + player.getId() + " position");
                     lastSentTime = runTime;
                 }

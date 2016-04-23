@@ -230,7 +230,7 @@ public class Player {
         if(hasBall() && client != null) {
             ball.loseHoldingPlayer();
             client.sendMessage(new Network.PacketDropBall(id)); // Updates server of the dropping of ball
-            Gdx.app.log("Player-dropBall", "id " + id);
+            //Gdx.app.log("Player-dropBall", "id " + id);
         }
     }
 
@@ -247,7 +247,7 @@ public class Player {
     public void acquirePowerUp(int type){
         hasPowerUp = true;
         powerUpType = type;
-        Gdx.app.log("Player"+id, "Acquired" +type);
+        //Gdx.app.log("Player"+id, "Acquired" +type);
         AssetLoader.powerUpSound.play(GameConstants.SOUND_VOLUME); // Acquired power up sound
     }
 
@@ -268,10 +268,10 @@ public class Player {
                 AssetLoader.invisibleSound.play(GameConstants.SOUND_VOLUME);
                 activateInvisibleEffect();
             }
-            Gdx.app.log("Player" + id, "Used" + powerUpType);
+            //Gdx.app.log("Player" + id, "Used" + powerUpType);
         }
         else {
-            Gdx.app.log("Player" + id, "No power up to use");
+            //Gdx.app.log("Player" + id, "No power up to use");
         }
     }
     public boolean hasPowerUp() {
@@ -299,7 +299,7 @@ public class Player {
                 confuse_x = 1; confuse_y = 1; break;
         }
         confusionEffectTime = CONFUSION_DURATION;
-        Gdx.app.log("Player"+id, "Activate x:" + confuse_x + " y:"+confuse_y);
+        //Gdx.app.log("Player"+id, "Activate x:" + confuse_x + " y:"+confuse_y);
     }
     // Set invisibility duration
     public void activateInvisibleEffect(){
